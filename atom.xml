@@ -4,9 +4,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
-  <updated>2016-05-21T06:04:41.000Z</updated>
-  <id>http://yoursite.com/</id>
+  <link href="http://luoye.pw/"/>
+  <updated>2016-05-21T07:05:03.000Z</updated>
+  <id>http://luoye.pw/</id>
   
   <author>
     <name>Luoye</name>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>mobile-debug</title>
-    <link href="http://yoursite.com/2016/03/20/mobile-debug/"/>
-    <id>http://yoursite.com/2016/03/20/mobile-debug/</id>
+    <link href="http://luoye.pw/2016/03/20/mobile-debug/"/>
+    <id>http://luoye.pw/2016/03/20/mobile-debug/</id>
     <published>2016-03-20T05:53:44.000Z</published>
-    <updated>2016-05-21T06:04:41.000Z</updated>
+    <updated>2016-05-21T07:05:03.000Z</updated>
     
     <content type="html">&lt;h4 id=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;a href=&quot;#UC浏览器开发版（仅限安卓平台）&quot; class=&quot;headerlink&quot; title=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;/a&gt;UC浏览器开发版（仅限安卓平台）&lt;/h4&gt;&lt;blockquote&gt;
 &lt;p&gt;超级强大，样式、脚本、资源，都可以调试，而且UC在移动端份额最大，针对性很高。&lt;/p&gt;
