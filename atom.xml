@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>LUOYE</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2016-05-21T05:56:37.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Luoye</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="http://yoursite.com/2016/05/21/mobile-debug/"/>
+    <id>http://yoursite.com/2016/05/21/mobile-debug/</id>
+    <published>2016-05-21T05:53:44.000Z</published>
+    <updated>2016-05-21T05:56:37.000Z</updated>
+    
+    <content type="html">&lt;h4 id=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;a href=&quot;#UC浏览器开发版（仅限安卓平台）&quot; class=&quot;headerlink&quot; title=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;/a&gt;UC浏览器开发版（仅限安卓平台）&lt;/h4&gt;&lt;blockquote&gt;
+&lt;p&gt;超级强大，样式、脚本、资源，都可以调试，而且UC在移动端份额最大，针对性很高。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;1、 &lt;a href=&quot;http://plus.uc.cn/document/webapp/doc5.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;UC浏览器开发版&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2、 官方的文档已经很详细了，包括两种调试方法，无线和有线。有线的调试很复杂，需要ADB工具，需要数据线，所以还是直接无线调试比较好。&lt;/p&gt;
+&lt;p&gt;3、 无线调试方法简记：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;安卓手机安装UC浏览器的开发版&lt;/li&gt;
+&lt;li&gt;保证手机和电脑在同一个局域网&lt;/li&gt;
+&lt;li&gt;记录下手机的ip地址，比如手机ip为 &lt;code&gt;10.69.5.150&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;在UC浏览器中打开需要调试的页面&lt;/li&gt;
+&lt;li&gt;电脑上打开 &lt;code&gt;10.69.5.150:9998&lt;/code&gt; 即可开始开心的调试（和chrome控制台相差不大）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;weinre本地服务器（全平台）&quot;&gt;&lt;a href=&quot;#weinre本地服务器（全平台）&quot; class=&quot;headerlink&quot; title=&quot;weinre本地服务器（全平台）&quot;&gt;&lt;/a&gt;weinre本地服务器（全平台）&lt;/h4&gt;&lt;blockquote&gt;
+&lt;p&gt;weinre是专门的网页调试工具，它会在本地创建一个监听服务器，然后你需要在被调试页面插入一个它提供的js，然后weinre就可以监听到，然后即可开始调试。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;1、 &lt;a href=&quot;http://people.apache.org/~pmuellr/weinre/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;weinre官网&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2、 &lt;a href=&quot;https://www.npmjs.com/package/weinre&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;weinre npm&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;3、 调试步骤&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;本地全局安装weinre&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight cmake&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;npm &lt;span class=&quot;keyword&quot;&gt;install&lt;/span&gt; weinre -g&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;启动本地 weinre 服务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-tag&quot;&gt;weinre&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;--boundHost&lt;/span&gt; 10&lt;span class=&quot;selector-class&quot;&gt;.69&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.5&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.10&lt;/span&gt; &lt;span class=&quot;selector-tag&quot;&gt;--httpPort&lt;/span&gt; 9090&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;参数解释&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-tag&quot;&gt;--boundHost&lt;/span&gt; 10&lt;span class=&quot;selector-class&quot;&gt;.69&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.5&lt;/span&gt;&lt;span class=&quot;selector-class&quot;&gt;.10&lt;/span&gt; : 在你局域网的地址开启服务&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-tag&quot;&gt;--httpPort&lt;/span&gt; 9090 : 本地服务器监听端口，不设置默认为8080&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;访问pc调试界面&lt;br&gt;如果启动服务时指定了ip和端口，访问此ip的指定端口即可。&lt;br&gt;本例地址为： &lt;code&gt;http://10.69.5.10:9090/&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在调试页面插入监听脚本&lt;br&gt;在调试页面中插入下图中 Target Script 中的js，本例即 &lt;code&gt;http://10.69.5.10:9090/target/target-script-min.js#anonymous&lt;/code&gt;。&lt;br&gt;&lt;code&gt;#anonymous&lt;/code&gt; 这个是页面标志，不同的标志在选取目标调试页时可以起到识别作用。&lt;br&gt;&lt;img src=&quot;./1.png&quot; alt=&quot;&quot;&gt;&lt;br&gt;假设页面代码如下&lt;/p&gt;
+&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;html&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;lang&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;en&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;meta&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;charset&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;UTF-8&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;meta&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;content&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;meta&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;format-detection&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;content&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;telephone=no&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;	&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;h1&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;id&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;test&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;我是标题&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;script&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;type&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;text/javascript&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;src&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;http://10.69.5.10:9090/target/target-script-min.js&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;undefined&quot;&gt;&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;script&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在终端访问此页面（apache可以直接有个本地http服务，nodejs需要自己启一个）&lt;/p&gt;
+&lt;figure class=&quot;highlight js&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 在本地的2333端口开启服务，返回上面的测试页&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;&#39;use strict&#39;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; express = &lt;span class=&quot;built_in&quot;&gt;require&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&#39;express&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; app = express();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; pwd = __dirname;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; port = &lt;span class=&quot;number&quot;&gt;2333&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;app.get(&lt;span class=&quot;string&quot;&gt;&#39;/&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;req, res, next&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    res.sendFile(pwd + &lt;span class=&quot;string&quot;&gt;&#39;/test.html&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;app.listen(&lt;span class=&quot;number&quot;&gt;2333&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;此时访问 &lt;code&gt;10.69.5.10::2333&lt;/code&gt; 就可以看到上面测试页的内容&lt;br&gt;&lt;img src=&quot;./2.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;然后在局域网的其它终端访问此页面都可以看到&lt;br&gt;&lt;img src=&quot;./3.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;此时打开 &lt;code&gt;http://10.69.5.10:9090/client/&lt;/code&gt; 你会看到&lt;br&gt;&lt;img src=&quot;./4.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;选中 Targets 里的地址即可开始调试，如下图&lt;br&gt;&lt;img src=&quot;./5.png&quot; alt=&quot;&quot;&gt;&lt;br&gt;&lt;img src=&quot;./6.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;4、其它&lt;/p&gt;
+&lt;p&gt;weinre最大的缺点就是不能调试js，虽然它实现了一个简单的js解释器，能在自己的控制台操作dom，但是本身页面里的调试信息没法在这捕获，遗憾。&lt;br&gt;但是它支持全平台，不管是wap还是app，只要是前端的html页面，都可以调试，遇到一些奇葩的兼容性问题很好找。&lt;br&gt;如果真心用这个工具，我们还可以在测试服务器搭一个代理服务，任何线上页面走这个代理服务器，都会被注入那段监听的js，测试机访问代理服务器吐出的地址，pc机访问统一的控制台页面，本地什么配置都不用，就可以开始真机调试。&lt;br&gt;再深入的话也可以深究一下weinre的js调试问题，那就圆满了。。。脑洞ing。。。  &lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;a href=&quot;#UC浏览器开发版（仅限安卓平台）&quot; class=&quot;headerlink&quot; title=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;/a&gt;UC浏览器开发版（仅限安卓平台）&lt;/h4&gt;&lt;blockquote&gt;
+&lt;p&gt;超
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
