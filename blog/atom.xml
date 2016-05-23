@@ -2,11 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>LUOYE</title>
   
-  <link href="/atom.xml" rel="self"/>
+  <link href="/blog/atom.xml" rel="self"/>
   
-  <link href="http://luoye.pw/"/>
+  <link href="http://luoye.pw/blog/"/>
   <updated>2016-05-22T09:52:53.000Z</updated>
-  <id>http://luoye.pw/</id>
+  <id>http://luoye.pw/blog/</id>
   
   <author>
     <name>Luoye</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>用 webpack 构建 node 后端代码，使其支持 js 新特性并实现热重载</title>
-    <link href="http://luoye.pw/2016/04/12/use-webpack-in-your-node-app/"/>
-    <id>http://luoye.pw/2016/04/12/use-webpack-in-your-node-app/</id>
+    <link href="http://luoye.pw/blog/2016/04/12/use-webpack-in-your-node-app/"/>
+    <id>http://luoye.pw/blog/2016/04/12/use-webpack-in-your-node-app/</id>
     <published>2016-04-12T09:52:18.000Z</published>
     <updated>2016-05-22T09:52:53.000Z</updated>
     
@@ -101,8 +101,8 @@
   
   <entry>
     <title>mobile-debug</title>
-    <link href="http://luoye.pw/2016/03/20/mobile-debug/"/>
-    <id>http://luoye.pw/2016/03/20/mobile-debug/</id>
+    <link href="http://luoye.pw/blog/2016/03/20/mobile-debug/"/>
+    <id>http://luoye.pw/blog/2016/03/20/mobile-debug/</id>
     <published>2016-03-20T05:53:44.000Z</published>
     <updated>2016-05-21T07:05:03.000Z</updated>
     
