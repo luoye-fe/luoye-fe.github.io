@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://luoye.pw/blog/blog/2016/05/24/webpack-workflow/</loc>
+    
+    <lastmod>2016-05-24T06:30:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://luoye.pw/blog/blog/2016/04/12/use-webpack-in-your-node-app/</loc>
     
     <lastmod>2016-05-22T09:52:53.000Z</lastmod>
