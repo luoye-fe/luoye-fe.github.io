@@ -5,7 +5,7 @@
   <link href="/blog/atom.xml" rel="self"/>
   
   <link href="http://luoye.pw/blog/"/>
-  <updated>2016-05-24T06:30:25.000Z</updated>
+  <updated>2016-06-06T11:58:38.125Z</updated>
   <id>http://luoye.pw/blog/</id>
   
   <author>
@@ -16,11 +16,79 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>会声会影安装与激活</title>
+    <link href="http://luoye.pw/blog/2016/06/05/%E4%BC%9A%E5%A3%B0%E4%BC%9A%E5%BD%B1%E5%AE%89%E8%A3%85%E4%B8%8E%E6%BF%80%E6%B4%BB/"/>
+    <id>http://luoye.pw/blog/2016/06/05/会声会影安装与激活/</id>
+    <published>2016-06-05T14:58:54.000Z</published>
+    <updated>2016-06-06T11:58:38.125Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;资源&quot;&gt;&lt;a href=&quot;#资源&quot; class=&quot;headerlink&quot; title=&quot;资源&quot;&gt;&lt;/a&gt;资源&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.huishenghuiying.com.cn/xiazai.html#selctbuy&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;会声会影下载&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://hostr.co/file/FDp8MOYlRuHv/AppNee.com.Corel.X5-X9.All.Products.Universal.Keygen.7z?warning=on&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;会声会影注册机下载&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;安装（x8版本）&quot;&gt;&lt;a href=&quot;#安装（x8版本）&quot; class=&quot;headerlink&quot; title=&quot;安装（x8版本）&quot;&gt;&lt;/a&gt;安装（x8版本）&lt;/h2&gt;&lt;h4 id=&quot;1、找到下载好的以-exe-为结尾的安装文件，将后缀名改为-rar，然后打开此压缩包（不是解压，用360压缩等工具打开）&quot;&gt;&lt;a href=&quot;#1、找到下载好的以-exe-为结尾的安装文件，将后缀名改为-rar，然后打开此压缩包（不是解压，用360压缩等工具打开）&quot; class=&quot;headerlink&quot; title=&quot;1、找到下载好的以 .exe 为结尾的安装文件，将后缀名改为 .rar，然后打开此压缩包（不是解压，用360压缩等工具打开）&quot;&gt;&lt;/a&gt;1、找到下载好的以 &lt;code&gt;.exe&lt;/code&gt; 为结尾的安装文件，将后缀名改为 &lt;code&gt;.rar&lt;/code&gt;，然后打开此压缩包（不是解压，用360压缩等工具打开）&lt;/h4&gt;&lt;h4 id=&quot;2、打开压缩包中的-setup-xml&quot;&gt;&lt;a href=&quot;#2、打开压缩包中的-setup-xml&quot; class=&quot;headerlink&quot; title=&quot;2、打开压缩包中的 setup.xml&quot;&gt;&lt;/a&gt;2、打开压缩包中的 &lt;code&gt;setup.xml&lt;/code&gt;&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;搜索 &lt;code&gt;SHOWSERIALDIALOG&lt;/code&gt;，将其 &lt;code&gt;value&lt;/code&gt; 改为 &lt;code&gt;true&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;搜索 &lt;code&gt;SERIALNUMBER&lt;/code&gt;，将其 &lt;code&gt;value&lt;/code&gt; 删除&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;修改前&lt;br&gt;&lt;img src=&quot;./1.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;修改后&lt;br&gt;&lt;img src=&quot;./2.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然后将 &lt;code&gt;.rar&lt;/code&gt; 改回 &lt;code&gt;.exe&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&quot;3、断开网络链接&quot;&gt;&lt;a href=&quot;#3、断开网络链接&quot; class=&quot;headerlink&quot; title=&quot;3、断开网络链接&quot;&gt;&lt;/a&gt;3、断开网络链接&lt;/h4&gt;&lt;h4 id=&quot;4、打开注册机，选择产品为-Corel-VideoStudio-Pro-Ulitime-X8&quot;&gt;&lt;a href=&quot;#4、打开注册机，选择产品为-Corel-VideoStudio-Pro-Ulitime-X8&quot; class=&quot;headerlink&quot; title=&quot;4、打开注册机，选择产品为 Corel VideoStudio Pro/Ulitime X8&quot;&gt;&lt;/a&gt;4、打开注册机，选择产品为 &lt;code&gt;Corel VideoStudio Pro/Ulitime X8&lt;/code&gt;&lt;/h4&gt;&lt;p&gt;&lt;img src=&quot;./3.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h4 id=&quot;5、双击打开安装包&quot;&gt;&lt;a href=&quot;#5、双击打开安装包&quot; class=&quot;headerlink&quot; title=&quot;5、双击打开安装包&quot;&gt;&lt;/a&gt;5、双击打开安装包&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;勾选接受协议，下一步&lt;br&gt;&lt;img src=&quot;./4.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;要求输入序列号&lt;br&gt;&lt;img src=&quot;./5.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;拷贝注册机中生成的序列号&lt;br&gt;&lt;img src=&quot;./6.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;粘贴在输入框内，点击下一步&lt;br&gt;&lt;img src=&quot;./7.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;位置默认，视频标准默认，安装位置自定义，点击立即安装，等待安装完成&lt;br&gt;&lt;img src=&quot;./8.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;6、打开会声会影主程序，第一次打开会提示为试用版30天，有功能限制，无视。待程序打开后，关闭程序&quot;&gt;&lt;a href=&quot;#6、打开会声会影主程序，第一次打开会提示为试用版30天，有功能限制，无视。待程序打开后，关闭程序&quot; class=&quot;headerlink&quot; title=&quot;6、打开会声会影主程序，第一次打开会提示为试用版30天，有功能限制，无视。待程序打开后，关闭程序&quot;&gt;&lt;/a&gt;6、打开会声会影主程序，第一次打开会提示为试用版30天，有功能限制，无视。待程序打开后，关闭程序&lt;/h4&gt;&lt;blockquote&gt;
+&lt;p&gt;这个地方有可能出现打开主程序提示试用版然后打不开软件的情况，此时，链接上网络，双击 &lt;code&gt;Corel FastFlick X8&lt;/code&gt;，会出现提示注册的界面，输入邮箱进行注册，如下&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;./9.png&quot; alt=&quot;&quot;&gt;&lt;br&gt;&lt;img src=&quot;./10.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;点击下一步，完成后关闭页面&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;出现如下界面时，断开网络链接，根据箭头指示点击&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&quot;./11.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;./12.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在注册机中输入安装码（只能手工输入，注意连字符）&lt;br&gt;&lt;img src=&quot;./13.png&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&quot;./14.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;点击 &lt;code&gt;Generate Activation Code&lt;/code&gt; 生成激活码&lt;br&gt;&lt;img src=&quot;./15.png&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+&lt;li&gt;复制生成好的激活码&lt;br&gt;&lt;img src=&quot;./16.png&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+&lt;li&gt;粘贴在安装程序激活码位置&lt;br&gt;&lt;img src=&quot;./17.png&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+&lt;li&gt;点击下一步完成激活&lt;br&gt;&lt;img src=&quot;./18.png&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+&lt;li&gt;链接网络，打开主程序，已成功激活&lt;br&gt;&lt;img src=&quot;./19.png&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;资源&quot;&gt;&lt;a href=&quot;#资源&quot; class=&quot;headerlink&quot; title=&quot;资源&quot;&gt;&lt;/a&gt;资源&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.huishenghuiying.com.cn/xiazai.html#selctbuy&quot;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>webpack-workflow</title>
     <link href="http://luoye.pw/blog/2016/05/24/webpack-workflow/"/>
     <id>http://luoye.pw/blog/2016/05/24/webpack-workflow/</id>
     <published>2016-05-24T06:28:24.000Z</published>
-    <updated>2016-05-24T06:30:25.000Z</updated>
+    <updated>2016-06-04T09:17:07.542Z</updated>
     
     <content type="html">&lt;h2 id=&quot;前端工作流中要解决的问题&quot;&gt;&lt;a href=&quot;#前端工作流中要解决的问题&quot; class=&quot;headerlink&quot; title=&quot;前端工作流中要解决的问题&quot;&gt;&lt;/a&gt;前端工作流中要解决的问题&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;资源管理：模块化、组件化、依赖管理等&lt;/li&gt;
@@ -130,7 +198,7 @@
     <link href="http://luoye.pw/blog/2016/04/12/use-webpack-in-your-node-app/"/>
     <id>http://luoye.pw/blog/2016/04/12/use-webpack-in-your-node-app/</id>
     <published>2016-04-12T09:52:18.000Z</published>
-    <updated>2016-05-22T09:52:53.000Z</updated>
+    <updated>2016-06-04T09:17:07.542Z</updated>
     
     <content type="html">&lt;p&gt;webpack 在前端领域的模块化和代码构建方面有着无比强大的功能，通过一些特殊的配置甚至可以实现前端代码的实时构建、ES6/7新特性支持以及热重载，这些功能同样可以运用于后台 nodejs 的应用，让后台的开发更加顺畅，服务更加灵活，怎么来呢？往下看。&lt;/p&gt;
 &lt;p&gt;先梳理下我们将要解决的问题：&lt;/p&gt;
@@ -214,7 +282,7 @@
     <link href="http://luoye.pw/blog/2016/03/20/mobile-debug/"/>
     <id>http://luoye.pw/blog/2016/03/20/mobile-debug/</id>
     <published>2016-03-20T05:53:44.000Z</published>
-    <updated>2016-05-21T07:05:03.000Z</updated>
+    <updated>2016-06-04T09:17:07.529Z</updated>
     
     <content type="html">&lt;h4 id=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;a href=&quot;#UC浏览器开发版（仅限安卓平台）&quot; class=&quot;headerlink&quot; title=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;/a&gt;UC浏览器开发版（仅限安卓平台）&lt;/h4&gt;&lt;blockquote&gt;
 &lt;p&gt;超级强大，样式、脚本、资源，都可以调试，而且UC在移动端份额最大，针对性很高。&lt;/p&gt;
