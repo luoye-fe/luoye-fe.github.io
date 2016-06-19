@@ -5,7 +5,7 @@
   <link href="/blog/atom.xml" rel="self"/>
   
   <link href="http://luoye.pw/blog/"/>
-  <updated>2016-06-14T10:08:34.000Z</updated>
+  <updated>2016-06-16T06:52:25.000Z</updated>
   <id>http://luoye.pw/blog/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://luoye.pw/blog/2016/06/09/js%E4%B8%AD%E7%9A%84%E5%BC%82%E6%AD%A5%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6-Promise-Generators-Async-Await/"/>
     <id>http://luoye.pw/blog/2016/06/09/js中的异步流程控制-Promise-Generators-Async-Await/</id>
     <published>2016-06-09T00:05:14.000Z</published>
-    <updated>2016-06-14T10:08:34.000Z</updated>
+    <updated>2016-06-16T06:52:25.000Z</updated>
     
     <content type="html">&lt;blockquote&gt;
 &lt;p&gt;长文预警 ～&lt;/p&gt;
@@ -234,7 +234,7 @@
     <link href="http://luoye.pw/blog/2016/06/05/%E4%BC%9A%E5%A3%B0%E4%BC%9A%E5%BD%B1%E5%AE%89%E8%A3%85%E4%B8%8E%E6%BF%80%E6%B4%BB/"/>
     <id>http://luoye.pw/blog/2016/06/05/会声会影安装与激活/</id>
     <published>2016-06-05T14:58:54.000Z</published>
-    <updated>2016-06-11T05:45:36.000Z</updated>
+    <updated>2016-06-16T10:24:22.000Z</updated>
     
     <content type="html">&lt;h2 id=&quot;资源&quot;&gt;&lt;a href=&quot;#资源&quot; class=&quot;headerlink&quot; title=&quot;资源&quot;&gt;&lt;/a&gt;资源&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.huishenghuiying.com.cn/xiazai.html#selctbuy&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;会声会影下载&lt;/a&gt;&lt;/li&gt;
@@ -551,6 +551,55 @@
     
       &lt;h4 id=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;a href=&quot;#UC浏览器开发版（仅限安卓平台）&quot; class=&quot;headerlink&quot; title=&quot;UC浏览器开发版（仅限安卓平台）&quot;&gt;&lt;/a&gt;UC浏览器开发版（仅限安卓平台）&lt;/h4&gt;&lt;blockquote&gt;
 &lt;p&gt;超
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>2015年终总结</title>
+    <link href="http://luoye.pw/blog/2015/12/31/2015%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"/>
+    <id>http://luoye.pw/blog/2015/12/31/2015年终总结/</id>
+    <published>2015-12-31T14:22:22.000Z</published>
+    <updated>2016-06-18T06:55:48.000Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;踏入社会的第一年，每年的年终总结应该记起来了。默默的定下一个应一直坚持的小事。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;2015，从校园到社会；2015，从徐州到北京；2015，从骆也到骆也。2015，颇具转折意义的一年。&lt;/p&gt;
+&lt;h3 id=&quot;选择&quot;&gt;&lt;a href=&quot;#选择&quot; class=&quot;headerlink&quot; title=&quot;选择&quot;&gt;&lt;/a&gt;选择&lt;/h3&gt;&lt;p&gt;2015年初，还在焦急的等待考研的结果，或许自己已经知道答案。但是查到分数那一刻还是有点不甘心，回想之前一年为考研做的准备，哎，只能说，努力就好。&lt;/p&gt;
+&lt;p&gt;人最不应该的就是在原地等待。考研没有结果，我知道自己该做个选择了。选择什么？包括未来在内的所有一切。&lt;/p&gt;
+&lt;p&gt;毕业了选择什么职业？那时候脑海中的目标真心明确，就是前端。现在想想啊，真是为自己以一个纯文科愣头青身份去投身程序员行业而感到后怕。&lt;/p&gt;
+&lt;p&gt;3月11号，踏上北京的土地，灰蒙蒙的天，有点压抑，也有点兴奋。缔造了无数传说的帝都，我来了。&lt;/p&gt;
+&lt;h3 id=&quot;前端&quot;&gt;&lt;a href=&quot;#前端&quot; class=&quot;headerlink&quot; title=&quot;前端&quot;&gt;&lt;/a&gt;前端&lt;/h3&gt;&lt;p&gt;来北京后的大半个月，不断的面试，不断的被打击，不断的认识到自己是有多菜。&lt;/p&gt;
+&lt;p&gt;还记得去美食杰面试的时候，硕哥问我，jq的函数你知道几个，我回答说不知道。相信那时候硕哥的心里一定是崩溃的，内心os或许就是，小伙子，谁给你的勇气！&lt;/p&gt;
+&lt;p&gt;幸好硕哥最后的“判决”是，能给我个实习的岗位。就这样，在美食杰，踏上了自己的职业生涯，走上了前端这条道路。&lt;/p&gt;
+&lt;p&gt;工作的时间总是很快，一晃，在美食杰过去了大半年，没什么怨言，美食杰的每一位小伙伴都很棒，每天的工作也很充实，进步很快。但是当自己能够完全虐业务的所有需求之后，知道在美食杰已经到尽头了，是时候该走了。&lt;/p&gt;
+&lt;p&gt;前端入行，html标签不会几个，jq函数不知一个，现在？现在手里的项目是一个ng的cms系统，一个独立的web应用。&lt;/p&gt;
+&lt;p&gt;不敢说自己现在有多牛B，但是实打实的进步是自己敢拍着胸脯吹布尔的。&lt;/p&gt;
+&lt;p&gt;离开美食杰，转战新浪，从11月到现在，也两个月了，谈感受的话，挺好。厉害的人大大存在，不再和以前一样像过家家一样弄着前端了。但是觉得还是太慢，在前端路上走的越远，越认识到自己应该踏多大的步伐，走什么样的路。&lt;/p&gt;
+&lt;p&gt;选择道路，不一定十分十正确，但一定不要不去选择。&lt;/p&gt;
+&lt;p&gt;未来自己一定还是深入前端，希望自己能够快速成长起来，我会努力。&lt;/p&gt;
+&lt;h3 id=&quot;美食杰&quot;&gt;&lt;a href=&quot;#美食杰&quot; class=&quot;headerlink&quot; title=&quot;美食杰&quot;&gt;&lt;/a&gt;美食杰&lt;/h3&gt;&lt;p&gt;美食杰，自己职业生涯的起点，真的有感情。&lt;/p&gt;
+&lt;p&gt;美食杰，带给自己的不仅是一份工作，更是一个平台，在这，学到了知识，锻炼了技能，更认识了很多新小伙伴。每一位都是收获。&lt;/p&gt;
+&lt;p&gt;还记得，李老爷，徐丹，我，三个人一起进的美食杰，然后中午吃啥，晚上走啊，周末干嘛，生活乐无忧。再然后是小唐，长相腼腆的男孩子，现在看来，大错特错！再然后，苏瑶，那个笑起来雾霾天都退散几步的姑娘。再然后，徐丹走了，欧美汇的鱼火锅加点酒，几个人大谈特谈，悠闲无比。再然后沈大人，一个地方来的小伙伴，年龄严重不符性格的家伙，正式开启了四人组的逗比生后。再然后。。嗯，还有好多个再然后，也还会有好多个再然后。&lt;/p&gt;
+&lt;p&gt;附上离开美食杰的 &lt;a href=&quot;/html/cizhixin.html&quot;&gt;辞职信&lt;/a&gt; ，哈哈，虽然并没有用上，现在看看好傻。。&lt;/p&gt;
+&lt;h3 id=&quot;过往&quot;&gt;&lt;a href=&quot;#过往&quot; class=&quot;headerlink&quot; title=&quot;过往&quot;&gt;&lt;/a&gt;过往&lt;/h3&gt;&lt;p&gt;大学的小伙伴们啊，你们还好嘛？&lt;/p&gt;
+&lt;p&gt;六月份的毕业照灰尘都没有落上，但相信每个人都不再一样。或许离开校园，联系已经多余，往后的日子也不会有过多的交集，但是请记得同窗四年的我们，一定是那时候最纯粹的友谊。&lt;/p&gt;
+&lt;p&gt;大学的小圈子原定元旦回徐州小聚，但各有各的事，只能搁浅，小小的遗憾。&lt;/p&gt;
+&lt;h3 id=&quot;定音&quot;&gt;&lt;a href=&quot;#定音&quot; class=&quot;headerlink&quot; title=&quot;定音&quot;&gt;&lt;/a&gt;定音&lt;/h3&gt;&lt;p&gt;总结没个总结的样子了，。。想到哪写哪了，总之加油吧。&lt;/p&gt;
+&lt;p&gt;16年马上就来，目标要有，梦想更要有。&lt;/p&gt;
+&lt;p&gt;至于是啥？梦中再做个总结去，哈哈哈。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;踏入社会的第一年，每年的年终总结应该记起来了。默默的定下一个应一直坚持的小事。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;2015，从校园到社会；2015，从徐州到北京；2015，从骆也到骆也。2015，颇具转折意义的一年。&lt;/p&gt;
+&lt;h3 id=
     
     </summary>
     
