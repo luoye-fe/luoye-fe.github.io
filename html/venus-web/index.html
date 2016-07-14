@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="./css/swiper.css">
+	<style type="text/css">
+	html,
+	body {
+		font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+	}
+	
+	.swiper-container {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+	
+	.swiper-slide {
+		position: relative;
+		display: flex;
+		align-content: center;
+		justify-content: center;
+	}
+	
+	.swiper-container canvas {
+		position: absolute;
+		z-index: -1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+	}
+	
+	.swiper-pagination .swiper-pagination-bullet {
+		background-color: #fff;
+	}
+	
+	.all-center {
+		align-self: center;
+		color: #fff;
+		text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.9);
+	}
+	
+	.index,
+	.catlog,
+	.page {
+		font-size: 12px;
+		color: #fff;
+		cursor: pointer;
+		transition: all ease 0.2s;
+	}
+	
+	.index {
+		position: fixed;
+		bottom: 5px;
+		left: 3px;
+		z-index: 999;
+	}
+	
+	.catlog {
+		position: absolute;
+		bottom: 5px;
+		left: 30px;
+		z-index: 888;
+	}
+	
+	.page {
+		position: absolute;
+		bottom: 5px;
+		right: 3px;
+		z-index: 888;
+	}
+	
+	.index:hover,
+	.catlog:hover {
+		/*color: rgba(0, 0, 0, 1);*/
+	}
+	
+	h1,
+	ul {
+		padding: 0;
+		margin: 0;
+	}
+	
+	ul {
+		margin-top: 10px;
+	}
+	
+	li {
+		list-style: none;
+		font-size: 16px;
+		line-height: 28px;
+	}
+	
+	h1 {
+		font-size: 34px;
+		text-align: center;
+	}
+	
+	.list-con {}
+	
+	.list-con h1 {}
+	
+	.list-con ul {}
+	
+	.list-con ul li {
+		text-align: center;
+		cursor: pointer;
+		transition: all ease 0.2s;
+	}
+	
+	.list-con ul li:hover {
+		margin-left: 8px;
+	}
+	
+	.loading_con {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background-color: rgba(255, 255, 255, 1);
+		z-index: 9999;
+		transition: all ease 0.2s;
+		opacity: 1;
+	}
+	
+	.loading_con .loading {
+		width: 300px;
+		height: 120px;
+		font-size: 0;
+		text-align: center;
+		top: 50%;
+		left: 50%;
+		position: absolute;
+		transform: translate(-50%, -50%);
+	}
+	
+	.loading_con .loading span {
+		display: inline-block;
+		vertical-align: top;
+		width: 8px;
+		height: 80px;
+		background-color: #fff;
+		margin: 0 4px;
+		box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+		border-radius: 2px;
+	}
+	
+	.loading_con .loading span:nth-child(1) {
+		animation: loading 1.2s ease-in-out 0s infinite;
+		-webkit-animation: loading 1.2s ease-in-out 0s infinite;
+		-moz-animation: loading 1.2s ease-in-out 0s infinite;
+		-ms-animation: loading 1.2s ease-in-out 0s infinite;
+	}
+	
+	.loading_con .loading span:nth-child(2) {
+		animation: loading 1.2s ease-in-out -1.1s infinite;
+		-webkit-animation: loading 1.2s ease-in-out -1.1s infinite;
+		-moz-animation: loading 1.2s ease-in-out -1.1s infinite;
+		-ms-animation: loading 1.2s ease-in-out -1.1s infinite;
+	}
+	
+	.loading_con .loading span:nth-child(3) {
+		animation: loading 1.2s ease-in-out -1.0s infinite;
+		-webkit-animation: loading 1.2s ease-in-out -1.0s infinite;
+		-moz-animation: loading 1.2s ease-in-out -1.0s infinite;
+		-ms-animation: loading 1.2s ease-in-out -1.0s infinite;
+	}
+	
+	.loading_con .loading span:nth-child(4) {
+		animation: loading 1.2s ease-in-out -0.9s infinite;
+		-webkit-animation: loading 1.2s ease-in-out -0.9s infinite;
+		-moz-animation: loading 1.2s ease-in-out -0.9s infinite;
+		-ms-animation: loading 1.2s ease-in-out -0.9s infinite;
+	}
+	
+	.loading_con .loading span:nth-child(5) {
+		animation: loading 1.2s ease-in-out -0.8s infinite;
+		-webkit-animation: loading 1.2s ease-in-out -0.8s infinite;
+		-moz-animation: loading 1.2s ease-in-out -0.8s infinite;
+		-ms-animation: loading 1.2s ease-in-out -0.8s infinite;
+	}
+	
+	.loading_con .loading span:nth-child(6) {
+		animation: loading 1.2s ease-in-out -0.7s infinite;
+		-webkit-animation: loading 1.2s ease-in-out -0.7s infinite;
+		-moz-animation: loading 1.2s ease-in-out -0.7s infinite;
+		-ms-animation: loading 1.2s ease-in-out -0.7s infinite;
+	}
+	
+	@-webkit-keyframes loading {
+		0%,
+		40%,
+		100% {
+			transform: scaleY(0.4);
+			-webkit-transform: scaleY(0.4);
+		}
+		20% {
+			transform: scaleY(1.0);
+			-webkit-transform: scaleY(1.0);
+		}
+	}
+	
+	@keyframes loading {
+		0%,
+		40%,
+		100% {
+			transform: scaleY(0.4);
+			-webkit-transform: scaleY(0.4);
+		}
+		20% {
+			transform: scaleY(1.0);
+			-webkit-transform: scaleY(1.0);
+		}
+	}
+	</style>
+</head>
+
+<body>
+	<div class="loading_con">
+		<div class="loading">
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
+	<div id="app">
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<section class="swiper-slide" v-for="item in listPages">
+					<div class="all-center">
+						<div class="list-con">
+							<h1>{{item.title}}</h1>
+							<ul>
+								<li v-for="li in item.list" @click="slideTo(li.page - 1)">{{li.msg}}</li>
+							</ul>
+							<div class="real-html">{{{item.html}}}</div>
+						</div>
+					</div>
+					<canvas></canvas>
+					<span class="page">{{swiper.activeIndex + 1}}/{{swiper.slides.length}}</span>
+				</section>
+				<section class="swiper-slide" v-for="item in detailPages">
+					<div class="all-center">
+						<div class="list-con">
+							<p v-for="p in item.pList"># {{p}}</p>
+							<div class="real-html">{{{item.html}}}</div>
+						</div>
+					</div>
+					<canvas></canvas>
+					<span class="catlog" @click="slideTo(item.from - 1)">| 目录</span>
+					<span class="page">{{swiper.activeIndex + 1}}/{{swiper.slides.length}}</span>
+				</section>
+			</div>
+			<div class="swiper-pagination "></div>
+			<span class="index" @click="slideTo(0)">首页</span>
+		</div>
+	</div>
+	<script type="text/javascript " src="./js/swiper.js"></script>
+	<script type="text/javascript " src="./js/trianglify.js"></script>
+	<script type="text/javascript " src="./js/vue.js "></script>
+	<script type="text/javascript ">
+	new Vue({
+		el: '#app',
+		data: {
+			listPages: [{
+				title: '目录',
+				list: [{
+					msg: 'Vue',
+					page: 2
+				}, {
+					msg: 'NodeJs/Npm',
+					page: 3
+				}, {
+					msg: 'ES6/7',
+					page: 4
+				}, {
+					msg: 'Webpack/Gulp',
+					page: 5
+				}, {
+					msg: 'Sass/Jade',
+					page: 6
+				}, {
+					msg: 'Git',
+					page: 7
+				}, {
+					msg: 'Webscoket',
+					page: 8
+				}, {
+					msg: '业务详解',
+					page: 9
+				}, {
+					msg: '发布流程',
+					page: 10
+				}, {
+					msg: '本地调试',
+					page: 11
+				}]
+			}, {
+				title: 'Vue',
+				list: [{
+					msg: '为什么选择Vue',
+					page: 12
+				}],
+				html: ''
+			}, {
+				title: 'NodeJs/Npm',
+				list: [{
+					msg: 'NodeJs',
+					page: 13
+				}, {
+					msg: 'NPM',
+					page: 14
+				}],
+				html: ''
+			}, {
+				title: 'ES6/7',
+				list: [{
+					msg: '客服平台中使用的新特性',
+					page: 15
+				}],
+				html: ''
+			}, {
+				title: 'Webpack/Gulp',
+				list: [{
+					msg: 'Webpack',
+					page: 16
+				}, {
+					msg: 'Gulp',
+					page: 17
+				}],
+				html: ''
+			}, {
+				title: 'Sass/Jade',
+				list: [{
+					msg: 'Sass',
+					page: 18
+				}, {
+					msg: 'Jade',
+					page: 19
+				}]
+			}, {
+				title: 'Git',
+				list: [{
+					msg: '版本控制工具，以及完整高效的工作流'
+				}]
+			}, {
+				title: 'Webscoket',
+				list: [{
+					msg: 'websocket 在客服平台中的运用',
+					page: 20
+				}]
+			}, {
+				title: '业务详解',
+				list: [{
+					msg: '目录结构'
+				}, {
+					msg: '业务结构划分',
+					page: 21
+				}]
+			}, {
+				title: '发布流程',
+				list: [{
+					msg: '详情',
+					page: 22
+				}]
+			}, {
+				title: '本地调试',
+				list: [{
+					msg: '详情',
+					page: 23
+				}]
+			}],
+			detailPages: [{
+				pList: [
+					'简洁',
+					'数据驱动',
+					'组件化',
+					'快速',
+					'轻量但不失强大',
+					'新技术的试验田'
+				],
+				from: 2,
+				html: ''
+			}, {
+				pList: [
+					'利用 NodeJs 搭建简易 web server，同步前后端环境',
+					'利用 NodeJs 开发工具，简化开发流程'
+				],
+				from: 3,
+				html: ''
+			}, {
+				pList: [
+					'强大的依赖管理功能',
+					'简易的 npm script'
+				],
+				from: 3,
+				html: ''
+			}, {
+				pList: [
+					'变量声明：let/const 命令',
+					'变量的结构赋值',
+					'模板字符串',
+					'箭头函数',
+					'模块管理：import/export',
+					'Promise 对象控制异步流程',
+					'其他的新API'
+				],
+				from: 4,
+				html: ''
+			}, {
+				pList: [
+					'模块化',
+					'编译打包'
+				],
+				from: 5,
+				html: ''
+			}, {
+				pList: [
+					'自动化任务',
+					'文件流概念'
+				],
+				from: 5,
+				html: ''
+			}, {
+				pList: [
+					'css 方言',
+					'属性嵌套',
+					'属性变量',
+					'属性逻辑'
+				],
+				from: 6,
+				html: ''
+			}, {
+				pList: [
+					'模板引擎',
+					'模块化 HTML',
+					'HTML 内逻辑控制'
+				],
+				from: 6,
+				html: ''
+			}, {
+				pList: [],
+				from: 8,
+				html: '<img src="./img/1.png"/>'
+			}, {
+				pList: [],
+				from: 9,
+				html: '<img src="./img/4.png" style="margin-right: 4px;"/><img src="./img/5.png"/>'
+			}, {
+				pList: [],
+				from: 10,
+				html: '<img src="./img/2.png"/>'
+			}, {
+				pList: [],
+				from: 11,
+				html: '<img src="./img/3.png"/>'
+			}],
+			swiper: null
+		},
+		ready: function() {
+			var _this = this;
+			this.swiper = new Swiper('.swiper-container', {
+				direction: 'vertical',
+				loop: false,
+				pagination: '.swiper-pagination',
+				paginationClickable: true
+			})
+
+			// 相当耗时
+			Array.prototype.slice.call(document.querySelectorAll('.swiper-slide')).forEach(function(item) {
+				Trianglify({
+					width: window.innerWidth,
+					height: window.innerHeight,
+					cell_size: 30
+				}).canvas(item.querySelector('canvas'));
+			})
+
+			// loading
+			document.querySelector('.loading_con').style.opacity = 0;
+			setTimeout(function() {
+				document.querySelector('.loading_con').style.display = 'none';
+			}, 200);
+
+			document.addEventListener('keydown', function(ev) {
+				if (ev.keyCode === 40 || ev.keyCode === 39) {
+					_this.swiper.slideNext();
+				}
+				if (ev.keyCode === 37 || ev.keyCode === 38) {
+					_this.swiper.slidePrev();
+				}
+			})
+		},
+		methods: {
+			slideTo: function(page) {
+				if (isNaN(page)) {
+					return;
+				}
+				this.swiper.slideTo(page);
+			}
+		}
+	});
+	</script>
+</body>
+
+</html>
