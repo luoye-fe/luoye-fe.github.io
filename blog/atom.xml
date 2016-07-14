@@ -5,7 +5,7 @@
   <link href="/blog/atom.xml" rel="self"/>
   
   <link href="http://luoye.pw/blog/"/>
-  <updated>2016-06-23T02:48:03.000Z</updated>
+  <updated>2016-07-14T08:32:40.000Z</updated>
   <id>http://luoye.pw/blog/</id>
   
   <author>
@@ -16,17 +16,183 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>客服平台总结</title>
+    <link href="http://luoye.pw/blog/2016/07/13/%E5%AE%A2%E6%9C%8D%E5%B9%B3%E5%8F%B0%E6%80%BB%E7%BB%93/"/>
+    <id>http://luoye.pw/blog/2016/07/13/客服平台总结/</id>
+    <published>2016-07-13T03:19:42.000Z</published>
+    <updated>2016-07-14T08:32:40.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;Vue&quot;&gt;&lt;a href=&quot;#Vue&quot; class=&quot;headerlink&quot; title=&quot;Vue&quot;&gt;&lt;/a&gt;Vue&lt;/h2&gt;&lt;p&gt;Vue是一个构建数据驱动的 web 界面的库，也就是一个以 MVVM 为核心的库。  &lt;/p&gt;
+&lt;h4 id=&quot;为什么选择Vue&quot;&gt;&lt;a href=&quot;#为什么选择Vue&quot; class=&quot;headerlink&quot; title=&quot;为什么选择Vue&quot;&gt;&lt;/a&gt;为什么选择Vue&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;简洁&lt;/p&gt;
+&lt;p&gt;  API 足够简洁明了，文档足够清晰有条理，上手难度足够低&lt;/p&gt;
+&lt;p&gt;  HTML 模板加上 JSON 数据，就是一个 Vue 实例。    &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;数据驱动&lt;/p&gt;
+&lt;p&gt;  DOM和数据绑定，对数据的操作自动追踪依赖的模板表达式，自动更新DOM。  &lt;/p&gt;
+&lt;p&gt;  例如，列表的渲染，只需给定一个数组，将这个数组绑定到列表的模板表达式上，数组的变化自动触发DOM的更新，无需手动维护DOM。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;组件化&lt;/p&gt;
+&lt;p&gt;  提供了一套完整的组件化开发方式，用解藕、可敷用的组件来构造界面，极大简化代码量的同时，对维护工作也相当友好。  &lt;/p&gt;
+&lt;p&gt;  例如，全局的 loading/alert/表单 组件、局部的表格组件，一处定义，多处复用，一处更改，全局同步。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;快速&lt;/p&gt;
+&lt;p&gt;  库内部对自动更新DOM的操作做了很多优化，内部ID排序，最小变更步骤等，和手动更新DOM相比，速度更快。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;轻量但不失强大&lt;/p&gt;
+&lt;p&gt;  Vue 本身只是一个关注 view 层的轻量化库，但是搭配官方出品的几个轻量库，能够完成相当复杂的 web 应用。  &lt;/p&gt;
+&lt;p&gt;  例如，客服平台中用到的 vue-router ，用来控制路由；vuex，用来集中式管理应用状态，控制 SPA 内数据流向。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;新技术的试验田&lt;/p&gt;
+&lt;p&gt;  Vue 足够灵活，能够完美的搭配前端中新兴的各种技术，加快开发效率，规范开发流程，减少人工操纵。  &lt;/p&gt;
+&lt;p&gt;  例如，客服平台中模块化的 js 开发方式，webpack 编译，NPM 管理依赖，sass 书写样式等，都能够融合进 vue 的开发体系中。  &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;相关文档&quot;&gt;&lt;a href=&quot;#相关文档&quot; class=&quot;headerlink&quot; title=&quot;相关文档&quot;&gt;&lt;/a&gt;相关文档&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://cn.vuejs.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Vue 文档&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://router.vuejs.org/zh-cn/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Vue-router 文档&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://vuex.vuejs.org/zh-cn/intro.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Vuex 文档&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;NodeJs-Npm&quot;&gt;&lt;a href=&quot;#NodeJs-Npm&quot; class=&quot;headerlink&quot; title=&quot;NodeJs/Npm&quot;&gt;&lt;/a&gt;NodeJs/Npm&lt;/h2&gt;&lt;h4 id=&quot;NodeJs&quot;&gt;&lt;a href=&quot;#NodeJs&quot; class=&quot;headerlink&quot; title=&quot;NodeJs&quot;&gt;&lt;/a&gt;NodeJs&lt;/h4&gt;&lt;p&gt;NodeJs 虽然是一门后端语言，但是在前端工作中，利用 NodeJs 开发的一些工具能够极大简化我们的工作。  &lt;/p&gt;
+&lt;p&gt;例如，客服平台实现了一个简易的 web server，本地开发时以这个 web server 作为入口，可以很方便的访问接口，代理静态资源等。  &lt;/p&gt;
+&lt;p&gt;利用 NodeJs 开发的工具也能够完成自动化操作、构建等任务，这个将在下文的 webpack/gulp 部分具体讲述。&lt;/p&gt;
+&lt;h4 id=&quot;NPM&quot;&gt;&lt;a href=&quot;#NPM&quot; class=&quot;headerlink&quot; title=&quot;NPM&quot;&gt;&lt;/a&gt;NPM&lt;/h4&gt;&lt;p&gt;NPM 是管理 NodeJs 开发依赖的工具，同样能够用在前端的开发工作中，大部分的开发依赖通过 NPM 来管理，杜绝手工管理依赖包，也能够很方便的控制依赖的版本。  &lt;/p&gt;
+&lt;p&gt;NPM 还提供一些便捷的 script 定义方式，在一个 NPM 项目下，会存在一个 &lt;code&gt;package.json&lt;/code&gt; 文件，其中有一个字段为 &lt;code&gt;scripts&lt;/code&gt; ，在这个字段中定义的 key ，可以通过 &lt;code&gt;npm run {key}&lt;/code&gt; 来执行 value 中的命令。  &lt;/p&gt;
+&lt;p&gt;例如，在本地开发时，需要连接后台人员的机器，可以执行 &lt;code&gt;npm run localtest&lt;/code&gt; 命令，而实际执行的命令是 &lt;code&gt;scripts&lt;/code&gt; 字段中 &lt;code&gt;localtest&lt;/code&gt; 对应的 &lt;code&gt;NODE_ENV=localtest gulp watch&lt;/code&gt; 命令。  &lt;/p&gt;
+&lt;p&gt;这相当于为某些命令做了个缩写，但是在本项目中，由于环境变量定义方式不同，mac 环境可以直接执行 &lt;code&gt;npm run localtest&lt;/code&gt; ，win 上只能执行具体的命令 &lt;code&gt;NODE_ENV=localtest gulp watch&lt;/code&gt;。  &lt;/p&gt;
+&lt;h4 id=&quot;相关文档-1&quot;&gt;&lt;a href=&quot;#相关文档-1&quot; class=&quot;headerlink&quot; title=&quot;相关文档&quot;&gt;&lt;/a&gt;相关文档&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://nodejs.cn/api/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;NodeJs 文档&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.npmjs.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;NPM 文档&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;其他&quot;&gt;&lt;a href=&quot;#其他&quot; class=&quot;headerlink&quot; title=&quot;其他&quot;&gt;&lt;/a&gt;其他&lt;/h4&gt;&lt;p&gt;客服平台对 NodeJs 的依赖不可或缺，开发人员必须安装 NodeJs ，建议版本 v4.2.4&lt;/p&gt;
+&lt;h2 id=&quot;ES6-7&quot;&gt;&lt;a href=&quot;#ES6-7&quot; class=&quot;headerlink&quot; title=&quot;ES6/7&quot;&gt;&lt;/a&gt;ES6/7&lt;/h2&gt;&lt;p&gt;JavaScript 这门语言在以往的版本中存在着很多缺陷，比如没有类，没有标准的模块管理，没有统一的异步流程控制API，没有块级作用域赋值等等，但是在新版本中，这些都有了相应的解决方案，所以客服平台的开发，我们选择了 JS 的新标准 ES6 作为主要开发语言。  &lt;/p&gt;
+&lt;p&gt;本项目中用到的主要 ES6 新特性包括：  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;变量声明：let/const 命令&lt;/li&gt;
+&lt;li&gt;变量的结构赋值&lt;/li&gt;
+&lt;li&gt;模板字符串&lt;/li&gt;
+&lt;li&gt;箭头函数&lt;/li&gt;
+&lt;li&gt;模块管理：import/export&lt;/li&gt;
+&lt;li&gt;Promise 对象控制异步流程&lt;/li&gt;
+&lt;li&gt;其他的新API&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;http://es6.ruanyifeng.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ES6 文档&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Webpack-Gulp&quot;&gt;&lt;a href=&quot;#Webpack-Gulp&quot; class=&quot;headerlink&quot; title=&quot;Webpack/Gulp&quot;&gt;&lt;/a&gt;Webpack/Gulp&lt;/h2&gt;&lt;h4 id=&quot;Webpack&quot;&gt;&lt;a href=&quot;#Webpack&quot; class=&quot;headerlink&quot; title=&quot;Webpack&quot;&gt;&lt;/a&gt;Webpack&lt;/h4&gt;&lt;p&gt;上文提到，我们用了 Vue，用了 ES6，用了很多新特性新东西，但是对于浏览器来说，这些东西浏览器是没有办法直接运行的，所以需要有构建这一过程，我们选择了 webpack 这个工具。  &lt;/p&gt;
+&lt;p&gt;webpack 是一个灵活的模块打包工具，搭配不同的 plugin 和 loader 可以打包几乎所有 js 方言，css 方言，不同的模板文件，最后生成可供浏览器直接运行的 js 文件。  &lt;/p&gt;
+&lt;p&gt;客服平台的 webpack 配置在 &lt;code&gt;gulpfile.js&lt;/code&gt; 文件的 &lt;code&gt;webpackConfig&lt;/code&gt; 变量中，具体可以看代码。  &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://webpack.github.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;webpack 文档&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;Gulp&quot;&gt;&lt;a href=&quot;#Gulp&quot; class=&quot;headerlink&quot; title=&quot;Gulp&quot;&gt;&lt;/a&gt;Gulp&lt;/h4&gt;&lt;p&gt;除了 webpack 用来打包构建之外，还有一些额外的自动化工作需要完成，比如图片的拷贝，静态资源更改 hash 值以控制缓存，打包四个环境不同的 bundle 包等，这一部分我们选择了 gulp 来完成。  &lt;/p&gt;
+&lt;p&gt;gulp 主要利用 NodeJs 文件流的概念在内存中操作文件，减少 IO 操作，能够更加快速的完成复杂的构建工作。  &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.gulpjs.com.cn/docs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;gulp 文档&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Sass-Jade&quot;&gt;&lt;a href=&quot;#Sass-Jade&quot; class=&quot;headerlink&quot; title=&quot;Sass/Jade&quot;&gt;&lt;/a&gt;Sass/Jade&lt;/h2&gt;&lt;h4 id=&quot;Sass&quot;&gt;&lt;a href=&quot;#Sass&quot; class=&quot;headerlink&quot; title=&quot;Sass&quot;&gt;&lt;/a&gt;Sass&lt;/h4&gt;&lt;p&gt;一个 css 方言，提供了嵌套的书写方式，css 的变量定义，逻辑控制功能等。  &lt;/p&gt;
+&lt;p&gt;客服平台使用的是页面构建组提供的 sass 源码，最后使用 gulp 编译成浏览器可识别的 css。  &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://sass.bootcss.com/docs/sass-reference/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;sass 文档&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;Jade-Pug&quot;&gt;&lt;a href=&quot;#Jade-Pug&quot; class=&quot;headerlink&quot; title=&quot;Jade(Pug)&quot;&gt;&lt;/a&gt;Jade(Pug)&lt;/h4&gt;&lt;p&gt;HTML 模板引擎，页面构建组使用的 HTML 方言，用更加简洁的方式书写 HTML，也可以在 HTML 中加以逻辑，写出更加强大健壮的 HTML 模板。  &lt;/p&gt;
+&lt;p&gt;客服平台使用的是页面构建组提供的生成后的普通 HTML 文件。  &lt;/p&gt;
+&lt;p&gt;已更名为 Pug 。  &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://jade-lang.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;pug 文档&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Git&quot;&gt;&lt;a href=&quot;#Git&quot; class=&quot;headerlink&quot; title=&quot;Git&quot;&gt;&lt;/a&gt;Git&lt;/h2&gt;&lt;p&gt;客服平台的所有代码，都托管在公司的 gitlab 上，项目地址是： &lt;code&gt;http://gitlab.intra.gomeplus.com/gomeplusFED/CSP&lt;/code&gt;。  &lt;/p&gt;
+&lt;p&gt;配合 git ，我们完成了一套完整的开发发布流程。  &lt;/p&gt;
+&lt;h2 id=&quot;Webscoket&quot;&gt;&lt;a href=&quot;#Webscoket&quot; class=&quot;headerlink&quot; title=&quot;Webscoket&quot;&gt;&lt;/a&gt;Webscoket&lt;/h2&gt;&lt;h4 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h4&gt;&lt;p&gt;WebSocket协议，代替原先http协议的1s轮询，能更好的节省服务器资源和带宽并达到实时通讯，本项目用于客服与买家的实时通讯聊天、表情、上传图片、接收图片音频视频。   &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;figure class=&quot;highlight js&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 创建一个Socket实例&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; socket = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; WebSocket(&lt;span class=&quot;string&quot;&gt;&#39;ws://localhost:8080&#39;&lt;/span&gt;); &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// 打开Socket &lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;socket.onopen = &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;event&lt;/span&gt;) &lt;/span&gt;&amp;#123; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 发送一个初始化消息&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    socket.send(&lt;span class=&quot;string&quot;&gt;&#39;I am the client and I\&#39;m listening!&#39;&lt;/span&gt;); &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 监听消息&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    socket.onmessage = &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;event&lt;/span&gt;) &lt;/span&gt;&amp;#123; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;Client received a message&#39;&lt;/span&gt;,event); &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 监听Socket的关闭&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    socket.onclose = &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;event&lt;/span&gt;) &lt;/span&gt;&amp;#123; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;Client notified socket has closed&#39;&lt;/span&gt;,event); &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;   &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 监听Socket报错&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    socket.onerror = &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(&lt;span class=&quot;params&quot;&gt;event&lt;/span&gt;) &lt;/span&gt;&amp;#123; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;Client notified socket has error&#39;&lt;/span&gt;,event); &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 关闭Socket.... &lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;//socket.close() &lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&quot;断开重连机制&quot;&gt;&lt;a href=&quot;#断开重连机制&quot; class=&quot;headerlink&quot; title=&quot;断开重连机制&quot;&gt;&lt;/a&gt;断开重连机制&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;断网重连&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;关闭重连&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;异常重连&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;客服选择在线重连    &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;https://msdn.microsoft.com/library/hh673567.aspx&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Webscoket 文档&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;业务详解&quot;&gt;&lt;a href=&quot;#业务详解&quot; class=&quot;headerlink&quot; title=&quot;业务详解&quot;&gt;&lt;/a&gt;业务详解&lt;/h2&gt;&lt;h4 id=&quot;目录结构&quot;&gt;&lt;a href=&quot;#目录结构&quot; class=&quot;headerlink&quot; title=&quot;目录结构&quot;&gt;&lt;/a&gt;目录结构&lt;/h4&gt;&lt;pre&gt;&lt;code&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;48&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;49&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;50&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;51&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;52&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;53&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;54&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;55&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;56&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;57&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;58&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;59&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;├── src                             源码文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   ├── font                            font 文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   ├── img                             img 文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   ├── css                             css 文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   │   ├── app.scss                        样式主入口&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   │   ├── common                          基础样式文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   │   ├── module                          业务样式文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   │   │   └── all.scss                        所有业务样式&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   │   └── vendors                         第三方插件样式&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│   └── js                              js 文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── app.js                          app 入口文件 （定义路由表，启动项目，过滤ajax请求等）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── debug.js                        debug 文件 （定义一些全局变量，在控制台直接调用）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── base                            基础功能文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── component                       组件文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   ├── app.vue                         入口组件 （组织全局组件，定义路由容器）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   ├── base                            全局组件 （alert、loading组件等）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   ├── common                          通用组件 （导航、时间选择器、头部、尾部等）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   ├── dashboard                       dashboard 路由下所有组件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── account-manage.vue              账户管理&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── chat-record.vue                 聊天记录&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── common-msg.vue                  常用语&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── config.vue                      配置管理&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── index.vue                       首页&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   └── password.vue                    修改密码&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   ├── form                            通用表单组件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   ├── im                              im 路由下所有组件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── common_msg.vue                  常用语&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── contacts.vue                    联系人&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── header.vue                      头部 &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   ├── index.vue                       首页&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   │   └── record.vue                      聊天记录&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   └── login                           登陆组件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── config                              配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   ├── env                                 环境设置&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       │   └── http.json                           AJAX 请求跟路径配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── directive                           指令文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── filter                              过滤器文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── store                               vuex 文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       ├── util                                工具函数文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;│       └── vendors                             第三方插件文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── dist                            编译打包生成的dist文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── app.babel.js                    node 执行文件入口 （babel引导）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── app.js                          web server 入口文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── gulpfile.js                     gulp 配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── index.html                      view 首页&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── node_modules                    依赖文件夹 （npm install 后会出现）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── package.json                    依赖管理配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── config.json                     项目配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── README.md                       README&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── .babelrc                        babel 配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── .bin                            脚本文件夹 （格式化文件脚本）&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── .gitignore                      git 忽略规则&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── doc                             文档文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── demo                            demo &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── ui                              页面构建组提供的 ui 文件夹&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── development                     开发环境编译打包后产出目录&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── test                            测试环境编译打包后产出目录&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;├── pre-production                  预生产环境编译打包后产出目录&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;└── production                      生产环境编译打包后产出目录&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&quot;业务结构划分&quot;&gt;&lt;a href=&quot;#业务结构划分&quot; class=&quot;headerlink&quot; title=&quot;业务结构划分&quot;&gt;&lt;/a&gt;业务结构划分&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;登录&lt;br&gt;  &lt;code&gt;/src/js/component/login/index.vue&lt;/code&gt;&lt;br&gt;  &lt;code&gt;/#!/login&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;欢迎页&lt;br&gt;  &lt;code&gt;/src/js/component/dashboard/index.vue&lt;/code&gt;&lt;br&gt;  &lt;code&gt;/#!/dashboard&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;用户管理&lt;br&gt;  &lt;code&gt;/src/js/component/dashboard/account-manage.vue&lt;/code&gt;&lt;br&gt;  &lt;code&gt;/#!/dashboard/account-manage&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;聊天记录查询&lt;br&gt;  &lt;code&gt;/src/js/component/dashboard/chat-record.vue&lt;/code&gt;&lt;br&gt;  &lt;code&gt;/#!/dashboard/chat-record&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;常用语&lt;br&gt;  &lt;code&gt;/src/js/component/dashboard/common-msg.vue&lt;/code&gt;&lt;br&gt;  &lt;code&gt;/#!/dashboard/common-msg&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;系统配置管理&lt;br&gt;  &lt;code&gt;/src/js/component/dashboard/config.vue&lt;/code&gt;&lt;br&gt;  &lt;code&gt;/#!/dashboard/config&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;修改密码&lt;br&gt;  &lt;code&gt;/src/js/component/dashboard/password.vue&lt;/code&gt;&lt;br&gt;  &lt;code&gt;/#!/dashboard/password&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;IM&lt;br&gt;  &lt;code&gt;/src/js/component/im/index.vue&lt;/code&gt;&lt;br&gt;  &lt;code&gt;/#!/im&lt;/code&gt; &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;发布流程&quot;&gt;&lt;a href=&quot;#发布流程&quot; class=&quot;headerlink&quot; title=&quot;发布流程&quot;&gt;&lt;/a&gt;发布流程&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;git checkout dev&lt;/code&gt; 切换到dev更新到最新版本&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;git checkout pre-release&lt;/code&gt; 切换到pre-release分支&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;git merge dev&lt;/code&gt; merge dev分支到pre-release分支&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;git checkout release&lt;/code&gt; 切换到release 分支&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;git checkout pre-release ./src index.html package.json gulpfile.js&lt;/code&gt; 将 &lt;code&gt;./src index.html package.json gulpfile.js&lt;/code&gt; 等指定文件merge过来&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;npm run buildall&lt;/code&gt;  生成开发、测试、预生产、生产四个环境的待发布包裹&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;git commit -am &amp;quot;提交信息&amp;quot;&lt;/code&gt;  提交所有变动&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;git push origin release --force&lt;/code&gt;  覆盖式推送到远程release分支&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;通知BS发布对应环境的包裹&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;本地调试&quot;&gt;&lt;a href=&quot;#本地调试&quot; class=&quot;headerlink&quot; title=&quot;本地调试&quot;&gt;&lt;/a&gt;本地调试&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;git clone http://gitlab.intra.gomeplus.com/gomeplusFED/CSP.git&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;cd CSP&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;npm install -d&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;npm run localdev&lt;/code&gt; 本地开发，连接AMP平台&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;npm run localtest&lt;/code&gt; 本地开发，连接后台人员本机&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;node app.babel.js&lt;/code&gt; 开启本地静态资源服务&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;ifconfig(mac)\ipconfig(win)&lt;/code&gt; 查看ip&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;http://&lt;/code&gt; +  ip  +  &lt;code&gt;:1234/#!/login&lt;/code&gt; 访问地址&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;可以通过修改 &lt;code&gt;/src/js/config/http.json&lt;/code&gt; 文件改变各个环境地址   &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;http.json&lt;/code&gt; 文件&lt;/p&gt;
+  &lt;figure class=&quot;highlight json&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;&quot;localdev&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;http://10.69.205.26:9090/mock/5742c66eb094235129ee29b5&quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;&quot;localtest&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;http://10.125.2.43:6080/venus-crm-rest&quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;&quot;development&quot;&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;&quot;http://10.69.201.13:8080/venus-crm-rest&quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;&quot;test&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;http://10.125.2.43:6080/venus-crm-rest&quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;&quot;pre-production&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;http://10.125.2.10:8093/venus-crm-rest/&quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attr&quot;&gt;&quot;production&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;http://10.125.139.206:8093/venus-crm-rest&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Vue&quot;&gt;&lt;a href=&quot;#Vue&quot; class=&quot;headerlink&quot; title=&quot;Vue&quot;&gt;&lt;/a&gt;Vue&lt;/h2&gt;&lt;p&gt;Vue是一个构建数据驱动的 web 界面的库，也就是一个以 MVVM 为核心的库。  &lt;/p&gt;
+&lt;h4 id=&quot;为什么选择Vue&quot;&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>我的sublime配置</title>
     <link href="http://luoye.pw/blog/2016/06/23/%E6%88%91%E7%9A%84sublime%E9%85%8D%E7%BD%AE/"/>
     <id>http://luoye.pw/blog/2016/06/23/我的sublime配置/</id>
     <published>2016-06-23T02:10:51.000Z</published>
-    <updated>2016-06-23T02:48:03.000Z</updated>
+    <updated>2016-07-13T03:27:06.000Z</updated>
     
-    <content type="html">&lt;h2 id=&quot;先放几张图&quot;&gt;&lt;a href=&quot;#先放几张图&quot; class=&quot;headerlink&quot; title=&quot;先放几张图&quot;&gt;&lt;/a&gt;先放几张图&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;代码&lt;br&gt;&lt;img src=&quot;./1.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;Markdown&lt;br&gt;&lt;img src=&quot;./2.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&quot;功能插件&quot;&gt;&lt;a href=&quot;#功能插件&quot; class=&quot;headerlink&quot; title=&quot;功能插件&quot;&gt;&lt;/a&gt;功能插件&lt;/h2&gt;&lt;ul&gt;
+    <content type="html">&lt;h2 id=&quot;功能插件&quot;&gt;&lt;a href=&quot;#功能插件&quot; class=&quot;headerlink&quot; title=&quot;功能插件&quot;&gt;&lt;/a&gt;功能插件&lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Emmet&lt;/p&gt;
 &lt;p&gt;  写 &lt;code&gt;html&lt;/code&gt; 的利器，不用多说&lt;/p&gt;
 &lt;/li&gt;
@@ -55,14 +221,19 @@
 &lt;p&gt;  仿 Atom 的语法着色，完成度百分百&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;h2 id=&quot;放几张图&quot;&gt;&lt;a href=&quot;#放几张图&quot; class=&quot;headerlink&quot; title=&quot;放几张图&quot;&gt;&lt;/a&gt;放几张图&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;代码&lt;br&gt;&lt;img src=&quot;./1.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;Markdown&lt;br&gt;&lt;img src=&quot;./2.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;想开箱即用？打开 &lt;code&gt;Preferences -&amp;gt; Browse Packages&lt;/code&gt;，备份 &lt;code&gt;Packahes&lt;/code&gt; 文件下的内容，在此文件夹打开命令行，执行 &lt;code&gt;git clone https://github.com/luoye-fe/sublimeTextConfig.git ./&lt;/code&gt;，完成后打开 sublime 等待各种插件安装完成即可。  &lt;/p&gt;
 </content>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;先放几张图&quot;&gt;&lt;a href=&quot;#先放几张图&quot; class=&quot;headerlink&quot; title=&quot;先放几张图&quot;&gt;&lt;/a&gt;先放几张图&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;代码&lt;br&gt;&lt;img src=&quot;./1.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;Markd
+      &lt;h2 id=&quot;功能插件&quot;&gt;&lt;a href=&quot;#功能插件&quot; class=&quot;headerlink&quot; title=&quot;功能插件&quot;&gt;&lt;/a&gt;功能插件&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Emmet&lt;/p&gt;
+&lt;p&gt;  写 &lt;code&gt;html&lt;/code&gt; 的利器，不用多说&lt;/p&gt;
+&lt;/li&gt;
     
     </summary>
     
