@@ -5,7 +5,7 @@
   <link href="/blog/atom.xml" rel="self"/>
   
   <link href="http://luoye.pw/blog/"/>
-  <updated>2016-07-14T08:32:40.000Z</updated>
+  <updated>2016-07-22T06:00:47.000Z</updated>
   <id>http://luoye.pw/blog/</id>
   
   <author>
@@ -14,6 +14,74 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>git相关</title>
+    <link href="http://luoye.pw/blog/2016/07/21/git%E7%9B%B8%E5%85%B3/"/>
+    <id>http://luoye.pw/blog/2016/07/21/git相关/</id>
+    <published>2016-07-21T13:54:30.000Z</published>
+    <updated>2016-07-22T06:00:47.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;git-开始&quot;&gt;&lt;a href=&quot;#git-开始&quot; class=&quot;headerlink&quot; title=&quot;git 开始&quot;&gt;&lt;/a&gt;git 开始&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://git-scm.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git 下载&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://git-for-windows.github.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git for windows&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;git-文章推荐&quot;&gt;&lt;a href=&quot;#git-文章推荐&quot; class=&quot;headerlink&quot; title=&quot;git 文章推荐&quot;&gt;&lt;/a&gt;git 文章推荐&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.runoob.com/manual/git-guide/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git 简明指南&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;廖雪峰-Git教程&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://git-scm.com/docs&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git 官方文档 - 所有命令&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/fanfan259/p/4810517.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git 常用命令收集&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.jianshu.com/p/104fa8b15d1e&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git flow 讲解&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://nvie.com/posts/a-successful-git-branching-model/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git flow 模型原文&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;git flow 将是我们遵循的开发流程。当然，会根据具体业务做相应调整，但是原理不变&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/fanyong/p/3962455.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;gitlab/github多账户管理ssh&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ssh 简单来说就是一种加密通信手段，服务器保存一段密文，你本地保存一段密文，互相通信就不再需要帐号密码&lt;/p&gt;
+&lt;p&gt;所以，在 git 中提交代码时，如果不想每次输入帐号密码，可以用 ssh 达到验证账户的目的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;git-图形化工具推荐&quot;&gt;&lt;a href=&quot;#git-图形化工具推荐&quot; class=&quot;headerlink&quot; title=&quot;git 图形化工具推荐&quot;&gt;&lt;/a&gt;git 图形化工具推荐&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;除了使用 git bash 用命令行的方式进行 git 操作，同样有很棒的图形化工具提高工作效率&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://www.sourcetreeapp.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Source Tree&lt;/a&gt;（需翻墙下载）&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Source Tree 群里有分享文件 1.8.3 版本&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;git-其他&quot;&gt;&lt;a href=&quot;#git-其他&quot; class=&quot;headerlink&quot; title=&quot;git 其他&quot;&gt;&lt;/a&gt;git 其他&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://learngitbranching.js.org/?demo&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git 动画演示&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://onlywei.github.io/explain-git-with-d3/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;git 操作实时动画&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/wicub/p/3646070.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;githug&lt;/a&gt;（git 小游戏）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.jianshu.com/p/482b32716bbe&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;github 通关攻略&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;git-开始&quot;&gt;&lt;a href=&quot;#git-开始&quot; class=&quot;headerlink&quot; title=&quot;git 开始&quot;&gt;&lt;/a&gt;git 开始&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://git-scm.com/&quot; target=&quot;_blank
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>客服平台总结</title>
