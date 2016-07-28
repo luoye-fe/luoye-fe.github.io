@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<div id="app">
+		<h1>CurrentPage:{{config.currentPage}}</h1>
+		<v-pagination :pagination-config="config"></v-pagination>
+	</div>
+	<script type="text/javascript" src="http://cdn.bootcss.com/vue/1.0.26/vue.js"></script>
+	<script type="text/javascript" src="./vue-pagination.min.js"></script>
+	<script type="text/javascript">
+		new Vue({
+			el: '#app',
+			data: {
+				config: {
+					firstStr: '首页',
+					prevStr: '上一页',
+					nextStr: '下一页',
+					lastStr: '末页',
+					// first: false,
+					// prev: false,
+					// next: false,
+					// last: false,
+					// normal: false,
+					currentPage: 1,
+					itemsPerPage: 5,
+					pagesLength: 7,
+					totalItems: 0,
+					onChange: function() {}
+				}
+			},
+			ready() {
+				var _this = this;
+
+				// async operation to get totalItems
+				setTimeout(function() {
+					// end of the async operation, you should set totalItems then pagination component will show
+					_this.config.totalItems = 100;
+				}, 1000);
+
+				// Invoked when currentPage change
+				this.config.onChange = function() {
+					console.log(_this.config.currentPage);
+				}
+			}
+		})
+	</script>
+</body>
+</html>
