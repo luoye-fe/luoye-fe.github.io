@@ -3,7 +3,7 @@ var countdown;
 var init = function(){
 	
 	countdown = CountDown.init({
-		startTime: '2016/09/15 01:00',
+		startTime: '2016/09/16 01:00',
 		unit: {
 			day: true,
 			hour: true,
