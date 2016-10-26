@@ -1,0 +1,179 @@
+body {
+	background-color: #fdf8e2;
+}
+.head img{
+	display: block;
+	width: 100%;
+}
+
+.content{
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0 8px;
+}
+.content .item {
+	width: 100%;
+}
+
+.content .item .title {
+	width: 100%;
+	margin: 10px auto;
+}
+.content .item .title img{
+	display: block;width: 100%;
+}
+
+.content .item .tab{
+	width: 100%;
+	font-size: 0;
+	background-color: #dd3d8a;
+	margin-top: 5px;
+}
+.content .item .tab li {
+	font-size: 12px;
+	color: #fff;
+	width: 24%;
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 24px;
+	text-align: center;
+}
+.content .item .tab li:nth-child(3){
+	width: 28%;
+}
+.content .item .tab li.active{
+	background-color: #ac2667;
+}
+
+.column-con{
+	width: 100%;
+	margin-top: 4px;
+}
+
+.column-con .column-item{
+	width: 100%;
+}
+
+.trips {
+	width: 100%;
+	font-size: 0;
+}
+.trips .trip{
+	display: inline-block;
+	vertical-align: top;
+	width: 49%;
+	background-color: #fff;
+	margin-top: 8px;
+}
+.trips .trip:nth-child(odd){
+	margin-right: 2%;
+}
+.trips .trip .trip-head{
+	width: 100%;
+	position: relative;
+}
+.trips .trip .trip-head span{
+	position: absolute;top: 0;left: 0;
+	font-size: 12px;
+	background-color: #ffda00;
+	color: #000;
+	padding: 1px;
+}
+.trips .trip .trip-head img{
+	width: 100%;
+}
+.trips .trip .trip-title {
+	color: #666;
+	font-size: 14px;
+	padding: 0 8px;
+	box-sizing: border-box;
+	line-height: 24px;
+}
+.trips .trip .trip-desc {
+	color: #888;
+	font-size: 12px;
+	box-sizing: border-box;
+	padding: 0 8px;
+}
+.trips .trip .price-con{
+	padding: 0 8px;
+	box-sizing: border-box;
+	width: 100%;
+	font-size: 0;
+}
+.trips .trip .price-con img{
+	display: inline-block;
+	vertical-align: middle;
+	width: 15px;	
+	line-height: 20px;
+	margin-right: 5px;
+}
+.trips .trip .price-con .price{
+	color: #ab2769;
+	display: inline-block;vertical-align: middle;
+	font-size: 14px;
+	line-height: 20px;
+	margin-right: 2px;
+	margin-top: -4px;
+}
+.trips .trip .price-con em{
+	color: #666;
+	font-size: 12px;
+	line-height: 20px;
+	display: inline-block;vertical-align: middle;
+	font-style: normal;
+}
+.trips .trip>a {
+	font-size: 16px;
+	display: block;
+	width: 75%;
+	border-radius: 15px;
+	text-align: center;
+	color: #fff;
+	line-height: 24px;
+	background-color: #ff4a43;
+	margin: 10px auto;
+}
+
+.contry {
+	width: 100%;
+	font-size: 0;
+	margin-top: 5px;
+}
+
+.contry li {
+	display: inline-block;vertical-align: middle;
+	width: 25%;
+	padding: 0 2px;
+	box-sizing: border-box;
+	margin-top: 2px;
+}
+
+.contry li img {
+	display: block;width: 100%;
+}
+.contry li p {
+	font-size: 12px;
+	background-color: #fff;
+	text-align: center;
+	line-height: 22px;
+	color: #666666;
+}
+
+.fotter {
+	width: 100%;
+	margin-top: 10px;
+}
+
+.fotter img {
+	display: block;width: 10px;margin: 0 auto;
+}
+.fotter .fotter-bg {
+	width: 100%;
+	background-image: url('../images/h51/fotter.jpg');
+	margin-top: 3px;
+	color: #fff;
+	text-align: center;
+	font-size: 12px;
+	line-height: 24px;
+}
