@@ -88,12 +88,25 @@ body {
 	padding: 0 8px;
 	box-sizing: border-box;
 	line-height: 24px;
+	overflow : hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
 }
 .trips .trip .trip-desc {
 	color: #888;
 	font-size: 12px;
 	box-sizing: border-box;
 	padding: 0 8px;
+	position: relative;
+	line-height: 20px;
+	height: 40px;
+	overflow : hidden;
+	display: -webkit-box;
+	text-overflow: ellipsis;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 }
 .trips .trip .price-con{
 	padding: 0 8px;
@@ -114,7 +127,6 @@ body {
 	font-size: 14px;
 	line-height: 20px;
 	margin-right: 2px;
-	margin-top: -4px;
 }
 .trips .trip .price-con em{
 	color: #666;
