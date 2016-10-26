@@ -28,8 +28,8 @@
 }
 
 .side{
-	position: absolute;right: 0px;
-	top: 1200px;
+	position: fixed;right: 0px;
+	top: 200px;
 	z-index: 999;
 }
 .side-main{
