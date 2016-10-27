@@ -29,7 +29,7 @@
 
 .side{
 	position: fixed;right: 0px;
-	top: 200px;
+	top: 80px;
 	z-index: 999;
 }
 .side-main{
@@ -85,6 +85,9 @@
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
 	box-sizing: border-box;
+}
+.side-main .side-main-item .tap-ul li a {
+	color: #fff;
 }
 .side-main .side-main-item .tap-ul li:nth-child(odd){
 	border-right: 1px solid #fff;

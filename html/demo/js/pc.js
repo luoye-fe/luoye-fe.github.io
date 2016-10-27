@@ -19,20 +19,28 @@ $('.tab li').on('click', function() {
 	})
 })
 
-$('.tap-main').on('click', function() {
-	var index = $(this).parent().index();
-	$('.tap-main').removeClass('active');
-	$(this).addClass('active');
-	$('.tap-ul').css({
-		display: 'none'
-	})
-	$('.tap-ul').eq(index).css({
-		display: 'block'
-	})
-})
+// $('.tap-main').on('click', function() {
+// 	var index = $(this).parent().index();
+// 	$('.tap-main').removeClass('active');
+// 	$(this).addClass('active');
+// 	$('.tap-ul').css({
+// 		display: 'none'
+// 	})
+// 	$('.tap-ul').eq(index).css({
+// 		display: 'block'
+// 	})
+// })
 
 $('.tap-ul li').on('click', function(){
 	var index = $(this).index();
 	var parIndex = $(this).parent().parent().index();
 	$('.tab').eq(parIndex).find('li').eq(index).trigger('click');
+})
+
+$(document).on('scroll', function() {
+	if ($(document).scrollTop() > 944) {
+		$('.side').fadeIn();
+	} else {
+		$('.side').fadeOut();
+	}
 })
