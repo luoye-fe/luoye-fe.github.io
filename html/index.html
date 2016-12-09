@@ -71,6 +71,7 @@
 		z-index: -1;
 		top: 0;
 		left: 0;
+
 	}
 	</style>
 	<div class="main">
@@ -80,14 +81,22 @@
 		<p><a target="_blank" href="http://goh5.luoye.pw">GoH5 - Visual H5 Editor</a></p>
 	</div>
 	<canvas id="canvas"></canvas>
-	<script src="http://cdn.bootcss.com/trianglify/0.4.0/trianglify.min.js"></script>
+	<script src="http://cdn.bootcss.com/granim/1.0.31/granim.min.js"></script>
 	<script>
-	var pattern = Trianglify({
-		width: window.innerWidth,
-		height: window.innerHeight,
-		cell_size: 75
+	var granimInstance = new Granim({
+	    element: '#canvas',
+	    opacity: [1, .5, 0],
+	    isPausedWhenNotInView: true,
+	    states : {
+	        "default-state": {
+	            gradients: [
+	                ['#485563', '#29323c', '#29323c'],
+	                ['#00c6ff', '#0072ff', '#0072ff']
+	            ],
+	            transitionSpeed: 10000
+	        }
+	    }
 	});
-	pattern.canvas(document.getElementById('canvas'));
 	</script>
 	</script>
 </body>
