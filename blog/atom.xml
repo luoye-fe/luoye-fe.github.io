@@ -5,7 +5,7 @@
   <link href="/blog/atom.xml" rel="self"/>
   
   <link href="https://luoyefe.com/blog/"/>
-  <updated>2017-03-29T06:33:25.000Z</updated>
+  <updated>2017-06-07T07:04:08.000Z</updated>
   <id>https://luoyefe.com/blog/</id>
   
   <author>
@@ -14,6 +14,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>nginx将多个服务代理到同一域名</title>
+    <link href="https://luoyefe.com/blog/2017/06/07/nginx%E5%B0%86%E5%A4%9A%E4%B8%AA%E6%9C%8D%E5%8A%A1%E4%BB%A3%E7%90%86%E5%88%B0%E5%90%8C%E4%B8%80%E5%9F%9F%E5%90%8D/"/>
+    <id>https://luoyefe.com/blog/2017/06/07/nginx将多个服务代理到同一域名/</id>
+    <published>2017-06-07T06:38:59.000Z</published>
+    <updated>2017-06-07T07:04:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>有时候需要将来自不同端口的服务代理到同一个域名上，利用 <code>nginx</code> 可以轻易实现这样的需求，记录如下。  </p>
+<p>需求如下，两个 <code>node</code> 服务分别启动在 <code>8888</code> 和 <code>9999</code> 端口，然后在访问时需要将 <code>api.com/version1</code> 代理到 <code>127.0.0.1:8888</code>，将 <code>api.com/version2</code> 代理到 <code>127.0.0.1:9999</code>。  </p>
+<p>利用 <code>nginx</code> 的 <code>location</code>，搭配 <code>proxy_pass</code> 来实现此功能的伪代码如下。  </p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="section">server</span> &#123;</div><div class="line">	<span class="attribute">listen</span> <span class="number">80</span>;</div><div class="line">	<span class="attribute">server_name</span> api.com;</div><div class="line"></div><div class="line">	<span class="attribute">location</span> / &#123;</div><div class="line">		<span class="attribute">root</span> /root/www;</div><div class="line">		<span class="attribute">index</span> index.html;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="attribute">location</span><span class="regexp"> ^~</span> /version1/ &#123;</div><div class="line">		<span class="attribute">proxy_pass</span> http://127.0.0.1:8888/;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="attribute">location</span><span class="regexp"> ^~</span> /version2/ &#123;</div><div class="line">		<span class="attribute">proxy_pass</span> http://127.0.0.1:9999/;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>此时，访问 <code>api.com/version1/getUserInfo</code> 将访问到 <code>127.0.0.1:8888/getUserInfo</code>，同理，访问 <code>api.com/version2/getUserInfo</code> 将访问到 <code>127.0.0.1:9999/getUserInfo</code>。  </p>
+<p><strong>注意</strong>：<code>proxy_pass</code> 最后的 <code>/</code> 不能丢，否则，<code>api.com/version1/getUserInfo</code> 将访问到 <code>127.0.0.1:8888/version1/getUserInfo</code>。  </p>
+<p><code>location</code> 的匹配规则与优先级的详细可以访问，<a href="http://seanlook.com/2015/05/17/nginx-location-rewrite/?from=https%3A%2F%2Fluoyefe.com" target="_blank" rel="external">nginx配置location总结及rewrite规则写法</a>。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;有时候需要将来自不同端口的服务代理到同一个域名上，利用 &lt;code&gt;nginx&lt;/code&gt; 可以轻易实现这样的需求，记录如下。  &lt;/p&gt;
+&lt;p&gt;需求如下，两个 &lt;code&gt;node&lt;/code&gt; 服务分别启动在 &lt;code&gt;8888&lt;/code&gt; 和 &lt;code&gt;999
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>豆瓣阅读的文字解码</title>
