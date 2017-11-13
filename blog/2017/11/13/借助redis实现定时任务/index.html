@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 借助redis实现定时任务 · LUOYE</title><meta name="description" content="借助redis实现定时任务 - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/blog/favicon.ico"><link rel="stylesheet" href="/blog/css/apollo.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="/blog/logo.png"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="http://ss.luoyefe.com" target="_blank" class="nav-list-link">SHADOWSOCKS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">借助redis实现定时任务</h1><div class="post-info">2017年11月13日</div><div class="post-content"><p>在 nodejs 中实现定时任务可以使用 <a href="https://github.com/node-schedule/node-schedule" target="_blank" rel="external">node-schedule</a> ，但是无法持久化，脚本停止后，不仅任务停止，再次启动也无法恢复未完成的定时任务。</p>
+<p>当然也可以使用 crontab 这种方案，但是较为麻烦，其实可以简单的使用 redis 的 pub/sub 功能实现定时任务。</p>
+<p>pub/sub 功能简单来说就是，当某个事件被触发时 redis 会向监听此事件的频道推送消息，所以，如果我们监听 redis 中某个 key 的过期事件，即可完成定时任务功能。</p>
+<h2 id="redis-配置"><a href="#redis-配置" class="headerlink" title="redis 配置"></a>redis 配置</h2><p>redis 默认未启用 pub/sub 功能，需手动开启。</p>
+<p>配置 <code>redis.conf</code> 的 <code>notify-keyspace-events</code> 字段来开启此功能，其值可以为以下值：</p>
+<ul>
+<li><p><strong>K</strong>，表示 <code>keyspace</code> 事件，有这个字母表示会往 <code>__keyspace@[db]__:[event]</code> 频道推消息</p>
+</li>
+<li><p><strong>E</strong>，表示 <code>keyevent</code> 事件，有这个字母表示会往 <code>__keyevent@[db]__:[event]</code> 频道推消息</p>
+</li>
+<li><p><strong>g</strong>，表示一些通用指令事件支持，如 <code>DEL</code>、<code>EXPIRE</code>、<code>RENAME</code> 等等</p>
+</li>
+<li><p><strong>$</strong>，表示字符串（String）相关指令的事件支持</p>
+</li>
+<li><p><strong>l</strong>，表示列表（List）相关指令事件支持</p>
+</li>
+<li><p><strong>s</strong>，表示集合（Set）相关指令事件支持</p>
+</li>
+<li><p><strong>h</strong>，哈希（Hash）相关指令事件支持</p>
+</li>
+<li><p><strong>z</strong>，有序集（Sorted Set）相关指令事件支持</p>
+</li>
+<li><p><strong>x</strong>，过期事件，与 <strong>g</strong> 中的 <code>EXPIRE</code> 不同的是，<strong>g</strong> 的 <code>EXPIRE</code> 是指执行 <code>EXPIRE key ttl</code> 这条指令的时候顺便触发的事件，而这里是指那个 <code>key</code> 刚好过期的这个时间点触发的事件，即主动与被动的区别</p>
+</li>
+<li><p><strong>e</strong>，驱逐事件，一个 <code>key</code> 由于内存上限而被驱逐的时候会触发的事件</p>
+</li>
+<li><p><strong>A</strong>，<code>g$lshzxe</code> 的别名，也就是说 <code>AKE</code> 的意思就代表了所有的事件</p>
+</li>
+</ul>
+<p>我们要实现定时任务功能，所以需要配置 过期事件，即将 <code>notify-keyspace-events</code> 配置为 <code>Ex</code>。</p>
+<p>配置完成启动 redis 后，可以通过，<code>redis-cli config get notify-keyspace-events</code> 命令来验证是否生效。</p>
+<h2 id="redis-事件名规则"><a href="#redis-事件名规则" class="headerlink" title="redis 事件名规则"></a>redis 事件名规则</h2><p><code>&quot;__keyevent@&quot; + DB_NUMBER + &quot;__:&quot; + EVENT_NAME</code></p>
+<p>EVENT_NAME: 如 <code>del</code> <code>expire</code> <code>rename</code> 等，具体可看 <a href="http://redisdoc.com/topic/notification.html" target="_blank" rel="external">redis-evnet-type</a></p>
+<h2 id="业务逻辑"><a href="#业务逻辑" class="headerlink" title="业务逻辑"></a>业务逻辑</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> PublishRedisStore = <span class="keyword">new</span> redis(); <span class="comment">// 发布事件 dbNum: 1</span></span><br><span class="line"><span class="keyword">const</span> SubscribeRedisStore = <span class="keyword">new</span> redis(); <span class="comment">// 订阅事件 dbNum: 2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 订阅者 redis 实例只允许 (P)SUBSCRIBE / (P)UNSUBSCRIBE / PING / QUIT 事件，所以需要两个 redis 实例来完成 pub/sub 功能</span></span><br><span class="line"></span><br><span class="line">SubscribeRedisStore.subscribe(<span class="string">'__keyevent@1__:expired'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">// 订阅 redis 数据库 1 的 key expired 事件</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">SubscribeRedisStore.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">channel, key</span>) </span>&#123;</span><br><span class="line">	<span class="comment">// channel 频道名称</span></span><br><span class="line">	<span class="comment">// key (value 已被删除，只能获取到 key 而拿不到 value)</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 PublishRedisStore 实例中设置某个 3s 后过期的值，key 过期时即可监听到，从而做相应处理</span></span><br><span class="line">PublishRedisStore.set(<span class="string">'textEvent'</span>, <span class="string">'textValue'</span>, <span class="string">'EX'</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>除了定时任务功能，借助 pub/sub 还可实现比如 队列消息、循环任务 等功能。</p>
+<p>但是一个比较大的限制就是任务时间只能精确到 s，而无法到 ms。</p>
+</div></article></div></section><footer><div class="paginator"><a href="/blog/2017/10/25/ss-ssl-复用端口/" class="next">下一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'luoyefe';
+var disqus_identifier = '2017/11/13/借助redis实现定时任务/';
+var disqus_title = '借助redis实现定时任务';
+var disqus_url = 'https://luoyefe.com/blog/2017/11/13/借助redis实现定时任务/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2017 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script></body></html>
