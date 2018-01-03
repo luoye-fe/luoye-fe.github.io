@@ -6,7 +6,7 @@
   <link href="/blog/atom.xml" rel="self"/>
   
   <link href="https://luoyefe.com/blog/"/>
-  <updated>2017-11-13T01:47:31.000Z</updated>
+  <updated>2018-01-03T10:55:24.515Z</updated>
   <id>https://luoyefe.com/blog/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用NodeJS借助阿里云dns解析API实现DDNS</title>
+    <link href="https://luoyefe.com/blog/2018/01/03/%E4%BD%BF%E7%94%A8NodeJS%E5%80%9F%E5%8A%A9%E9%98%BF%E9%87%8C%E4%BA%91dns%E8%A7%A3%E6%9E%90API%E5%AE%9E%E7%8E%B0DDNS/"/>
+    <id>https://luoyefe.com/blog/2018/01/03/使用NodeJS借助阿里云dns解析API实现DDNS/</id>
+    <published>2018-01-03T10:33:50.000Z</published>
+    <updated>2018-01-03T10:55:24.515Z</updated>
+    
+    <content type="html"><![CDATA[<p>DDNS，即动态DNS，简单来说就是服务器的 IP 地址经常变动，这个时候需要一个主动上报的服务来更新 DNS 的解析记录，保证域名指向正确的 IP 地址。  </p><p>比如在自己家中的树莓派上部署了某些服务，且路由器有公网 IP，由于每次重新拨号，公网 IP 都会变，所以想要根据域名去访问树莓派，必须做 DDNS。</p><p>DDNS 可以选择 花生壳，但是花生壳提供的 DDNS 服务无法自定义域名，配置起来也较为麻烦，所以这里用 NodeJS 来实现一个 DDNS 服务。</p><p><a href="https://github.com/luoye-fe/aliyun-ddns" target="_blank" rel="external">源码地址(https://github.com/luoye-fe/aliyun-ddns)</a></p><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><ul><li><p>定期获取本机公网 IP</p></li><li><p>比对当前 DNS 解析记录</p></li><li><p>如果不一致，调用阿里云的 API 更新 DNS 记录</p></li></ul><h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><ul><li><a href="https://help.aliyun.com/document_detail/29739.html" target="_blank" rel="external">阿里云 API</a></li></ul><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h4 id="获取公网-IP"><a href="#获取公网-IP" class="headerlink" title="获取公网 IP"></a>获取公网 IP</h4><p>访问 <code>http://ifconfig.me/ip</code> 获取本机外网 IP，注意需伪造 UA，不然403</p><h4 id="阿里云-API-接口鉴权"><a href="#阿里云-API-接口鉴权" class="headerlink" title="阿里云 API 接口鉴权"></a>阿里云 API 接口鉴权</h4><p>比较复杂，也比较坑爹，具体实现可以看放出的 git 源码</p><ul><li><p>把所有请求参数按顺序序列化</p></li><li><p>把所有请求参数拼接成 <code>encodeURIComponent(key)=encodeURIComponent(value)&amp;encodeURIComponent(key)=encodeURIComponent(value)</code> 的形式得到 <code>signStr</code></p></li><li><p>拼接字符串，<code>[请求方式]&amp;encodeURIComponent(&#39;/&#39;)&amp;[signStr]</code>，如 <code>GET&amp;%2F&amp;[signStr]</code></p></li><li><p>HMAC SHA1 加密，加密的 key 为 <code>[AccessKeySecret]&amp;</code>，注意最后的 <code>&amp;</code></p></li></ul><h4 id="获取当前解析记录"><a href="#获取当前解析记录" class="headerlink" title="获取当前解析记录"></a>获取当前解析记录</h4><p><code>DescribeSubDomainRecords</code></p><p>具体看文档</p><h4 id="更新或新增解析记录"><a href="#更新或新增解析记录" class="headerlink" title="更新或新增解析记录"></a>更新或新增解析记录</h4><p>根据当前解析记录的状态来确定是更新还是新增解析记录</p><p><code>AddDomainRecord</code> <code>UpdateDomainRecord</code></p><h4 id="定时运行"><a href="#定时运行" class="headerlink" title="定时运行"></a>定时运行</h4><p>使用的 <a href="https://github.com/node-schedule/node-schedule" target="_blank" rel="external">node-schedule</a></p><h4 id="服务常驻"><a href="#服务常驻" class="headerlink" title="服务常驻"></a>服务常驻</h4><p>使用的 <a href="https://npm.taobao.org/package/pm2" target="_blank" rel="external">pm2</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;DDNS，即动态DNS，简单来说就是服务器的 IP 地址经常变动，这个时候需要一个主动上报的服务来更新 DNS 的解析记录，保证域名指向正确的 IP 地址。  &lt;/p&gt;
+&lt;p&gt;比如在自己家中的树莓派上部署了某些服务，且路由器有公网 IP，由于每次重新拨号，公网 IP 都会变
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>借助redis实现定时任务</title>

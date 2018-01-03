@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://luoyefe.com/blog/2018/01/03/%E4%BD%BF%E7%94%A8NodeJS%E5%80%9F%E5%8A%A9%E9%98%BF%E9%87%8C%E4%BA%91dns%E8%A7%A3%E6%9E%90API%E5%AE%9E%E7%8E%B0DDNS/</loc>
+    
+    <lastmod>2018-01-03T10:55:24.515Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luoyefe.com/blog/2017/11/13/%E5%80%9F%E5%8A%A9redis%E5%AE%9E%E7%8E%B0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/</loc>
     
     <lastmod>2017-11-13T01:47:31.000Z</lastmod>
