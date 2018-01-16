@@ -6,7 +6,7 @@
   <link href="/blog/atom.xml" rel="self"/>
   
   <link href="https://luoyefe.com/blog/"/>
-  <updated>2018-01-03T10:55:24.515Z</updated>
+  <updated>2018-01-16T03:17:28.241Z</updated>
   <id>https://luoyefe.com/blog/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>30行代码的Google镜像站</title>
+    <link href="https://luoyefe.com/blog/2018/01/16/30%E8%A1%8C%E4%BB%A3%E7%A0%81%E7%9A%84Google%E9%95%9C%E5%83%8F%E7%AB%99/"/>
+    <id>https://luoyefe.com/blog/2018/01/16/30行代码的Google镜像站/</id>
+    <published>2018-01-16T02:45:28.000Z</published>
+    <updated>2018-01-16T03:17:28.241Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="DEMO-SO-FREEDOM"><a href="#DEMO-SO-FREEDOM" class="headerlink" title="DEMO: SO FREEDOM"></a><strong>DEMO: <a href="http://so.luoyefe.com/" target="_blank" rel="external">SO FREEDOM</a></strong></h4><h4 id="源码地址-https-github-com-luoye-fe-so"><a href="#源码地址-https-github-com-luoye-fe-so" class="headerlink" title="源码地址: https://github.com/luoye-fe/so/"></a><strong>源码地址: <a href="https://github.com/luoye-fe/so/" target="_blank" rel="external">https://github.com/luoye-fe/so/</a></strong></h4><p>又是一个充满噱头的标题 = =。</p><p>思路是在研究 <code>NodeJS</code> 代理时想到的小 trick，说是 30 行，其实最重要的只有一行，即：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">req.pipe(request(URL)).res;</span><br></pre></td></tr></table></figure><p>将客户端来的请求直接转发到相应的 URL 上，实现代理，基于这个原理，可以很容易的实现各种网站的镜像站点。</p><p>服务端代码加注释如下：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> URL = <span class="built_in">require</span>(<span class="string">'url'</span>);</span><br><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"><span class="keyword">const</span> request = <span class="built_in">require</span>(<span class="string">'request'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> port = <span class="number">9901</span>;</span><br><span class="line"><span class="keyword">const</span> homeHTML = fs.readFileSync(<span class="string">'./home.html'</span>, <span class="string">'utf-8'</span>); <span class="comment">// 自定义的首页内容</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">requestInstance</span>(<span class="params">url, ua</span>) </span>&#123;</span><br><span class="line"><span class="keyword">return</span> request(&#123;</span><br><span class="line">url,</span><br><span class="line">headers: &#123; <span class="string">'User-Agent'</span>: ua &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Server = http.createServer(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line"><span class="keyword">const</span> url = URL.parse(req.url, <span class="literal">true</span>);</span><br><span class="line"><span class="keyword">if</span> (url.pathname === <span class="string">'/'</span>) &#123;</span><br><span class="line"><span class="comment">// 自定义首页</span></span><br><span class="line">res.writeHeader(<span class="string">'200'</span>, &#123; <span class="string">'Contetn-Type'</span>: <span class="string">'text/html'</span> &#125;);</span><br><span class="line">fs.createReadStream(<span class="string">'./home.html'</span>).pipe(res);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (url.pathname === <span class="string">'/bg'</span>) &#123;</span><br><span class="line"><span class="comment">// 每日必应壁纸加速（给首页用，具体可看源码内逻辑）</span></span><br><span class="line">req.pipe(requestInstance(<span class="string">`https://bing.ioliu.cn/v1?<span class="subst">$&#123;url.search&#125;</span>`</span>, req.headers[<span class="string">'user-agent'</span>])).pipe(res);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="comment">// 这个就是最重要的一步了，将客户端来的请求，按照规则直接代理到 `google.com` 下</span></span><br><span class="line"><span class="comment">// 这样客户端拿到的内容也是谷歌返回的内容了</span></span><br><span class="line"><span class="comment">// 因为请求是服务端转发到谷歌，所以翻墙这一步也就免了</span></span><br><span class="line">req.pipe(requestInstance(<span class="string">`https://www.google.com/<span class="subst">$&#123;url.path&#125;</span>`</span>, req.headers[<span class="string">'user-agent'</span>])).pipe(res);</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 启动服务</span></span><br><span class="line">Server.listen(port, () =&gt; &#123;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`Server on port <span class="subst">$&#123;port&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><p>几行代码，完整可用的免翻墙 Google 搜索就完成了。</p><p>按这个思路来，任何网站都可以用这样的思路来玩耍，比如 <code>po**hub.com</code> ??</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;DEMO-SO-FREEDOM&quot;&gt;&lt;a href=&quot;#DEMO-SO-FREEDOM&quot; class=&quot;headerlink&quot; title=&quot;DEMO: SO FREEDOM&quot;&gt;&lt;/a&gt;&lt;strong&gt;DEMO: &lt;a href=&quot;http://so.luoyefe
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>使用NodeJS借助阿里云dns解析API实现DDNS</title>
