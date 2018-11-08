@@ -1,7 +1,0 @@
-.DS_Store
-.idea
-.gradle
-local.properties
-.project
-node_modules/
-npm-debug.log
