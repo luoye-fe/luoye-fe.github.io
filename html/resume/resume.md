@@ -9,8 +9,6 @@ tags:
 
 * Email：luoyefe@gmail.com
 
-* QQ：842891024
-
 * Wechat：l842891024
 
 ## 个人信息
