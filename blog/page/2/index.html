@@ -1,44 +1,72 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> LUOYE</title><meta name="description" content="luoye, blog, coder"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><ul class="home post-list"><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/06/09/js中的异步流程控制-Promise-Generators-Async-Await/" class="post-title-link">js中的异步流程控制--Promise/Generator/Async/Await</a></h2><div class="post-info">2016年6月9日</div><div class="post-content"><blockquote>
+<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> LUOYE</title><meta name="description" content="luoye, blog, coder"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"><link rel="stylesheet" href="/blog/css/prism.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><ul class="home post-list"><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2017/10/25/ss-ssl-复用端口/" class="post-title-link">shadowsocks/ssl 复用端口</a></h2><div class="post-info">2017年10月25日</div><div class="post-content"><p>前提：默认对对 nginx/shadowsocks(后面称 ss) 比较熟</p>
+<p>目的：实现 https/ss 共用 443 端口</p>
+<p>原因：公知原因 ss 已经会被检测到并封锁，特别是用非常见端口(80/443)，443 ssl 的默认端口来做 ss 服务更加稳定</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>其实很简单，ss 的原理在这不具体讲了，其实作用就相当于代理，把我们的请求通过 ss 这一层从目标服务器拿到数据再给我们。</p>
+<p>既然要实现同一个端口访问不同的服务，就是在这两个服务前加一层代理，这层代理可以把 ss 流量转到 ss 的服务，把 web 的流量转到本地的 htps 端口。</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p>nginx + shadowsocksR</p>
+<p><a href="https://github.com/shadowsocksr-backup/shadowsocksr" target="_blank" rel="noopener">shadowsocksR</a> 是在 ss 基础上的另一个实现，主要加上了更安全的加密措施等功能，其中对我们今天最重要的就是它的 <code>redirect</code> 功能。</p>
+<br></div><a href="/blog/2017/10/25/ss-ssl-复用端口/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2017/06/07/nginx将多个服务代理到同一域名/" class="post-title-link">nginx将多个服务代理到同一域名</a></h2><div class="post-info">2017年6月7日</div><div class="post-content"><p>有时候需要将来自不同端口的服务代理到同一个域名上，利用 <code>nginx</code> 可以轻易实现这样的需求，记录如下。  </p>
+<p>需求如下，两个 <code>node</code> 服务分别启动在 <code>8888</code> 和 <code>9999</code> 端口，然后在访问时需要将 <code>api.com/version1</code> 代理到 <code>127.0.0.1:8888</code>，将 <code>api.com/version2</code> 代理到 <code>127.0.0.1:9999</code>。  </p>
+<p>利用 <code>nginx</code> 的 <code>location</code>，搭配 <code>proxy_pass</code> 来实现此功能的伪代码如下。  </p>
+<pre><code class="line-numbers language-nginx">server {
+    listen 80;
+    server_name api.com;
+
+<br></code></pre></div><a href="/blog/2017/06/07/nginx将多个服务代理到同一域名/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2017/01/23/豆瓣阅读的文字解码/" class="post-title-link">豆瓣阅读的文字解码</a></h2><div class="post-info">2017年1月23日</div><div class="post-content"><p>前段时间找本小说发现只有豆瓣有资源，然而并不能下载，就想着把全本爬下来，现将接口和解码相关记录如下。</p>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><ul>
+<li><p>URL: <a href="https://read.douban.com/j/article_v2/get_reader_data" target="_blank" rel="noopener">https://read.douban.com/j/article_v2/get_reader_data</a></p>
+</li>
+<li><p>Method: <code>POST</code></p>
+</li>
+<li><p>Body: </p>
+<br></li></ul></div><a href="/blog/2017/01/23/豆瓣阅读的文字解码/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/12/02/write-a-nodejs-proxy-support-http-https/" class="post-title-link">write-a-nodejs-proxy-support-http/https</a></h2><div class="post-info">2016年12月2日</div><div class="post-content"><p>web 开发的调试过程不可避免的涉及到代理的问题，当然现在很多工具都可以完成这项工作，比如 Win 下的 <code>Fiddler</code>，Mac 下的 <code>Charles</code>，今天我们来看一下怎么用 <code>NodeJS</code> 完成这些代理工作，当然，必须支持 <code>http/https</code> 两种常见协议。  </p>
+<h3 id="代理原理"><a href="#代理原理" class="headerlink" title="代理原理"></a>代理原理</h3><p>要想实现代理的目的，就得有一个代理服务的存在，客户端的请求不会直接到达服务器，而是先经过代理服务，然后由代理服务来处理这个请求，不管是原样的转发到目标服务器，还是拦截下来做自定义的回复。</p>
+<p>下图来自《HTTP权威指南》，直观的展示了一个代理服务所做的工作：</p>
+<p>  </p>
+<p>实现这个客户端请求转发到代理服务的工具当然可以用系统的代理配置，不过推荐使用 <code>Chrome</code> 的一个插件 <a href="https://chrome.google.com/webstore/detail/proxy-switchyomega/padekgcemlokbadohgkifijomclgjgif" target="_blank" rel="noopener">Proxy SwitchyOmega</a>.  </p>
+<h3 id="创建-HTTP-代理服务"><a href="#创建-HTTP-代理服务" class="headerlink" title="创建 HTTP 代理服务"></a>创建 HTTP 代理服务</h3><p>了解了代理的原理之后，我们来实现一个简单的代理服务：</p>
+<pre><code class="line-numbers language-js">const http = require(&#39;http&#39;);
+<br></code></pre></div><a href="/blog/2016/12/02/write-a-nodejs-proxy-support-http-https/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/07/21/git相关/" class="post-title-link">git相关</a></h2><div class="post-info">2016年7月21日</div><div class="post-content"><h2 id="git-开始"><a href="#git-开始" class="headerlink" title="git 开始"></a>git 开始</h2><ul>
+<li><p><a href="https://git-scm.com/" target="_blank" rel="noopener">git 下载</a></p>
+</li>
+<li><p><a href="https://git-for-windows.github.io/" target="_blank" rel="noopener">git for windows</a></p>
+</li>
+</ul>
+<h2 id="git-文章推荐"><a href="#git-文章推荐" class="headerlink" title="git 文章推荐"></a>git 文章推荐</h2><ul>
+<br></ul></div><a href="/blog/2016/07/21/git相关/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/07/13/客服平台总结/" class="post-title-link">客服平台总结</a></h2><div class="post-info">2016年7月13日</div><div class="post-content"><h2 id="Vue"><a href="#Vue" class="headerlink" title="Vue"></a>Vue</h2><p>Vue是一个构建数据驱动的 web 界面的库，也就是一个以 MVVM 为核心的库。  </p>
+<h4 id="为什么选择Vue"><a href="#为什么选择Vue" class="headerlink" title="为什么选择Vue"></a>为什么选择Vue</h4><ul>
+<li><p>简洁</p>
+<p>  API 足够简洁明了，文档足够清晰有条理，上手难度足够低</p>
+<p>  HTML 模板加上 JSON 数据，就是一个 Vue 实例。    </p>
+</li>
+<li><p>数据驱动</p>
+<br></li></ul></div><a href="/blog/2016/07/13/客服平台总结/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/06/23/我的sublime配置/" class="post-title-link">我的sublime配置</a></h2><div class="post-info">2016年6月23日</div><div class="post-content"><h2 id="功能插件"><a href="#功能插件" class="headerlink" title="功能插件"></a>功能插件</h2><ul>
+<li><p>Emmet</p>
+<p>  写 <code>html</code> 的利器，不用多说</p>
+</li>
+<li><p>Babel  </p>
+<p>  不仅能够识别更多的js方言，让sublime有正确的着色，而且能够支持ES6的语法提示等</p>
+</li>
+<br></ul></div><a href="/blog/2016/06/23/我的sublime配置/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/06/09/js中的异步流程控制-Promise-Generators-Async-Await/" class="post-title-link">js中的异步流程控制--Promise/Generator/Async/Await</a></h2><div class="post-info">2016年6月9日</div><div class="post-content"><blockquote>
 <p>长文预警 ～</p>
 </blockquote>
 <p>异步I/O、事件驱动使JS这个单线程语言在不阻塞的情况下可以并行的执行很多任务，这带来了性能的极大提升，并且更加符合人们的自然认识（烧一壶水，期间你肯定不会等着水烧开再去做别的事，异步才是正常的啊！）。然而异步风格也给流程控制，错误处理带来了更多的麻烦。</p>
 <h3 id="一、回调"><a href="#一、回调" class="headerlink" title="一、回调"></a>一、回调</h3><p>回调是JS的基础，函数可以作为参数传递并在恰当的时机执行，比如有下面的三个函数：   </p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f1();</span><br><span class="line">f2();</span><br><span class="line">f3();</span><br></pre></td></tr></table></figure>
-<p>如果 <code>f1</code> 中存在异步操作，比如 <code>ajax</code> 请求，并且 <code>f2</code> 需要在 <code>f1</code> 执行完毕之后执行，那么可以使用回调的方式改写函数，如下：  </p>
-<br></div><a href="/blog/2016/06/09/js中的异步流程控制-Promise-Generators-Async-Await/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/06/05/会声会影安装与激活/" class="post-title-link">会声会影安装与激活</a></h2><div class="post-info">2016年6月5日</div><div class="post-content"><h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><ul>
-<li><a href="http://www.huishenghuiying.com.cn/xiazai.html#selctbuy" target="_blank" rel="external">会声会影下载</a></li>
-<li><a href="https://hostr.co/file/FDp8MOYlRuHv/AppNee.com.Corel.X5-X9.All.Products.Universal.Keygen.7z?warning=on" target="_blank" rel="external">会声会影注册机下载</a></li>
+<pre><code class="line-numbers language-js">f1();
+f2();
+<br></code></pre></div><a href="/blog/2016/06/09/js中的异步流程控制-Promise-Generators-Async-Await/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/06/05/会声会影安装与激活/" class="post-title-link">会声会影安装与激活</a></h2><div class="post-info">2016年6月5日</div><div class="post-content"><h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><ul>
+<li><a href="http://www.huishenghuiying.com.cn/xiazai.html#selctbuy" target="_blank" rel="noopener">会声会影下载</a></li>
+<li><a href="https://hostr.co/file/FDp8MOYlRuHv/AppNee.com.Corel.X5-X9.All.Products.Universal.Keygen.7z?warning=on" target="_blank" rel="noopener">会声会影注册机下载</a></li>
 </ul>
 <h2 id="安装（x8版本）"><a href="#安装（x8版本）" class="headerlink" title="安装（x8版本）"></a>安装（x8版本）</h2><h4 id="1、找到下载好的以-exe-为结尾的安装文件，将后缀名改为-rar，然后打开此压缩包（不是解压，用360压缩等工具打开）"><a href="#1、找到下载好的以-exe-为结尾的安装文件，将后缀名改为-rar，然后打开此压缩包（不是解压，用360压缩等工具打开）" class="headerlink" title="1、找到下载好的以 .exe 为结尾的安装文件，将后缀名改为 .rar，然后打开此压缩包（不是解压，用360压缩等工具打开）"></a>1、找到下载好的以 <code>.exe</code> 为结尾的安装文件，将后缀名改为 <code>.rar</code>，然后打开此压缩包（不是解压，用360压缩等工具打开）</h4><h4 id="2、打开压缩包中的-setup-xml"><a href="#2、打开压缩包中的-setup-xml" class="headerlink" title="2、打开压缩包中的 setup.xml"></a>2、打开压缩包中的 <code>setup.xml</code></h4><ul>
 <li>搜索 <code>SHOWSERIALDIALOG</code>，将其 <code>value</code> 改为 <code>true</code></li>
 <li>搜索 <code>SERIALNUMBER</code>，将其 <code>value</code> 删除</li>
-<br></div><a href="/blog/2016/06/05/会声会影安装与激活/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/05/24/webpack-workflow/" class="post-title-link">webpack-workflow</a></h2><div class="post-info">2016年5月24日</div><div class="post-content"><h2 id="前端工作流中要解决的问题"><a href="#前端工作流中要解决的问题" class="headerlink" title="前端工作流中要解决的问题"></a>前端工作流中要解决的问题</h2><ul>
+<br></ul></div><a href="/blog/2016/06/05/会声会影安装与激活/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/05/24/webpack-workflow/" class="post-title-link">webpack-workflow</a></h2><div class="post-info">2016年5月24日</div><div class="post-content"><h2 id="前端工作流中要解决的问题"><a href="#前端工作流中要解决的问题" class="headerlink" title="前端工作流中要解决的问题"></a>前端工作流中要解决的问题</h2><ul>
 <li>资源管理：模块化、组件化、依赖管理等</li>
 <li>开发流程：dev、debug、proxy、build、deploy</li>
 <li>周边工具：图形化界面、命令行辅助、自动化工程</li>
 </ul>
 <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
-<li><a href="http://webpack.github.io/" target="_blank" rel="external">webpack官网</a>  </li>
-<br></div><a href="/blog/2016/05/24/webpack-workflow/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/04/12/use-webpack-in-your-node-app/" class="post-title-link">用 webpack 构建 node 后端代码，使其支持 js 新特性并实现热重载</a></h2><div class="post-info">2016年4月12日</div><div class="post-content"><p>webpack 在前端领域的模块化和代码构建方面有着无比强大的功能，通过一些特殊的配置甚至可以实现前端代码的实时构建、ES6/7新特性支持以及热重载，这些功能同样可以运用于后台 nodejs 的应用，让后台的开发更加顺畅，服务更加灵活，怎么来呢？往下看。</p>
-<p>先梳理下我们将要解决的问题：</p>
-<ul>
-<li>node端代码构建</li>
-<li>ES6/7 新特性支持</li>
-<li>node服务代码热重载</li>
-</ul>
-<br></div><a href="/blog/2016/04/12/use-webpack-in-your-node-app/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2016/03/20/mobile-debug/" class="post-title-link">mobile-debug</a></h2><div class="post-info">2016年3月20日</div><div class="post-content"><h4 id="UC浏览器开发版（仅限安卓平台）"><a href="#UC浏览器开发版（仅限安卓平台）" class="headerlink" title="UC浏览器开发版（仅限安卓平台）"></a>UC浏览器开发版（仅限安卓平台）</h4><blockquote>
-<p>超级强大，样式、脚本、资源，都可以调试，而且UC在移动端份额最大，针对性很高。</p>
-</blockquote>
-<p>1、 <a href="http://plus.uc.cn/document/webapp/doc5.html" target="_blank" rel="external">UC浏览器开发版</a></p>
-<p>2、 官方的文档已经很详细了，包括两种调试方法，无线和有线。有线的调试很复杂，需要ADB工具，需要数据线，所以还是直接无线调试比较好。</p>
-<p>3、 无线调试方法简记：</p>
-<ul>
-<br></div><a href="/blog/2016/03/20/mobile-debug/" class="read-more">...阅读全文</a></article></li><li class="post-list-item"><article class="post-block"><h2 class="post-title"><a href="/blog/2015/12/31/2015年终总结/" class="post-title-link">2015年终总结</a></h2><div class="post-info">2015年12月31日</div><div class="post-content"><blockquote>
-<p>踏入社会的第一年，每年的年终总结应该记起来了。默默的定下一个应一直坚持的小事。</p>
-</blockquote>
-<p>2015，从校园到社会；2015，从徐州到北京；2015，从骆也到骆也。2015，颇具转折意义的一年。</p>
-<h3 id="选择"><a href="#选择" class="headerlink" title="选择"></a>选择</h3><p>2015年初，还在焦急的等待考研的结果，或许自己已经知道答案。但是查到分数那一刻还是有点不甘心，回想之前一年为考研做的准备，哎，只能说，努力就好。</p>
-<p>人最不应该的就是在原地等待。考研没有结果，我知道自己该做个选择了。选择什么？包括未来在内的所有一切。</p>
-<p>毕业了选择什么职业？那时候脑海中的目标真心明确，就是前端。现在想想啊，真是为自己以一个纯文科愣头青身份去投身程序员行业而感到后怕。</p>
-<br></div><a href="/blog/2015/12/31/2015年终总结/" class="read-more">...阅读全文</a></article></li></ul></section><footer><div class="paginator"><a href="/blog/" class="prev">上一页</a></div><div class="copyright"><p>© 2015 - 2018 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
-var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script></body></html>
+<li><a href="http://webpack.github.io/" target="_blank" rel="noopener">webpack官网</a>  </li>
+<br></ul></div><a href="/blog/2016/05/24/webpack-workflow/" class="read-more">...阅读全文</a></article></li></ul></section><footer><div class="paginator"><a href="/blog/" class="prev">上一页</a><a href="/blog/page/3/" class="next">下一页</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="/blog/js/prism.js"></script></body></html>

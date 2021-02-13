@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 你需要更简洁的 Redux（一） · LUOYE</title><meta name="description" content="你需要更简洁的 Redux（一） - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"><link rel="stylesheet" href="/blog/css/prism.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">你需要更简洁的 Redux（一）</h1><div class="post-info">2019年9月13日</div><div class="post-content"><p>使用 React 的过程中，或多或少都会接触到 <strong>状态管理</strong> ，从 Flux 到 Redux 到 Dva，各种状态管理工具满天飞，今天让我们来聊一聊这些工具，以及思考在这些工具的基础上如何更简洁的使用 <strong>状态管理</strong> 这个大杀器。</p>
+<h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>聊状态管理之前，先让我们梳理下在原生 React 中如何进行组件间通信。</p>
+<ul>
+<li><p>Props</p>
+<p>子组件需要父组件的数据，通过 props 一层层向下传递。</p>
+<p>子组件需要更改父组件数据，通过 props callback 调用父组件的方法更新数据。</p>
+<p>多个组件共享数据，抽象 Container 组件，从 Container 组件统一分发 props。</p>
+<p>这样确实可以让应用的数据流非常明确，但是随着应用复杂度提升，组件层级加深，不同组件都要抽象 Container 组件，带来的状态提升问题非常严重，后期通信成本会越来越高。</p>
+</li>
+<li><p>Context</p>
+<p>为了减少 props 带来的嵌套问题，可以使用 Context API。</p>
+<p>在顶级公共组件中，定义 getChildContext 方法，返回子组件所需的数据，子组件通过 this.context 访问相应数据。</p>
+<p>这样就省去了 props 传递带来的复杂度，但是这样也有自己的问题，比如数据过多 getChildContext 方法会非常臃肿，比如 context 跨多层组件获取时，需要上层组件都进行 render，最终组件才可获取数据等。</p>
+</li>
+<li><p>观察者模式</p>
+<p>观察者模式就是组件通信的一种通用方法了，在需要更新时订阅 event 的变化传入回调函数即可。</p>
+<p>同样的，观察者模式也会带来很多问题，比如订阅散落在各个组件中，维护成本高，违背 React 单向数据流的理念。</p>
+<p>所以，一个统一的状态管理工具从 React 诞生之始，就备受期待。</p>
+</li>
+</ul>
+<h2 id="Flux"><a href="#Flux" class="headerlink" title="Flux"></a>Flux</h2><p>Flux 其实更像是一种思想，类似 MVC、MVVM，提倡严格的单向数据流，组件所用数据全部存放在 Store 中，只能通过 Dispatcher 来告知 Store 修改数据，View 层则订阅数据变化来触发页面更新动作。</p>
+<p>在这个思想的基础上，不管什么框架都可以基于这个实现自己的状态管理工具。</p>
+<p>Flux 的几个主要概念：</p>
+<ul>
+<li><p>View：视图层，根据数据展示界面，订阅数据变化来自动更新界面，并响应用户行为触发 Action</p>
+</li>
+<li><p>Store：存放和处理数据相关的逻辑</p>
+</li>
+<li><p>Action：触发 Dispatcher</p>
+</li>
+<li><p>Dispatcher：告知 Store 修改数据</p>
+</li>
+</ul>
+<p>Flux 需要手动在 view 层订阅数据变化手动触发页面更新，而且没有很好的异步解决方案，所以在 Redux 出现以后，迅速被代替。</p>
+<h2 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h2><p>Redux 是在吸收 Flux 思想的基础上产生的状态管理工具。</p>
+<blockquote>
+<p>此处默认 Redux 为  React-Redux</p>
+</blockquote>
+<p>Redux 的核心概念：</p>
+<ul>
+<li><p>Store：管理 State，并有 dispatch、subscribe 等方法</p>
+</li>
+<li><p>Action：响应用户事件，触发 Reducer</p>
+</li>
+<li><p>Dispatch：分发 Action</p>
+</li>
+<li><p>Reducer：修改 Store 中的数据，返回一个全新的 State</p>
+</li>
+<li><p>Provider：将 store 注入到应用中</p>
+</li>
+<li><p>Connect：将特定的 state 和 dispatch 函数注入到组件中</p>
+</li>
+<li><p>Middleware：类似 Koa 的中间件思想，拓展 Redux 能力，如 log、dev-tool 等</p>
+</li>
+</ul>
+<p>虽说 Redux 吸收了 Flux 的优秀思想，但是依旧存在着众多问题，比如：</p>
+<ul>
+<li><p>约定太多</p>
+<p>Redux 中提出了很多约定，但是根本不知道为啥要这么写，新手看起来非常头大。</p>
+<p>比如 Action 只是一个个 JS 对象，为什么要放在不同的文件里？</p>
+<p>比如 Reducer 强调纯函数，每次修改必须返回全新的 State。</p>
+<p>比如 Reducer 大量 case 仅仅只是为了改变一个值。</p>
+<p>比如应用复杂了之后，类似文件大量重复，组织繁琐。</p>
+<p>当然，这些可以用更好的代码组织方式来避免，不过既然是约定，如果每个人都有自己的组织方式，那约定也就失去了意义。</p>
+</li>
+<li><p>异步处理</p>
+<p>Redux 中的 Action 其实就是一个个 JS 对象，当需要在 Action 中进行异步操作时，只能在 Redux 上做一些封装。</p>
+<p>目前社区最通用的解决方案是 redux-saga，通过在全局跑着 generator，监听 dispatch 函数分发的 actionType，当命中时，进入 saga，执行异步操作，完成后再调用真实的 Reducer。</p>
+<p>虽说解决了很多问题，但是缺点同样明显。</p>
+<p>比如需要定义的文件又多了一个 saga，应用复杂后，代码组织成本直线增加。</p>
+<p>比如错误处理，基本每个 task 都需要 try catch 捕获错误。</p>
+<p>比如都 9102 年了，依旧需要使用 “丑陋” 的 yield 写法。</p>
+<p>综上，在直接使用 Redux 时，绝大多数都会选择对 Redux 进行一层封装，集合多种中间件的功能。</p>
+</li>
+</ul>
+<h2 id="Dva"><a href="#Dva" class="headerlink" title="Dva"></a>Dva</h2><p>说完 Flux 和 Redux ，发现 Dva 才是 “真香” 的解决方案。</p>
+<blockquote>
+<p>dva 首先是一个基于 redux 和 redux-saga 的数据流方案，然后为了简化开发体验，dva 还额外内置了 react-router 和 fetch，所以也可以理解为一个轻量级的应用框架。</p>
+</blockquote>
+<p>以上是 Dva 的官方说明，简单理解，就是可以让 react-redux 和 redux-saga 编写的代码组织起来更合理，维护起来更简单。</p>
+<p>比如，原先散落在各处的 Action、saga，可以在同一个对象中书写。</p>
+<p>比如，简化配置过程，项目可快速初始化。</p>
+<p>比如，集成 redux、redux-saga、redux-router。</p>
+<p>比如，简洁的 API，相较于 redux 更容易理解的 app.model、app.router、app.use、app.start API。</p>
+<p>比如，动态注册 model。</p>
+<p>接下来又是喜闻乐见的转折，Dva 是有很多优点，但是它的缺点同样“致命”。</p>
+<ul>
+<li><p>Dva 是一个轻量框架</p>
+<p>Dva 集成了很多你可能并不需要的东西，当你想要部分使用它的功能，有点难。</p>
+<p>比如只能绑定使用 Dva 中的 react-router ，无法独立升级。</p>
+<p>比如打包脚本，想要整合进自己的项目，还需要做一番努力。</p>
+</li>
+<li><p>redux-saga 的缺点</p>
+<p>Dva 集成 redux-saga 来实现异步 action，所以它同样继承了 saga generator 的写法，以及 saga put take 等 API，理解困难，书写不直观。</p>
+<p>说了这么多，最终目的还是要解决在使用 <strong>状态管理</strong> 时遇到的各种问题，综合对比以上的各种方案，我们简单列一下还未解决的痛点。</p>
+</li>
+</ul>
+<h2 id="待解决的痛点"><a href="#待解决的痛点" class="headerlink" title="待解决的痛点"></a>待解决的痛点</h2><ul>
+<li><p>低入侵</p>
+<p>尽可能减少对原应用的入侵，提供尽量简洁的 API 来实现 Redux 功能</p>
+</li>
+<li><p>异步 Action</p>
+<p>提供更为现代，更为直观的异步 Action 解决方案</p>
+</li>
+<li><p>跨组件获取 Store</p>
+<p>子组件可以简便的获取 Stroe 树</p>
+</li>
+<li><p>模块化</p>
+<p>提供更自然的模块嵌套解决方案，减少心智负担</p>
+</li>
+<li><p>辅助函数</p>
+<p>提供 mapStateToProps、mapActionsToProps、mapReducersToProps 辅助函数，简化组件状态结构</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对比市面上流行的 <strong>状态管理</strong> 工具，发现并没有完全契合需求的方案，不如我们自己在 Redux 上加一层简单的封装，来解决使用过程中的痛点问题。</p>
+<p>下一章，我们来一步步对 “Redux” 进行封装，让 “Redux” 更加简洁，更加强大。</p>
+</div></article></div></section><footer><div class="paginator"><a href="/blog/2019/09/18/你需要更简洁的-Redux（二）/" class="prev">上一篇</a><a href="/blog/2018/01/16/30行代码的Google镜像站/" class="next">下一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'luoyefe';
+var disqus_identifier = '2019/09/13/你需要更简洁的-Redux（一）/';
+var disqus_title = '你需要更简洁的 Redux（一）';
+var disqus_url = 'https://luoyefe.com/blog/2019/09/13/你需要更简洁的-Redux（一）/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2021 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="/blog/js/prism.js"></script></body></html>

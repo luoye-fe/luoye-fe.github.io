@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> JS 新特性：Temporal · LUOYE</title><meta name="description" content="JS 新特性：Temporal - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"><link rel="stylesheet" href="/blog/css/prism.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">JS 新特性：Temporal</h1><div class="post-info">2020年9月21日</div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近日（2020.9.16）， <code>Moment</code> 团队发布<a href="https://momentjs.com/docs/#/-project-status/recommendations/" target="_blank" rel="noopener">声明</a>，宣布 <code>Moment</code> 将进入<strong>维护状态</strong>，除非必要，将不再更新：</p>
+<ul>
+<li>未来不会新增任何新特性</li>
+<li>不会改成 <code>immutable</code> </li>
+<li>不会做 <code>tree shakeing</code> ，也不会解决包体积问题</li>
+<li>不会更新 v3 版本</li>
+<li>不会修复 bug 或非预期行为，特别是长期以来的已知问题</li>
+</ul>
+<p>同时，声明中着重强调了新项目不要再使用 <code>Moment</code> ，并且给出了充分的理由，以及替代方案， 其中提到了一个正处于 stage2 状态的 js 新特性 <code>Temporal</code> ，虽然离生产还有很长的路，但是不妨提前学习下这个未来可以取代所有第三方时间库的新特性。</p>
+<p>学习 <code>Temporal</code> 之前，先来看下从 JS 诞生之初就存在的 <code>Date</code> 有什么问题，为何重头设计一个全新的事件对象：</p>
+<ul>
+<li><p><strong>不支持时区</strong>：<code>Date</code> 对象无法修改时区，永远以当前系统的时区为准，如果需要计算不同时区的时间，只能手动根据时区之间的时间差手动计算</p>
+</li>
+<li><p><strong>时间格式化不可靠</strong>：这个很好理解，应该没有一个 JSER 会觉得原生的 <code>Date</code> 对象格式化成 <code>YYYY-MM-DD</code> 是个简单操作</p>
+</li>
+<li><p><strong><code>Date</code> 对象是 <code>mutable</code> 的</strong>：与 <code>String</code> 对象的所有方法都返回一个新对象，不会修改原始字符串对象不同，对 <code>Date</code> 对象的操作都会修改原始对象，导致结果难以保证</p>
+</li>
+<li><p><strong>夏令时行为诡异</strong>：中国有一段时间（1986-1991）实行过夏令时，所以这个时间段的时间在不同的浏览器上得到的时间戳不一致，并且没有直接判断是夏令时的 API</p>
+</li>
+<li><p><strong>时间计算 API 难用至极</strong>：需要计算两个时间的间隔或者时间增减时，API 及其难用</p>
+</li>
+<li><p><strong>等等</strong></p>
+</li>
+</ul>
+<p>所以 TC39 工作组提出了遵循 <a href="https://zh.wikipedia.org/zh-hans/ISO_8601" target="_blank" rel="noopener">ISO_8601 标准</a> 的全新时间对象 <code>Temporal</code> 来解决这些问题，全新的对象将着眼于以下几个方面：</p>
+<ul>
+<li>提供简单易用的 API</li>
+<li>提供 <code>immutable</code> 对象</li>
+<li>严格的时间字符串格式</li>
+<li>支持非公历、支持时区</li>
+</ul>
+<p>详细的 API 可以查看 <a href="https://tc39.es/proposal-temporal/docs/" target="_blank" rel="noopener">TC39文档</a>，接下来我们用实际的案例感受下 <code>Temporal</code> 的强大（在 <code>Temporal</code> 文档页面，已集成 polyfill，可在控制台直接调用）。</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="获取-构造时间"><a href="#获取-构造时间" class="headerlink" title="获取/构造时间"></a>获取/构造时间</h3><p>相较于 <code>Date</code>，使用 <code>Temporal</code> 获取/构造时间有以下优点：</p>
+<ul>
+<li>最大精度为纳秒，可以对时间进行更精准的计算（为了配合纳秒， <code>Temporal</code> 以 <code>bigInit</code> 为基础参数） </li>
+<li>标准的时间构造方法</li>
+<li>完整的时间静态属性</li>
+</ul>
+<blockquote>
+<p><code>bigInit</code> 是 JS 新特性之一，简单来讲，在 <code>number</code> 后跟上 <code>n</code> 即为一个 <code>bigInit</code> 变量，比如 <code>0n</code>  <code>12345678900987654321n</code> ，此处不具体展开。</p>
+</blockquote>
+<pre><code class="line-numbers language-javascript">// 当前系统时间
+const now = Temporal.now.dateTime().toString(); // -&gt; 2020-09-18T11:49:34.076618285
+
+// 忽略时区的绝对时间
+const now = Temporal.now.absolute().toString(); // -&gt; 2020-09-18T03:49:34.871974076Z
+
+// 构造距 1970-1-1 xx 纳秒的 Temporal 对象
+const now = new Temporal.Absolute(0n).toString(); // -&gt; 1970-01-01T00:00Z
+
+// 根据 年 月 日 时 分 秒 毫秒 微妙 纳秒 构造时间 !!!
+const now = new Temporal.DateTime(2020, 9, 20, 12, 15, 32, 666, 233, 999).toString(); // -&gt; 2020-09-20T12:15:32.666233999
+
+// 更全的时间静态属性
+const now = Temporal.now.dateTime();
+/* ⬇️⬇️⬇️
+{
+  year: 2020, // 年
+  month: 9, // 月
+  day: 21, // 日
+  hour: 17, // 时
+  minute: 18, // 分
+  second: 7, // 秒
+  millisecond: 771, // 毫秒
+  microsecond: 785, // 微妙
+  nanosecond: 972, // 纳秒
+
+  dayOfWeek: 1, // 全周的第几天（从1开始）
+  dayOfYear: 265, // 全年的第几天
+  weekOfYear: 39, // 全年的第几周
+
+  daysInWeek: 7, // 当前时间所在周的天数
+  daysInMonth: 30, // 当前时间所在月的天数
+  daysInYear: 366, // 当前时间所在年的天数
+  monthsInYear: 12, // 当前时间所在年的月数
+
+  isLeapYear: true, // 是否是闰年
+}
+*/
+</code></pre>
+<h3 id="时间计算"><a href="#时间计算" class="headerlink" title="时间计算"></a>时间计算</h3><p>原生时间对象 <code>Date</code> 缺少时间计算相关 API，如果需要在当前时间基础上新增或减少天数得到另一个时间，只能通过先获取天数，再进行加减，再合并成完整时间，更要考虑跨天、跨月、跨年，甚至闰年、夏令时的影响，极其难用。</p>
+<p>相比较而言， <code>moment.js</code> <code>day.js</code> 等第三方库提供了便捷的时间计算 API，我们来做个简单比较</p>
+<pre><code class="line-numbers language-javascript">// day.js / moment.js
+const futureTime = dayjs().add(7, &#39;day&#39;).toString(); // -&gt; Mon, 28 Sep 2020 09:33:31 GMT
+const futureTime = dayjs().subtract(7, &#39;d&#39;).toString(); // -&gt; Mon, 14 Sep 2020 09:39:45 GMT
+
+// Temporal
+const futureTime = Temporal.now.dateTime().plus({ days: 7 }).toString(); // -&gt; Mon, 28 Sep 2020 09:33:31 GMT
+const futureTime = Temporal.now.dateTime().minus(new Temporal.Duration(&#39;P7D&#39;)).toString(); // -&gt; 2020-09-21T17:40:17.539198751
+
+// P7D 为 Temporal 中构造段时间的语法，简介如下
+// P1Y1M1DT1H1M1.1S -&gt; 一年一月一天一小时一分一百毫秒
+// P1M -&gt; 一个月
+// PT1M -&gt; 一分钟
+</code></pre>
+<h3 id="时间展示"><a href="#时间展示" class="headerlink" title="时间展示"></a>时间展示</h3><p>对大部分场景来说，展示时间是采用各种第三方库的首要原因，这样非常痛点的能力在 <code>Temporal</code> 是怎样使用的呢？</p>
+<h4 id="时间格式化"><a href="#时间格式化" class="headerlink" title="时间格式化"></a>时间格式化</h4><p>很遗憾，目前 <code>Temporal</code> 未提供与 <code>day.js</code> 类似的占位符格式化 API。不过根据上文提到的时间静态属性，结合模板字符串，与原生 <code>Date</code> 相比，格式化的工作量也将大大降低。根据这些静态属性，实现一个类似三方库的 API，工作量也不会太大。</p>
+<h4 id="时间偏差"><a href="#时间偏差" class="headerlink" title="时间偏差"></a>时间偏差</h4><p>计算两个时间之间的差值，展示时间差也是一个经常遇到的场景， <code>Temporal</code> 提供的 API 与 <code>day.js</code> 相比更具灵活性，差值单位甚至可以多单位组合。</p>
+<pre><code class="line-numbers language-javascript">// day.js / moment.js
+dayjs(&#39;2019-01-25&#39;).diff(&#39;2017-06-05&#39;, &#39;month&#39;); // -&gt; 19
+dayjs(&#39;2019-01-25&#39;).diff(&#39;2017-06-05&#39;, &#39;m&#39;); // -&gt; 19
+
+// Temporal
+Temporal.DateTime.from(&#39;2019-01-25&#39;).difference(Temporal.DateTime.from(&#39;2017-06-05&#39;)).toString(); // -&gt; P599D = 599天
+Temporal.DateTime.from(&#39;2019-01-25&#39;).difference(Temporal.DateTime.from(&#39;2017-06-05&#39;), {
+  largestUnit: &#39;years&#39;,
+  smallestUnit: &#39;seconds&#39;
+}).toString(); // -&gt; P1Y7M20D = 一年七个月二十天
+
+</code></pre>
+<h3 id="时区支持"><a href="#时区支持" class="headerlink" title="时区支持"></a>时区支持</h3><p>与 <code>Date</code> 不同， <code>Temporal</code> 将天然支持时区。 <code>Temporal</code> 的时间默认无时区信息，所以需要在不同时区转换时间信息时，将用到时区相关 API。</p>
+<pre><code class="line-numbers language-javascript">// 构造中国东八区时区
+const tz = new Temporal.TimeZone(&#39;Asia/Shanghai&#39;); // 时区参数支持 IANA 名称，支持 UTC等 https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+// 获取绝对时间
+const absoluteNow = Temporal.now.absolute(); // -&gt; 2020-09-21T12:02:50.041733410
+
+// 时间转换
+const now = tz.getDateTimeFor(Temporal.now.absolute()); // -&gt; 2020-09-21T20:02:50.041733410
+</code></pre>
+<h3 id="历法支持"><a href="#历法支持" class="headerlink" title="历法支持"></a>历法支持</h3><p>在上文提到的时间静态属性中，细心的朋友可能已经发现有是否是闰年这个属性，其实这就是历法在起作用。</p>
+<p>时间定义中，历法决定了了一年中有多少天，一年有多少月，一个月有多少天，所以能够灵活而准确的采用不同历法在时间计算中相当重要。</p>
+<p>目前世界上最常用的历法是 <a href="https://en.wikipedia.org/wiki/Gregorian_calendar" target="_blank" rel="noopener">Gregorian calendar</a>，在此基础上演变出来的时间标准 ISO_8601， <code>Temporal</code> 就是采用此种标准。</p>
+<p>以 <a href="https://en.wikipedia.org/wiki/Hebrew_calendar" target="_blank" rel="noopener">Hebrew calendar</a>（犹太历）为例，犹太历根据大小月，每个月有29或30天，八月九月是润月，根据常年缺年满年的不同，有不同的天数，以犹太历为例：</p>
+<pre><code class="line-numbers language-javascript">// 获取犹太历 5756年3月14号 的绝对时间
+const dateWithCalendar = Temporal.DateTime.from({
+    year: 5756,
+  month: 3,
+  day: 14,
+  hour: 3,
+  minute: 24,
+  second: 30,
+  calendar: new Temporal.Calendar(&#39;hebrew&#39;),
+}); // -&gt; 1995-12-07T03:24:30[c=hebrew]
+</code></pre>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>其他方面， <code>Temporal</code> 相较于 <code>Date</code> 也有非常多的新特性，比如本地化、验证、比较等，期待 <code>Temporal</code> 尽早进入 stage3 甚至 stage4 阶段，彻底替代所有第三方时间库。 </p>
+</div></article></div></section><footer><div class="paginator"><a href="/blog/2020/12/18/NPM-的基础知识/" class="prev">上一篇</a><a href="/blog/2020/07/02/深挖-css-垂直居中的实现/" class="next">下一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'luoyefe';
+var disqus_identifier = '2020/09/21/JS-新特性：Temporal/';
+var disqus_title = 'JS 新特性：Temporal';
+var disqus_url = 'https://luoyefe.com/blog/2020/09/21/JS-新特性：Temporal/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2021 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="/blog/js/prism.js"></script></body></html>

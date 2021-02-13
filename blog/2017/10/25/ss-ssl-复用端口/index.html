@@ -1,24 +1,67 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> shadowsocks/ssl 复用端口 · LUOYE</title><meta name="description" content="shadowsocks/ssl 复用端口 - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">shadowsocks/ssl 复用端口</h1><div class="post-info">2017年10月25日</div><div class="post-content"><p>前提：默认对对 nginx/shadowsocks(后面称 ss) 比较熟</p>
+<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> shadowsocks/ssl 复用端口 · LUOYE</title><meta name="description" content="shadowsocks/ssl 复用端口 - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"><link rel="stylesheet" href="/blog/css/prism.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">shadowsocks/ssl 复用端口</h1><div class="post-info">2017年10月25日</div><div class="post-content"><p>前提：默认对对 nginx/shadowsocks(后面称 ss) 比较熟</p>
 <p>目的：实现 https/ss 共用 443 端口</p>
 <p>原因：公知原因 ss 已经会被检测到并封锁，特别是用非常见端口(80/443)，443 ssl 的默认端口来做 ss 服务更加稳定</p>
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>其实很简单，ss 的原理在这不具体讲了，其实作用就相当于代理，把我们的请求通过 ss 这一层从目标服务器拿到数据再给我们。</p>
 <p>既然要实现同一个端口访问不同的服务，就是在这两个服务前加一层代理，这层代理可以把 ss 流量转到 ss 的服务，把 web 的流量转到本地的 htps 端口。</p>
 <h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p>nginx + shadowsocksR</p>
-<p><a href="https://github.com/shadowsocksr-backup/shadowsocksr" target="_blank" rel="external">shadowsocksR</a> 是在 ss 基础上的另一个实现，主要加上了更安全的加密措施等功能，其中对我们今天最重要的就是它的 <code>redirect</code> 功能。</p>
+<p><a href="https://github.com/shadowsocksr-backup/shadowsocksr" target="_blank" rel="noopener">shadowsocksR</a> 是在 ss 基础上的另一个实现，主要加上了更安全的加密措施等功能，其中对我们今天最重要的就是它的 <code>redirect</code> 功能。</p>
 <p>shadowsocksR 的 redirect 可以区分流量来源，将 web 请求直接转发到特定端口上去，利用这个就可以实现我们要达到的目的。</p>
 <h2 id="主体流程"><a href="#主体流程" class="headerlink" title="主体流程"></a>主体流程</h2><h4 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h4><p>nginx 的安装不表，自行 google</p>
 <p>配置好 nginx</p>
 <p>只贴下示例了，详细的配置项 google 吧</p>
 <p>这里是将 https 的端口放到 <code>6667</code> 端口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 6667 ssl http2 default_server;</span><br><span class="line">	listen [::]:6667 ssl http2 default_server;</span><br><span class="line">	access_log  /var/log/nginx/www/access.log;</span><br><span class="line">	error_log /var/log/nginx/www/error.log;</span><br><span class="line">	server_name example.com;</span><br><span class="line">	location / &#123;</span><br><span class="line">		root /root/www;</span><br><span class="line">		index index.html index.htm;</span><br><span class="line">	&#125;</span><br><span class="line">	error_page 404 /404.html;</span><br><span class="line"></span><br><span class="line">	ssl_certificate &quot;/root/wwwssl/xxx.crt&quot;;</span><br><span class="line">	ssl_certificate_key &quot;/root/wwwssl/xxx.key&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="shadowsocksR"><a href="#shadowsocksR" class="headerlink" title="shadowsocksR"></a>shadowsocksR</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 下载</span><br><span class="line">git clone https://github.com/shadowsocksr-backup/shadowsocksr.git</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// 默认分支为 manyuser 主目录为多用户功能，其中的 shadowsocks 子目录为单用户功能</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 进入主目录</span><br><span class="line">cd shadowsocksr</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 初始化</span><br><span class="line">bash initcfg.sh</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 修改配置(看如下示例)</span><br><span class="line">vim user-config.json</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 启动 shadowsocksR(-d 参数为后台运行)</span><br><span class="line">python ./shadowsocks/server.py -d start</span><br></pre></td></tr></table></figure>
-<p>user-config.json 示例</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "server": "0.0.0.0", // ss 服务地址，以本机为 ss 服务端设置为 0.0.0.0</span><br><span class="line">    "server_ipv6": "[::]",</span><br><span class="line">    "server_port": 443, // ss 服务器端口，复用 ssl 所以为 443</span><br><span class="line">    "local_address": "127.0.0.1",</span><br><span class="line">    "local_port": 1080,</span><br><span class="line">    "password": "password", // 密码</span><br><span class="line">    "method": "aes-256-cfb", // 加密方式</span><br><span class="line">    "protocol": "origin", // 默认为 origin</span><br><span class="line">    "protocol_param": "",</span><br><span class="line">    "obfs": "tls1.2_ticket_auth_compatible",</span><br><span class="line">    "obfs_param": "",</span><br><span class="line">    "speed_limit_per_con": 0,</span><br><span class="line">    "speed_limit_per_user": 0,</span><br><span class="line"></span><br><span class="line">    "additional_ports" : &#123;&#125;, // only works under multi-user mode</span><br><span class="line">    "additional_ports_only" : false, // only works under multi-user mode</span><br><span class="line">    "timeout": 120,</span><br><span class="line">    "udp_timeout": 60,</span><br><span class="line">    "dns_ipv6": false,</span><br><span class="line">    "connect_verbose_info": 0,</span><br><span class="line">    "redirect": ["*:443#127.0.0.1:6667"], // 重点：将 web 流量转发到本地的 6667 端口</span><br><span class="line">    "fast_open": false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>server {
+    listen 6667 ssl http2 default_server;
+    listen [::]:6667 ssl http2 default_server;
+    access_log  /var/log/nginx/www/access.log;
+    error_log /var/log/nginx/www/error.log;
+    server_name example.com;
+    location / {
+        root /root/www;
+        index index.html index.htm;
+    }
+    error_page 404 /404.html;
+
+    ssl_certificate &quot;/root/wwwssl/xxx.crt&quot;;
+    ssl_certificate_key &quot;/root/wwwssl/xxx.key&quot;;
+}
+</code></pre><h4 id="shadowsocksR"><a href="#shadowsocksR" class="headerlink" title="shadowsocksR"></a>shadowsocksR</h4><pre><code>// 下载
+git clone https://github.com/shadowsocksr-backup/shadowsocksr.git  
+</code></pre><pre><code>// 默认分支为 manyuser 主目录为多用户功能，其中的 shadowsocks 子目录为单用户功能  
+</code></pre><pre><code>// 进入主目录
+cd shadowsocksr  
+</code></pre><pre><code>// 初始化
+bash initcfg.sh  
+</code></pre><pre><code>// 修改配置(看如下示例)
+vim user-config.json  
+</code></pre><pre><code>// 启动 shadowsocksR(-d 参数为后台运行)
+python ./shadowsocks/server.py -d start  
+</code></pre><p>user-config.json 示例</p>
+<pre><code class="line-numbers language-json">{
+    &quot;server&quot;: &quot;0.0.0.0&quot;, // ss 服务地址，以本机为 ss 服务端设置为 0.0.0.0
+    &quot;server_ipv6&quot;: &quot;[::]&quot;,
+    &quot;server_port&quot;: 443, // ss 服务器端口，复用 ssl 所以为 443
+    &quot;local_address&quot;: &quot;127.0.0.1&quot;,
+    &quot;local_port&quot;: 1080,
+    &quot;password&quot;: &quot;password&quot;, // 密码
+    &quot;method&quot;: &quot;aes-256-cfb&quot;, // 加密方式
+    &quot;protocol&quot;: &quot;origin&quot;, // 默认为 origin
+    &quot;protocol_param&quot;: &quot;&quot;,
+    &quot;obfs&quot;: &quot;tls1.2_ticket_auth_compatible&quot;,
+    &quot;obfs_param&quot;: &quot;&quot;,
+    &quot;speed_limit_per_con&quot;: 0,
+    &quot;speed_limit_per_user&quot;: 0,
+
+    &quot;additional_ports&quot; : {}, // only works under multi-user mode
+    &quot;additional_ports_only&quot; : false, // only works under multi-user mode
+    &quot;timeout&quot;: 120,
+    &quot;udp_timeout&quot;: 60,
+    &quot;dns_ipv6&quot;: false,
+    &quot;connect_verbose_info&quot;: 0,
+    &quot;redirect&quot;: [&quot;*:443#127.0.0.1:6667&quot;], // 重点：将 web 流量转发到本地的 6667 端口
+    &quot;fast_open&quot;: false
+}
+</code></pre>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>其他端口复用原理一致，shadowsocksR 的 redirect 为数组，支持多个端口转发</p>
 </div></article></div></section><footer><div class="paginator"><a href="/blog/2017/11/13/借助redis实现定时任务/" class="prev">上一篇</a><a href="/blog/2017/06/07/nginx将多个服务代理到同一域名/" class="next">下一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'luoyefe';
 var disqus_identifier = '2017/10/25/ss-ssl-复用端口/';
@@ -28,5 +71,5 @@ var disqus_url = 'https://luoyefe.com/blog/2017/10/25/ss-ssl-复用端口/';
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2018 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
-var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script></body></html>
+})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2021 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="/blog/js/prism.js"></script></body></html>

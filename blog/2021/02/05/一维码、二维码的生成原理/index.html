@@ -1,0 +1,4903 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 一维码、二维码的生成原理 · LUOYE</title><meta name="description" content="一维码、二维码的生成原理 - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"><link rel="stylesheet" href="/blog/css/prism.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">一维码、二维码的生成原理</h1><div class="post-info">2021年2月5日</div><div class="post-content"><p>讲一讲一维码、二维码的生成原理，长文预警！</p>
+<h2 id="一维码"><a href="#一维码" class="headerlink" title="一维码"></a>一维码</h2><p>barcode 白皮书：<a href="https://www.barcodefaq.com/1d/code-128/" target="_blank" rel="noopener">https://www.barcodefaq.com/1d/code-128/</a></p>
+<p>一维码即条形码，由多个黑白条纹组成，基本原理就是通过二进制表示各个 ASCII 字符，以最常见最通用的 code128-B 码制为例（code128 可以表示全部的128个 ASCII 字符）</p>
+<blockquote>
+<p>UPC 码制是国际商品条码标准，这里不讨论商品码生成的规则，下文的条形码示例用微信、支付宝的扫码工具无法识别（微信、支付宝识别的是 UPC 码，用于查询商品信息），可以用钉钉扫码测试。</p>
+</blockquote>
+<p>条形码中，黑看做1，白看做0，code128-B 条形码的规律如下：</p>
+<ul>
+<li>由四部分构成，开始符、数据区、校验符、结束符</li>
+<li>开始符固定为：11010010000</li>
+<li>结束符固定为：1100011101011</li>
+<li>校验符计算规则：<code>(104 + (字符在字符串中的索引值 * 字符在 code128 表中的索引)) % 103</code></li>
+</ul>
+<p>以 “biz” 这个字符为例，</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">b</th>
+<th style="text-align:center">i</th>
+<th style="text-align:center">z</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">字符中的索引</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td style="text-align:center">code128 表中的索引</td>
+<td style="text-align:center">66</td>
+<td style="text-align:center">73</td>
+<td style="text-align:center">90</td>
+</tr>
+<tr>
+<td style="text-align:center">和</td>
+<td style="text-align:center">66</td>
+<td style="text-align:center">146</td>
+<td style="text-align:center">237</td>
+</tr>
+</tbody>
+</table>
+<p>则校验符的索引为：<code>(104 + (66 * 1) + (73 * 2) + (90 * 3)) % 103 = 71</code></p>
+<p>码值对应表：<a href="https://zh.wikipedia.org/wiki/Code128" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/Code128</a></p>
+<p>示意图如下：<img src="./1612170845333-812ee425-8dfd-4ae1-a386-dc99af6c53a5.png" alt="条形码.png"></p>
+<p>伪代码呼之欲出：</p>
+<pre><code class="line-numbers language-javascript">function barcodeEncode(value) {
+    // code 128 共有 107 个字符，具体列表可查看 https://zh.wikipedia.org/wiki/Code128
+  const BARS = [
+    11011001100, 11001101100, 11001100110, 10010011000, 10010001100,
+    10001001100, 10011001000, 10011000100, 10001100100, 11001001000,
+    11001000100, 11000100100, 10110011100, 10011011100, 10011001110,
+    10111001100, 10011101100, 10011100110, 11001110010, 11001011100,
+    11001001110, 11011100100, 11001110100, 11101101110, 11101001100,
+    11100101100, 11100100110, 11101100100, 11100110100, 11100110010,
+    11011011000, 11011000110, 11000110110, 10100011000, 10001011000,
+    10001000110, 10110001000, 10001101000, 10001100010, 11010001000,
+    11000101000, 11000100010, 10110111000, 10110001110, 10001101110,
+    10111011000, 10111000110, 10001110110, 11101110110, 11010001110,
+    11000101110, 11011101000, 11011100010, 11011101110, 11101011000,
+    11101000110, 11100010110, 11101101000, 11101100010, 11100011010,
+    11101111010, 11001000010, 11110001010, 10100110000, 10100001100,
+    10010110000, 10010000110, 10000101100, 10000100110, 10110010000,
+    10110000100, 10011010000, 10011000010, 10000110100, 10000110010,
+    11000010010, 11001010000, 11110111010, 11000010100, 10001111010,
+    10100111100, 10010111100, 10010011110, 10111100100, 10011110100,
+    10011110010, 11110100100, 11110010100, 11110010010, 11011011110,
+    11011110110, 11110110110, 10101111000, 10100011110, 10001011110,
+    10111101000, 10111100010, 11110101000, 11110100010, 10111011110,
+    10111101110, 11101011110, 11110101110, 11010000100, 11010010000,
+    11010011100, 1100011101011,
+  ]
+
+  const startCharIndex = 104;
+  const endCharIndex = 106;
+
+  // 校验符初始值为开始索引
+  let checksum = startCharIndex;
+
+  const result = [BARS[startCharIndex]];
+
+  value.split(&#39;&#39;).forEach((char, index) =&gt; {
+      const ascii = char.charCodeAt(0);
+    const barIndex = ascii - 32; // ascii 字符序号与 code128-b 序号的差固定为 32
+
+    // 每一位在 BARS 中的索引乘以字符串中的索引
+    checksum += barIndex * (index + 1)
+
+    result.push(BARS[barIndex]);
+  });
+
+  result.push(BARS[checksum % 103]);
+  result.push(BARS[endCharIndex]);
+
+  return result;
+}
+
+barcodeEncode(&#39;1234567890&#39;) // -&gt; [11010010000, 10011100110, 11001110010, 11001011100, 11001001110, 11011100100, 11001110100, 11101101110, 11101001100, 11100101100, 10011101100, 10100011000, 1100011101011]
+</code></pre>
+<p>得到二进制的列表后，即可将 0 或 1 按顺序绘制，伪代码如下：</p>
+<pre><code class="line-numbers language-javascript">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;body&gt;
+  &lt;canvas id=&quot;barcode&quot; /&gt;
+
+  &lt;script&gt;
+    function drawBarcode(canvasEl, barList) {
+        const ctx = canvasEl.getContext(&#39;2d&#39;);
+      const barJoinStr = barList.join(&#39;&#39;);
+
+      function drawOneBar(type, index) {
+          const bgColor = type === &#39;0&#39; ? &#39;#ffffff&#39; : &#39;#000000&#39;;
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(index * 2, 0, 2, 100)
+      }
+
+      barJoinStr.split(&#39;&#39;).forEach((char, index) =&gt; {
+          drawOneBar(char, index)
+      })
+    }
+
+    drawBarcode(document.querySelector(&#39;#barcode&#39;), barcodeEncode(&#39;1234567890&#39;))
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>得到结果如下：<img src="./1611740908213-c3dbf01c-b202-4fa2-835e-1f8f9669685b.png" alt="image.png"></p>
+<p>DEMO 地址：<a href="https://codesandbox.io/s/javascript-forked-o8sfn" target="_blank" rel="noopener">https://codesandbox.io/s/javascript-forked-o8sfn</a></p>
+<blockquote>
+<p>PS：以上代码未考虑任何边界情况，如字符合法性的判断、码制的自动选择等，请勿用于生产环境</p>
+</blockquote>
+<p>一维码由条纹构成，所以污损上下一部分后并不影响识别。但是也正因为这个问题，如果有一个条纹被遮挡，整个条形码都无法识别，而且垂直方向的空间被浪费，能表示的信息极为的少</p>
+<p>接下来我们看二维码</p>
+<h2 id="二维码"><a href="#二维码" class="headerlink" title="二维码"></a>二维码</h2><blockquote>
+<p>qrcode 白皮书：<a href="https://www.swisseduc.ch/informatik/theoretische_informatik/qr_codes/docs/qr_standard.pdf" target="_blank" rel="noopener">https://www.swisseduc.ch/informatik/theoretische_informatik/qr_codes/docs/qr_standard.pdf</a></p>
+</blockquote>
+<p>二维码同样区分各种码制，目前最常用的就是 qrcode，quick response code，快速响应矩阵，我们同样从最常用的码制出发，分析二维码的生成原理</p>
+<h3 id="基本术语"><a href="#基本术语" class="headerlink" title="基本术语"></a>基本术语</h3><ul>
+<li><strong>版本</strong>：可以简单理解为二维码尺寸<ul>
+<li>最小版本1，尺寸为21*21</li>
+<li>最大版本40，尺寸为177*177</li>
+<li>版本号每加一，尺寸多四格</li>
+</ul>
+</li>
+</ul>
+<p>不同尺寸能够容纳的字符根据容错等级和编码模式确定，容量表如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">版本</th>
+<th style="text-align:center">容错等级</th>
+<th style="text-align:center">数字模式</th>
+<th style="text-align:center">字母数字模式</th>
+<th style="text-align:center">字节模式</th>
+<th style="text-align:center">汉字模式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">41</td>
+<td style="text-align:center">25</td>
+<td style="text-align:center">17</td>
+<td style="text-align:center">10</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">34</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">14</td>
+<td style="text-align:center">8</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">27</td>
+<td style="text-align:center">16</td>
+<td style="text-align:center">11</td>
+<td style="text-align:center">7</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">17</td>
+<td style="text-align:center">10</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">77</td>
+<td style="text-align:center">47</td>
+<td style="text-align:center">32</td>
+<td style="text-align:center">20</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">63</td>
+<td style="text-align:center">38</td>
+<td style="text-align:center">26</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">48</td>
+<td style="text-align:center">29</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">12</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">34</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">14</td>
+<td style="text-align:center">8</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">127</td>
+<td style="text-align:center">77</td>
+<td style="text-align:center">53</td>
+<td style="text-align:center">32</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">101</td>
+<td style="text-align:center">61</td>
+<td style="text-align:center">42</td>
+<td style="text-align:center">26</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">77</td>
+<td style="text-align:center">47</td>
+<td style="text-align:center">32</td>
+<td style="text-align:center">20</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">58</td>
+<td style="text-align:center">35</td>
+<td style="text-align:center">24</td>
+<td style="text-align:center">15</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">187</td>
+<td style="text-align:center">114</td>
+<td style="text-align:center">78</td>
+<td style="text-align:center">48</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">149</td>
+<td style="text-align:center">90</td>
+<td style="text-align:center">62</td>
+<td style="text-align:center">38</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">111</td>
+<td style="text-align:center">67</td>
+<td style="text-align:center">46</td>
+<td style="text-align:center">28</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">82</td>
+<td style="text-align:center">50</td>
+<td style="text-align:center">34</td>
+<td style="text-align:center">21</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">255</td>
+<td style="text-align:center">154</td>
+<td style="text-align:center">106</td>
+<td style="text-align:center">65</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">202</td>
+<td style="text-align:center">122</td>
+<td style="text-align:center">84</td>
+<td style="text-align:center">52</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">144</td>
+<td style="text-align:center">87</td>
+<td style="text-align:center">60</td>
+<td style="text-align:center">37</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">106</td>
+<td style="text-align:center">64</td>
+<td style="text-align:center">44</td>
+<td style="text-align:center">27</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">322</td>
+<td style="text-align:center">195</td>
+<td style="text-align:center">134</td>
+<td style="text-align:center">82</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">255</td>
+<td style="text-align:center">154</td>
+<td style="text-align:center">106</td>
+<td style="text-align:center">65</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">178</td>
+<td style="text-align:center">108</td>
+<td style="text-align:center">74</td>
+<td style="text-align:center">45</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">139</td>
+<td style="text-align:center">84</td>
+<td style="text-align:center">58</td>
+<td style="text-align:center">36</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">370</td>
+<td style="text-align:center">224</td>
+<td style="text-align:center">154</td>
+<td style="text-align:center">95</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">293</td>
+<td style="text-align:center">178</td>
+<td style="text-align:center">122</td>
+<td style="text-align:center">75</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">207</td>
+<td style="text-align:center">125</td>
+<td style="text-align:center">86</td>
+<td style="text-align:center">53</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">154</td>
+<td style="text-align:center">93</td>
+<td style="text-align:center">64</td>
+<td style="text-align:center">39</td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">461</td>
+<td style="text-align:center">279</td>
+<td style="text-align:center">192</td>
+<td style="text-align:center">118</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">365</td>
+<td style="text-align:center">221</td>
+<td style="text-align:center">152</td>
+<td style="text-align:center">93</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">259</td>
+<td style="text-align:center">157</td>
+<td style="text-align:center">108</td>
+<td style="text-align:center">66</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">202</td>
+<td style="text-align:center">122</td>
+<td style="text-align:center">84</td>
+<td style="text-align:center">52</td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">552</td>
+<td style="text-align:center">335</td>
+<td style="text-align:center">230</td>
+<td style="text-align:center">141</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">432</td>
+<td style="text-align:center">262</td>
+<td style="text-align:center">180</td>
+<td style="text-align:center">111</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">312</td>
+<td style="text-align:center">189</td>
+<td style="text-align:center">130</td>
+<td style="text-align:center">80</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">235</td>
+<td style="text-align:center">143</td>
+<td style="text-align:center">98</td>
+<td style="text-align:center">60</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">652</td>
+<td style="text-align:center">395</td>
+<td style="text-align:center">271</td>
+<td style="text-align:center">167</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">513</td>
+<td style="text-align:center">311</td>
+<td style="text-align:center">213</td>
+<td style="text-align:center">131</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">364</td>
+<td style="text-align:center">221</td>
+<td style="text-align:center">151</td>
+<td style="text-align:center">93</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">288</td>
+<td style="text-align:center">174</td>
+<td style="text-align:center">119</td>
+<td style="text-align:center">74</td>
+</tr>
+<tr>
+<td style="text-align:center">11</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">772</td>
+<td style="text-align:center">468</td>
+<td style="text-align:center">321</td>
+<td style="text-align:center">198</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">604</td>
+<td style="text-align:center">366</td>
+<td style="text-align:center">251</td>
+<td style="text-align:center">155</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">427</td>
+<td style="text-align:center">259</td>
+<td style="text-align:center">177</td>
+<td style="text-align:center">109</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">331</td>
+<td style="text-align:center">200</td>
+<td style="text-align:center">137</td>
+<td style="text-align:center">85</td>
+</tr>
+<tr>
+<td style="text-align:center">12</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">883</td>
+<td style="text-align:center">535</td>
+<td style="text-align:center">367</td>
+<td style="text-align:center">226</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">691</td>
+<td style="text-align:center">419</td>
+<td style="text-align:center">287</td>
+<td style="text-align:center">177</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">489</td>
+<td style="text-align:center">296</td>
+<td style="text-align:center">203</td>
+<td style="text-align:center">125</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">374</td>
+<td style="text-align:center">227</td>
+<td style="text-align:center">155</td>
+<td style="text-align:center">96</td>
+</tr>
+<tr>
+<td style="text-align:center">13</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">1022</td>
+<td style="text-align:center">619</td>
+<td style="text-align:center">425</td>
+<td style="text-align:center">262</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">796</td>
+<td style="text-align:center">483</td>
+<td style="text-align:center">331</td>
+<td style="text-align:center">204</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">580</td>
+<td style="text-align:center">352</td>
+<td style="text-align:center">241</td>
+<td style="text-align:center">149</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">427</td>
+<td style="text-align:center">259</td>
+<td style="text-align:center">177</td>
+<td style="text-align:center">109</td>
+</tr>
+<tr>
+<td style="text-align:center">14</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">1101</td>
+<td style="text-align:center">667</td>
+<td style="text-align:center">458</td>
+<td style="text-align:center">282</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">871</td>
+<td style="text-align:center">528</td>
+<td style="text-align:center">362</td>
+<td style="text-align:center">223</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">621</td>
+<td style="text-align:center">376</td>
+<td style="text-align:center">258</td>
+<td style="text-align:center">159</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">468</td>
+<td style="text-align:center">283</td>
+<td style="text-align:center">194</td>
+<td style="text-align:center">120</td>
+</tr>
+<tr>
+<td style="text-align:center">15</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">1250</td>
+<td style="text-align:center">758</td>
+<td style="text-align:center">520</td>
+<td style="text-align:center">320</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">991</td>
+<td style="text-align:center">600</td>
+<td style="text-align:center">412</td>
+<td style="text-align:center">254</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">703</td>
+<td style="text-align:center">426</td>
+<td style="text-align:center">292</td>
+<td style="text-align:center">180</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">530</td>
+<td style="text-align:center">321</td>
+<td style="text-align:center">220</td>
+<td style="text-align:center">136</td>
+</tr>
+<tr>
+<td style="text-align:center">16</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">1408</td>
+<td style="text-align:center">854</td>
+<td style="text-align:center">586</td>
+<td style="text-align:center">361</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">1082</td>
+<td style="text-align:center">656</td>
+<td style="text-align:center">450</td>
+<td style="text-align:center">277</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">775</td>
+<td style="text-align:center">470</td>
+<td style="text-align:center">322</td>
+<td style="text-align:center">198</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">602</td>
+<td style="text-align:center">365</td>
+<td style="text-align:center">250</td>
+<td style="text-align:center">154</td>
+</tr>
+<tr>
+<td style="text-align:center">17</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">1548</td>
+<td style="text-align:center">938</td>
+<td style="text-align:center">644</td>
+<td style="text-align:center">397</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">1212</td>
+<td style="text-align:center">734</td>
+<td style="text-align:center">504</td>
+<td style="text-align:center">310</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">876</td>
+<td style="text-align:center">531</td>
+<td style="text-align:center">364</td>
+<td style="text-align:center">224</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">674</td>
+<td style="text-align:center">408</td>
+<td style="text-align:center">280</td>
+<td style="text-align:center">173</td>
+</tr>
+<tr>
+<td style="text-align:center">18</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">1725</td>
+<td style="text-align:center">1046</td>
+<td style="text-align:center">718</td>
+<td style="text-align:center">442</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">1346</td>
+<td style="text-align:center">816</td>
+<td style="text-align:center">560</td>
+<td style="text-align:center">345</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">948</td>
+<td style="text-align:center">574</td>
+<td style="text-align:center">394</td>
+<td style="text-align:center">243</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">746</td>
+<td style="text-align:center">452</td>
+<td style="text-align:center">310</td>
+<td style="text-align:center">191</td>
+</tr>
+<tr>
+<td style="text-align:center">19</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">1903</td>
+<td style="text-align:center">1153</td>
+<td style="text-align:center">792</td>
+<td style="text-align:center">488</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">1500</td>
+<td style="text-align:center">909</td>
+<td style="text-align:center">624</td>
+<td style="text-align:center">384</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1063</td>
+<td style="text-align:center">644</td>
+<td style="text-align:center">442</td>
+<td style="text-align:center">272</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">813</td>
+<td style="text-align:center">493</td>
+<td style="text-align:center">338</td>
+<td style="text-align:center">208</td>
+</tr>
+<tr>
+<td style="text-align:center">20</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">2061</td>
+<td style="text-align:center">1249</td>
+<td style="text-align:center">858</td>
+<td style="text-align:center">528</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">1600</td>
+<td style="text-align:center">970</td>
+<td style="text-align:center">666</td>
+<td style="text-align:center">410</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1159</td>
+<td style="text-align:center">702</td>
+<td style="text-align:center">482</td>
+<td style="text-align:center">297</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">919</td>
+<td style="text-align:center">557</td>
+<td style="text-align:center">382</td>
+<td style="text-align:center">235</td>
+</tr>
+<tr>
+<td style="text-align:center">21</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">2232</td>
+<td style="text-align:center">1352</td>
+<td style="text-align:center">929</td>
+<td style="text-align:center">572</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">1708</td>
+<td style="text-align:center">1035</td>
+<td style="text-align:center">711</td>
+<td style="text-align:center">438</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1224</td>
+<td style="text-align:center">742</td>
+<td style="text-align:center">509</td>
+<td style="text-align:center">314</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">969</td>
+<td style="text-align:center">587</td>
+<td style="text-align:center">403</td>
+<td style="text-align:center">248</td>
+</tr>
+<tr>
+<td style="text-align:center">22</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">2409</td>
+<td style="text-align:center">1460</td>
+<td style="text-align:center">1003</td>
+<td style="text-align:center">618</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">1872</td>
+<td style="text-align:center">1134</td>
+<td style="text-align:center">779</td>
+<td style="text-align:center">480</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1358</td>
+<td style="text-align:center">823</td>
+<td style="text-align:center">565</td>
+<td style="text-align:center">348</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1056</td>
+<td style="text-align:center">640</td>
+<td style="text-align:center">439</td>
+<td style="text-align:center">270</td>
+</tr>
+<tr>
+<td style="text-align:center">23</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">2620</td>
+<td style="text-align:center">1588</td>
+<td style="text-align:center">1091</td>
+<td style="text-align:center">672</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">2059</td>
+<td style="text-align:center">1248</td>
+<td style="text-align:center">857</td>
+<td style="text-align:center">528</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1468</td>
+<td style="text-align:center">890</td>
+<td style="text-align:center">611</td>
+<td style="text-align:center">376</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1108</td>
+<td style="text-align:center">672</td>
+<td style="text-align:center">461</td>
+<td style="text-align:center">284</td>
+</tr>
+<tr>
+<td style="text-align:center">24</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">2812</td>
+<td style="text-align:center">1704</td>
+<td style="text-align:center">1171</td>
+<td style="text-align:center">721</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">2188</td>
+<td style="text-align:center">1326</td>
+<td style="text-align:center">911</td>
+<td style="text-align:center">561</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1588</td>
+<td style="text-align:center">963</td>
+<td style="text-align:center">661</td>
+<td style="text-align:center">407</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1228</td>
+<td style="text-align:center">744</td>
+<td style="text-align:center">511</td>
+<td style="text-align:center">315</td>
+</tr>
+<tr>
+<td style="text-align:center">25</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">3057</td>
+<td style="text-align:center">1853</td>
+<td style="text-align:center">1273</td>
+<td style="text-align:center">784</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">2395</td>
+<td style="text-align:center">1451</td>
+<td style="text-align:center">997</td>
+<td style="text-align:center">614</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1718</td>
+<td style="text-align:center">1041</td>
+<td style="text-align:center">715</td>
+<td style="text-align:center">440</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1286</td>
+<td style="text-align:center">779</td>
+<td style="text-align:center">535</td>
+<td style="text-align:center">330</td>
+</tr>
+<tr>
+<td style="text-align:center">26</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">3283</td>
+<td style="text-align:center">1990</td>
+<td style="text-align:center">1367</td>
+<td style="text-align:center">842</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">2544</td>
+<td style="text-align:center">1542</td>
+<td style="text-align:center">1059</td>
+<td style="text-align:center">652</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1804</td>
+<td style="text-align:center">1094</td>
+<td style="text-align:center">751</td>
+<td style="text-align:center">462</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1425</td>
+<td style="text-align:center">864</td>
+<td style="text-align:center">593</td>
+<td style="text-align:center">365</td>
+</tr>
+<tr>
+<td style="text-align:center">27</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">3517</td>
+<td style="text-align:center">2132</td>
+<td style="text-align:center">1465</td>
+<td style="text-align:center">902</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">2701</td>
+<td style="text-align:center">1637</td>
+<td style="text-align:center">1125</td>
+<td style="text-align:center">692</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1933</td>
+<td style="text-align:center">1172</td>
+<td style="text-align:center">805</td>
+<td style="text-align:center">496</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1501</td>
+<td style="text-align:center">910</td>
+<td style="text-align:center">625</td>
+<td style="text-align:center">385</td>
+</tr>
+<tr>
+<td style="text-align:center">28</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">3669</td>
+<td style="text-align:center">2223</td>
+<td style="text-align:center">1528</td>
+<td style="text-align:center">940</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">2857</td>
+<td style="text-align:center">1732</td>
+<td style="text-align:center">1190</td>
+<td style="text-align:center">732</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">2085</td>
+<td style="text-align:center">1263</td>
+<td style="text-align:center">868</td>
+<td style="text-align:center">534</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1581</td>
+<td style="text-align:center">958</td>
+<td style="text-align:center">658</td>
+<td style="text-align:center">405</td>
+</tr>
+<tr>
+<td style="text-align:center">29</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">3909</td>
+<td style="text-align:center">2369</td>
+<td style="text-align:center">1628</td>
+<td style="text-align:center">1002</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">3035</td>
+<td style="text-align:center">1839</td>
+<td style="text-align:center">1264</td>
+<td style="text-align:center">778</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">2181</td>
+<td style="text-align:center">1322</td>
+<td style="text-align:center">908</td>
+<td style="text-align:center">559</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1677</td>
+<td style="text-align:center">1016</td>
+<td style="text-align:center">698</td>
+<td style="text-align:center">430</td>
+</tr>
+<tr>
+<td style="text-align:center">30</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">4158</td>
+<td style="text-align:center">2520</td>
+<td style="text-align:center">1732</td>
+<td style="text-align:center">1066</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">3289</td>
+<td style="text-align:center">1994</td>
+<td style="text-align:center">1370</td>
+<td style="text-align:center">843</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">2358</td>
+<td style="text-align:center">1429</td>
+<td style="text-align:center">982</td>
+<td style="text-align:center">604</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1782</td>
+<td style="text-align:center">1080</td>
+<td style="text-align:center">742</td>
+<td style="text-align:center">457</td>
+</tr>
+<tr>
+<td style="text-align:center">31</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">4417</td>
+<td style="text-align:center">2677</td>
+<td style="text-align:center">1840</td>
+<td style="text-align:center">1132</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">3486</td>
+<td style="text-align:center">2113</td>
+<td style="text-align:center">1452</td>
+<td style="text-align:center">894</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">2473</td>
+<td style="text-align:center">1499</td>
+<td style="text-align:center">1030</td>
+<td style="text-align:center">634</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1897</td>
+<td style="text-align:center">1150</td>
+<td style="text-align:center">790</td>
+<td style="text-align:center">486</td>
+</tr>
+<tr>
+<td style="text-align:center">32</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">4686</td>
+<td style="text-align:center">2840</td>
+<td style="text-align:center">1952</td>
+<td style="text-align:center">1201</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">3693</td>
+<td style="text-align:center">2238</td>
+<td style="text-align:center">1538</td>
+<td style="text-align:center">947</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">2670</td>
+<td style="text-align:center">1618</td>
+<td style="text-align:center">1112</td>
+<td style="text-align:center">684</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2022</td>
+<td style="text-align:center">1226</td>
+<td style="text-align:center">842</td>
+<td style="text-align:center">518</td>
+</tr>
+<tr>
+<td style="text-align:center">33</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">4965</td>
+<td style="text-align:center">3009</td>
+<td style="text-align:center">2068</td>
+<td style="text-align:center">1273</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">3909</td>
+<td style="text-align:center">2369</td>
+<td style="text-align:center">1628</td>
+<td style="text-align:center">1002</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">2805</td>
+<td style="text-align:center">1700</td>
+<td style="text-align:center">1168</td>
+<td style="text-align:center">719</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2157</td>
+<td style="text-align:center">1307</td>
+<td style="text-align:center">898</td>
+<td style="text-align:center">553</td>
+</tr>
+<tr>
+<td style="text-align:center">34</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">5253</td>
+<td style="text-align:center">3183</td>
+<td style="text-align:center">2188</td>
+<td style="text-align:center">1347</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">4134</td>
+<td style="text-align:center">2506</td>
+<td style="text-align:center">1722</td>
+<td style="text-align:center">1060</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">2949</td>
+<td style="text-align:center">1787</td>
+<td style="text-align:center">1228</td>
+<td style="text-align:center">756</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2301</td>
+<td style="text-align:center">1394</td>
+<td style="text-align:center">958</td>
+<td style="text-align:center">590</td>
+</tr>
+<tr>
+<td style="text-align:center">35</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">5529</td>
+<td style="text-align:center">3351</td>
+<td style="text-align:center">2303</td>
+<td style="text-align:center">1417</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">4343</td>
+<td style="text-align:center">2632</td>
+<td style="text-align:center">1809</td>
+<td style="text-align:center">1113</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">3081</td>
+<td style="text-align:center">1867</td>
+<td style="text-align:center">1283</td>
+<td style="text-align:center">790</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2361</td>
+<td style="text-align:center">1431</td>
+<td style="text-align:center">983</td>
+<td style="text-align:center">605</td>
+</tr>
+<tr>
+<td style="text-align:center">36</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">5836</td>
+<td style="text-align:center">3537</td>
+<td style="text-align:center">2431</td>
+<td style="text-align:center">1496</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">4588</td>
+<td style="text-align:center">2780</td>
+<td style="text-align:center">1911</td>
+<td style="text-align:center">1176</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">3244</td>
+<td style="text-align:center">1966</td>
+<td style="text-align:center">1351</td>
+<td style="text-align:center">832</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2524</td>
+<td style="text-align:center">1530</td>
+<td style="text-align:center">1051</td>
+<td style="text-align:center">647</td>
+</tr>
+<tr>
+<td style="text-align:center">37</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">6153</td>
+<td style="text-align:center">3729</td>
+<td style="text-align:center">2563</td>
+<td style="text-align:center">1577</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">4775</td>
+<td style="text-align:center">2894</td>
+<td style="text-align:center">1989</td>
+<td style="text-align:center">1224</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">3417</td>
+<td style="text-align:center">2071</td>
+<td style="text-align:center">1423</td>
+<td style="text-align:center">876</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2625</td>
+<td style="text-align:center">1591</td>
+<td style="text-align:center">1093</td>
+<td style="text-align:center">673</td>
+</tr>
+<tr>
+<td style="text-align:center">38</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">6479</td>
+<td style="text-align:center">3927</td>
+<td style="text-align:center">2699</td>
+<td style="text-align:center">1661</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">5039</td>
+<td style="text-align:center">3054</td>
+<td style="text-align:center">2099</td>
+<td style="text-align:center">1292</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">3599</td>
+<td style="text-align:center">2181</td>
+<td style="text-align:center">1499</td>
+<td style="text-align:center">923</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2735</td>
+<td style="text-align:center">1658</td>
+<td style="text-align:center">1139</td>
+<td style="text-align:center">701</td>
+</tr>
+<tr>
+<td style="text-align:center">39</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">6743</td>
+<td style="text-align:center">4087</td>
+<td style="text-align:center">2809</td>
+<td style="text-align:center">1729</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">5313</td>
+<td style="text-align:center">3220</td>
+<td style="text-align:center">2213</td>
+<td style="text-align:center">1362</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">3791</td>
+<td style="text-align:center">2298</td>
+<td style="text-align:center">1579</td>
+<td style="text-align:center">972</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2927</td>
+<td style="text-align:center">1774</td>
+<td style="text-align:center">1219</td>
+<td style="text-align:center">750</td>
+</tr>
+<tr>
+<td style="text-align:center">40</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">7089</td>
+<td style="text-align:center">4296</td>
+<td style="text-align:center">2953</td>
+<td style="text-align:center">1817</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">5596</td>
+<td style="text-align:center">3391</td>
+<td style="text-align:center">2331</td>
+<td style="text-align:center">1435</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">3993</td>
+<td style="text-align:center">2420</td>
+<td style="text-align:center">1663</td>
+<td style="text-align:center">1024</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">3057</td>
+<td style="text-align:center">1852</td>
+<td style="text-align:center">1273</td>
+<td style="text-align:center">784</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>容错等级</strong>：二维码有极大的容错能力，根据可污损面积，有不同的容错等级</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">容错等级</th>
+<th style="text-align:center">可污损面积</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">7%</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">15%</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">25%</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">30%</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p><strong>掩码模式</strong>：共八种，根据特定规则更改方块的颜色（黑改白 or 白改黑），便于扫码器识别</p>
+</li>
+<li><p><strong>纠错算法</strong>：核心是<strong>里德-所罗门码</strong>，经过计算后的字符串，即使丢失某些字符，依旧可以计算出整个字符的原始值</p>
+</li>
+</ul>
+<h3 id="基本构成"><a href="#基本构成" class="headerlink" title="基本构成"></a>基本构成</h3><p>二维码各个区域分为功能区和数据区，先看下二维码图案的基本构成：</p>
+<p><img src="./1611913183757-4f727bed-2eca-48b2-b3bf-254cd2418395.png" alt="二维码基本构成.png"></p>
+<p>二维码版本号大于7，即尺寸大于45*45后，需增加版本信息加快识别速度，如下：</p>
+<p><img src="./1611891049226-6f6e2e91-6e02-41b5-b9e6-877f96fbbebb.png" alt="二维码 45*45.png"></p>
+<h4 id="定位区"><a href="#定位区" class="headerlink" title="定位区"></a>定位区</h4><p>7*7 的回字形图案，分布在左上、右上、左下<img src="./1611887717818-331ced4f-23f9-45a9-bb4f-b948399476be.png" alt="定位区.png"></p>
+<h4 id="分隔区"><a href="#分隔区" class="headerlink" title="分隔区"></a>分隔区</h4><p>围绕定位区的图案，白色</p>
+<h4 id="时序信息"><a href="#时序信息" class="headerlink" title="时序信息"></a>时序信息</h4><p>两条从第七列或第七排开始，黑白交替，黑色开始，黑色结束的图案，用于告知扫码器识别的顺序</p>
+<h4 id="矫正区"><a href="#矫正区" class="headerlink" title="矫正区"></a>矫正区</h4><p>5*5 的回字形图案，用于扫码器加快定位速度</p>
+<p><img src="./1611887965265-8dbf39e2-5d00-46dd-aae1-742f2754223a.png" alt="矫正区.png"></p>
+<p>版本号大于等于2，需要增加矫正区，版本号越多矫正区越多，各个版本号对应的矫正区中心点坐标如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">版本</th>
+<th style="text-align:center">中心点坐标</th>
+<th>左上为 (0,0)</th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">6</td>
+<td>18</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">6</td>
+<td>22</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">6</td>
+<td>34</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">6</td>
+<td>22</td>
+<td>38</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">6</td>
+<td>24</td>
+<td>42</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td>46</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">6</td>
+<td>28</td>
+<td>50</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">11</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>54</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">12</td>
+<td style="text-align:center">6</td>
+<td>32</td>
+<td>58</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">13</td>
+<td style="text-align:center">6</td>
+<td>34</td>
+<td>62</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">14</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td>46</td>
+<td>66</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">15</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td>48</td>
+<td>70</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">16</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td>50</td>
+<td>74</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">17</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>54</td>
+<td>78</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">18</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>56</td>
+<td>82</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">19</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>58</td>
+<td>86</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">20</td>
+<td style="text-align:center">6</td>
+<td>34</td>
+<td>62</td>
+<td>90</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">21</td>
+<td style="text-align:center">6</td>
+<td>28</td>
+<td>50</td>
+<td>72</td>
+<td>94</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">22</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td>50</td>
+<td>74</td>
+<td>98</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">23</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>54</td>
+<td>78</td>
+<td>102</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">24</td>
+<td style="text-align:center">6</td>
+<td>28</td>
+<td>54</td>
+<td>80</td>
+<td>106</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">25</td>
+<td style="text-align:center">6</td>
+<td>32</td>
+<td>58</td>
+<td>84</td>
+<td>110</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">26</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>58</td>
+<td>86</td>
+<td>114</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">27</td>
+<td style="text-align:center">6</td>
+<td>34</td>
+<td>62</td>
+<td>90</td>
+<td>118</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">28</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td>50</td>
+<td>74</td>
+<td>98</td>
+<td>122</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">29</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>54</td>
+<td>78</td>
+<td>102</td>
+<td>126</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">30</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td>52</td>
+<td>78</td>
+<td>104</td>
+<td>130</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">31</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>56</td>
+<td>82</td>
+<td>108</td>
+<td>134</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">32</td>
+<td style="text-align:center">6</td>
+<td>34</td>
+<td>60</td>
+<td>86</td>
+<td>112</td>
+<td>138</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">33</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>58</td>
+<td>86</td>
+<td>114</td>
+<td>142</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">34</td>
+<td style="text-align:center">6</td>
+<td>34</td>
+<td>62</td>
+<td>90</td>
+<td>118</td>
+<td>146</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">35</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>54</td>
+<td>78</td>
+<td>102</td>
+<td>126</td>
+<td>150</td>
+</tr>
+<tr>
+<td style="text-align:center">36</td>
+<td style="text-align:center">6</td>
+<td>24</td>
+<td>50</td>
+<td>76</td>
+<td>102</td>
+<td>128</td>
+<td>154</td>
+</tr>
+<tr>
+<td style="text-align:center">37</td>
+<td style="text-align:center">6</td>
+<td>28</td>
+<td>54</td>
+<td>80</td>
+<td>106</td>
+<td>132</td>
+<td>158</td>
+</tr>
+<tr>
+<td style="text-align:center">38</td>
+<td style="text-align:center">6</td>
+<td>32</td>
+<td>58</td>
+<td>84</td>
+<td>110</td>
+<td>136</td>
+<td>162</td>
+</tr>
+<tr>
+<td style="text-align:center">39</td>
+<td style="text-align:center">6</td>
+<td>26</td>
+<td>54</td>
+<td>82</td>
+<td>110</td>
+<td>138</td>
+<td>166</td>
+</tr>
+<tr>
+<td style="text-align:center">40</td>
+<td style="text-align:center">6</td>
+<td>30</td>
+<td>58</td>
+<td>86</td>
+<td>114</td>
+<td>142</td>
+<td>170</td>
+</tr>
+</tbody>
+</table>
+<p>以版本号7为例，中心点坐标为 6 | 22 | 38，则需要 (6,6) (6,22) (6,38) (22,6) (22,22) (22,38) (38,6) (38,22) (38,38) 共九个矫正区，但实际绘制时，如果和定位区重叠，则不绘制此矫正区，如下：<img src="./1611891820243-712945d8-b3d6-405c-82cc-1f7c9a6f8dca.png" alt="编组 8.png"></p>
+<h4 id="格式信息"><a href="#格式信息" class="headerlink" title="格式信息"></a>格式信息</h4><p>用于记录<strong>容错等级、掩码模式</strong>，并且通过<strong>纠错算法</strong>编码后得到<strong>长度为15</strong>的二进制数</p>
+<p>容错等级对应字节：</p>
+<ul>
+<li>L –&gt; <code>01</code> </li>
+<li>M –&gt; <code>00</code> </li>
+<li>Q –&gt; <code>11</code> </li>
+<li>H –&gt; <code>10</code> </li>
+</ul>
+<p>掩码模式，用于对二维码进行“美化”，便于机器识别，共有八种，编码从 1 到 8，比如用 <code>Mask Pattern 4</code> ，格式信息中的掩码模式编码则为 <code>(4).toString(2) = 100</code> </p>
+<p>计算过程：</p>
+<ul>
+<li>容错等级为 L: <code>01</code> </li>
+<li>掩码模式为 4： <code>100</code> </li>
+<li>拼接： <code>01100</code> </li>
+<li>纠错码（计算过程看伪代码）： <code>1000111101</code> </li>
+<li>拼接： <code>011001000111101</code> </li>
+<li>用于异或计算的常量： <code>101010000010010</code> </li>
+<li>异或计算： <code>001010011011100 ^ 101010000010010 = 110011000101111</code> </li>
+</ul>
+<p>伪代码如下：</p>
+<pre><code class="line-numbers language-javascript">// 二进制字符串转十进制异或再转为二进制字符串
+function xorBinaryString(a, b) {
+  return (parseInt(a, 2) ^ parseInt(b, 2)).toString(2);
+}
+
+function calcFormatBits(correctLevel = &#39;L&#39;, maskPattern = &#39;4&#39;) {
+  const correctLevelBitsMap = {
+    L: &#39;01&#39;, M: &#39;00&#39;,
+    Q: &#39;11&#39;, H: &#39;10&#39;,
+  };
+
+  // 二维码规范中规定的用于计算格式信息【纠错码】的固定多项式
+  const errorCorrectionFixedPolynomial = &#39;10100110111&#39;;  // x^10 + x^8 + x^5 + x^4 + x^2 + x + 1
+
+  // 二维码规范中规定的用于计算格式信息【最终结果】的固定多项式
+  const calcResultFixedPolynomial = &#39;101010000010010&#39;; // x^14 + x^12 + x^10 + x^4 + x
+
+  // 容错等级
+  const correctLevelBits = correctLevelBitsMap[correctLevel];
+
+  // 掩码模式，补足 3 位
+  const maskPatternBits = Number(maskPattern).toString(2).padStart(3, &#39;0&#39;);
+
+  // 拼接容错等级和掩码模式，右侧补 0 到 15 位，并移除左侧的 0
+  const originBits = `${correctLevelBits}${maskPatternBits}`.padEnd(15, &#39;0&#39;).replace(/0*/, &#39;&#39;);
+
+  // 纠错码计算逻辑
+  function division(bits) {
+    const currentFormattedBits = bits;
+    const currentFormattedBitsLen = currentFormattedBits.length;
+
+    // 如果多项式和当前字符串位数不同，多项式右侧补 0 到相同位数
+    const paddedPolynomial = currentFormattedBitsLen &gt; errorCorrectionFixedPolynomial.length ? errorCorrectionFixedPolynomial.padEnd(currentFormattedBitsLen, &#39;0&#39;) : errorCorrectionFixedPolynomial;
+
+    // 当前字符串和多项式进行异或计算，然后移除左侧的 0
+    const xorResult = xorBinaryString(currentFormattedBits, paddedPolynomial).replace(/0*/, &#39;&#39;);
+
+    // 多次计算，直到字符串长度小于等于 10
+    if (xorResult.length &gt; 10) return division(xorResult);
+
+    // 左侧补 0 到 10 位
+    return xorResult.padStart(10, &#39;0&#39;);
+  }
+
+  // 纠错码
+  const errorCorrectionCode = division(originBits);
+
+  // 容错等级 + 掩码模式 + 纠错码，与多项式进行异或计算，最后左侧补 0 到 15 位
+  const result = xorBinaryString(`${correctLevelBits}${maskPatternBits}${errorCorrectionCode}`, calcResultFixedPolynomial).padStart(15, &#39;0&#39;);
+
+  // console.log(correctLevel, maskPattern, correctLevelBits, maskPatternBits, originBits.padEnd(15, &#39; &#39;), errorCorrectionCode.padEnd(10, &#39; &#39;), result)
+
+  return result;
+}
+
+calcFormatBits(&#39;L&#39;, &#39;0&#39;) // -&gt; L 0 01 000 10000000000000  1111010110 111011111000100
+calcFormatBits(&#39;L&#39;, &#39;1&#39;) // -&gt; L 1 01 001 10010000000000  1011100001 111001011110011
+calcFormatBits(&#39;L&#39;, &#39;2&#39;) // -&gt; L 2 01 010 10100000000000  0110111000 111110110101010
+calcFormatBits(&#39;L&#39;, &#39;3&#39;) // -&gt; L 3 01 011 10110000000000  0010001111 111100010011101
+calcFormatBits(&#39;L&#39;, &#39;4&#39;) // -&gt; L 4 01 100 11000000000000  1000111101 110011000101111
+calcFormatBits(&#39;L&#39;, &#39;5&#39;) // -&gt; L 5 01 101 11010000000000  1100001010 110001100011000
+calcFormatBits(&#39;L&#39;, &#39;6&#39;) // -&gt; L 6 01 110 11100000000000  0001010011 110110001000001
+calcFormatBits(&#39;L&#39;, &#39;7&#39;) // -&gt; L 7 01 111 11110000000000  0101100100 110100101110110
+calcFormatBits(&#39;M&#39;, &#39;0&#39;) // -&gt; M 0 00 000                 0000000000 101010000010010
+calcFormatBits(&#39;M&#39;, &#39;1&#39;) // -&gt; M 1 00 001 10000000000     0100110111 101000100100101
+calcFormatBits(&#39;M&#39;, &#39;2&#39;) // -&gt; M 2 00 010 100000000000    1001101110 101111001111100
+calcFormatBits(&#39;M&#39;, &#39;3&#39;) // -&gt; M 3 00 011 110000000000    1101011001 101101101001011
+calcFormatBits(&#39;M&#39;, &#39;4&#39;) // -&gt; M 4 00 100 1000000000000   0111101011 100010111111001
+calcFormatBits(&#39;M&#39;, &#39;5&#39;) // -&gt; M 5 00 101 1010000000000   0011011100 100000011001110
+calcFormatBits(&#39;M&#39;, &#39;6&#39;) // -&gt; M 6 00 110 1100000000000   1110000101 100111110010111
+calcFormatBits(&#39;M&#39;, &#39;7&#39;) // -&gt; M 7 00 111 1110000000000   1010110010 100101010100000
+calcFormatBits(&#39;Q&#39;, &#39;0&#39;) // -&gt; Q 0 11 000 110000000000000 0101001101 011010101011111
+calcFormatBits(&#39;Q&#39;, &#39;1&#39;) // -&gt; Q 1 11 001 110010000000000 0001111010 011000001101000
+calcFormatBits(&#39;Q&#39;, &#39;2&#39;) // -&gt; Q 2 11 010 110100000000000 1100100011 011111100110001
+calcFormatBits(&#39;Q&#39;, &#39;3&#39;) // -&gt; Q 3 11 011 110110000000000 1000010100 011101000000110
+calcFormatBits(&#39;Q&#39;, &#39;4&#39;) // -&gt; Q 4 11 100 111000000000000 0010100110 010010010110100
+calcFormatBits(&#39;Q&#39;, &#39;5&#39;) // -&gt; Q 5 11 101 111010000000000 0110010001 010000110000011
+calcFormatBits(&#39;Q&#39;, &#39;6&#39;) // -&gt; Q 6 11 110 111100000000000 1011001000 010111011011010
+calcFormatBits(&#39;Q&#39;, &#39;7&#39;) // -&gt; Q 7 11 111 111110000000000 1111111111 010101111101101
+calcFormatBits(&#39;H&#39;, &#39;0&#39;) // -&gt; H 0 10 000 100000000000000 1010011011 001011010001001
+calcFormatBits(&#39;H&#39;, &#39;1&#39;) // -&gt; H 1 10 001 100010000000000 1110101100 001001110111110
+calcFormatBits(&#39;H&#39;, &#39;2&#39;) // -&gt; H 2 10 010 100100000000000 0011110101 001110011100111
+calcFormatBits(&#39;H&#39;, &#39;3&#39;) // -&gt; H 3 10 011 100110000000000 0111000010 001100111010000
+calcFormatBits(&#39;H&#39;, &#39;4&#39;) // -&gt; H 4 10 100 101000000000000 1101110000 000011101100010
+calcFormatBits(&#39;H&#39;, &#39;5&#39;) // -&gt; H 5 10 101 101010000000000 1001000111 000001001010101
+calcFormatBits(&#39;H&#39;, &#39;6&#39;) // -&gt; H 6 10 110 101100000000000 0100011110 000110100001100
+calcFormatBits(&#39;H&#39;, &#39;7&#39;) // -&gt; H 7 10 111 101110000000000 0000101001 000100000111011
+</code></pre>
+<p>绘制顺序如下：<img src="./1611886481195-cdf04b07-d77e-4cb5-a8cb-b016338c154a.png" alt="格式信息.png"></p>
+<p>结果列表如下（有限值，实际应用可以先行计算完毕直接取用）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">容错等级</th>
+<th style="text-align:center">掩码模式</th>
+<th style="text-align:center">格式信息</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">111011111000100</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">111001011110011</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">111110110101010</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">111100010011101</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">110011000101111</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">110001100011000</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">110110001000001</td>
+</tr>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">110100101110110</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">101010000010010</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">101000100100101</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">101111001111100</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">101101101001011</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">100010111111001</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">100000011001110</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">100111110010111</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">100101010100000</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">011010101011111</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">011000001101000</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">011111100110001</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">011101000000110</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">010010010110100</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">010000110000011</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">010111011011010</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">010101111101101</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">001011010001001</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">001001110111110</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">001110011100111</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">001100111010000</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">000011101100010</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">000001001010101</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">000110100001100</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">000100000111011</td>
+</tr>
+</tbody>
+</table>
+<h4 id="版本信息"><a href="#版本信息" class="headerlink" title="版本信息"></a>版本信息</h4><p>二维码版本号大于7需要添加版本信息，为<strong>18位二进制数</strong>，组成 3*6 的图案</p>
+<p>计算过程：</p>
+<ul>
+<li>版本号为7：<code>000111</code></li>
+<li>右侧补0到18位，并清楚左侧的0： <code>111000000000000</code> </li>
+<li>纠错码（计算过程看伪代码）：  <code>110010010100</code>    </li>
+<li>拼接：<code>000111110010010100</code></li>
+</ul>
+<p>伪代码如下：</p>
+<pre><code class="line-numbers language-javascript">// 二进制字符串转十进制异或再转为二进制字符串
+function xorBinaryString(a, b) {
+  return (parseInt(a, 2) ^ parseInt(b, 2)).toString(2);
+}
+
+function calcVersionBits(version = &#39;7&#39;) {
+  // 二维码规范中规定的用于计算版本信息【纠错码】的固定多项式
+  const polynomial = &#39;1111100100101&#39;;
+
+  // 版本号，补足 6 位
+  const versionBits = Number(version).toString(2).padStart(6, &#39;0&#39;);
+
+  // 右侧补 0 到 18 位，并移除左侧的 0
+  const originBits = versionBits.padEnd(18, &#39;0&#39;).replace(/0*/, &#39;&#39;);
+
+  // 纠错码计算逻辑
+  function division(bits) {
+    const currentFormattedBits = bits;
+    const currentFormattedBitsLen = currentFormattedBits.length;
+
+    // 如果多项式和当前字符串位数不同，多项式右侧补 0 到相同位数
+    const paddedPolynomial = currentFormattedBitsLen &gt; polynomial.length ? polynomial.padEnd(currentFormattedBitsLen, &#39;0&#39;) : polynomial;
+
+    // 当前字符串和多项式进行异或计算，然后移除左侧的 0
+    const xorResult = xorBinaryString(currentFormattedBits, paddedPolynomial).replace(/0*/, &#39;&#39;);
+
+    // 多次计算，直到字符串长度小于等于 12
+    if (xorResult.length &gt; 12) return division(xorResult);
+
+    // 左侧补 0 到 12 位
+    return xorResult.padStart(12, &#39;0&#39;);
+  }
+
+  // 纠错码
+  const errorCorrectionCode = division(originBits);
+
+  // 拼接
+  const result = `${versionBits}${errorCorrectionCode}`;
+
+  console.log(version.padEnd(2, &#39; &#39;), versionBits, errorCorrectionCode, result)
+
+  return result;
+}
+
+calcVersionBits(&#39;7&#39;) // -&gt; 7  000111 110010010100 000111110010010100
+calcVersionBits(&#39;8&#39;) // -&gt; 8  001000 010110111100 001000010110111100
+calcVersionBits(&#39;9&#39;) // -&gt; 9  001001 101010011001 001001101010011001
+calcVersionBits(&#39;10&#39;) // -&gt; 10 001010 010011010011 001010010011010011
+calcVersionBits(&#39;11&#39;) // -&gt; 11 001011 101111110110 001011101111110110
+calcVersionBits(&#39;12&#39;) // -&gt; 12 001100 011101100010 001100011101100010
+calcVersionBits(&#39;13&#39;) // -&gt; 13 001101 100001000111 001101100001000111
+calcVersionBits(&#39;14&#39;) // -&gt; 14 001110 011000001101 001110011000001101
+calcVersionBits(&#39;15&#39;) // -&gt; 15 001111 100100101000 001111100100101000
+calcVersionBits(&#39;16&#39;) // -&gt; 16 010000 101101111000 010000101101111000
+calcVersionBits(&#39;17&#39;) // -&gt; 17 010001 010001011101 010001010001011101
+calcVersionBits(&#39;18&#39;) // -&gt; 18 010010 101000010111 010010101000010111
+calcVersionBits(&#39;19&#39;) // -&gt; 19 010011 010100110010 010011010100110010
+calcVersionBits(&#39;20&#39;) // -&gt; 20 010100 100110100110 010100100110100110
+calcVersionBits(&#39;21&#39;) // -&gt; 21 010101 011010000011 010101011010000011
+calcVersionBits(&#39;22&#39;) // -&gt; 22 010110 100011001001 010110100011001001
+calcVersionBits(&#39;23&#39;) // -&gt; 23 010111 011111101100 010111011111101100
+calcVersionBits(&#39;24&#39;) // -&gt; 24 011000 111011000100 011000111011000100
+calcVersionBits(&#39;25&#39;) // -&gt; 25 011001 000111100001 011001000111100001
+calcVersionBits(&#39;26&#39;) // -&gt; 26 011010 111110101011 011010111110101011
+calcVersionBits(&#39;27&#39;) // -&gt; 27 011011 000010001110 011011000010001110
+calcVersionBits(&#39;28&#39;) // -&gt; 28 011100 110000011010 011100110000011010
+calcVersionBits(&#39;29&#39;) // -&gt; 29 011101 001100111111 011101001100111111
+calcVersionBits(&#39;30&#39;) // -&gt; 30 011110 110101110101 011110110101110101
+calcVersionBits(&#39;31&#39;) // -&gt; 31 011111 001001010000 011111001001010000
+calcVersionBits(&#39;32&#39;) // -&gt; 32 100000 100111010101 100000100111010101
+calcVersionBits(&#39;33&#39;) // -&gt; 33 100001 011011110000 100001011011110000
+calcVersionBits(&#39;34&#39;) // -&gt; 34 100010 100010111010 100010100010111010
+calcVersionBits(&#39;35&#39;) // -&gt; 35 100011 011110011111 100011011110011111
+calcVersionBits(&#39;36&#39;) // -&gt; 36 100100 101100001011 100100101100001011
+calcVersionBits(&#39;37&#39;) // -&gt; 37 100101 010000101110 100101010000101110
+calcVersionBits(&#39;38&#39;) // -&gt; 38 100110 101001100100 100110101001100100
+calcVersionBits(&#39;39&#39;) // -&gt; 39 100111 010101000001 100111010101000001
+calcVersionBits(&#39;40&#39;) // -&gt; 40 101000 110001101001 101000110001101001
+</code></pre>
+<p>绘制顺序如下：<img src="./1611891015008-5936ddc8-0a10-4e35-824f-922cfa7e978d.png" alt="方形区域.png"></p>
+<p>结果列表如下（有限值，实际应用可以先行计算完毕直接取用）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">版本号</th>
+<th style="text-align:center">版本信息</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">000111110010010100</td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">001000010110111100</td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">001001101010011001</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">001010010011010011</td>
+</tr>
+<tr>
+<td style="text-align:center">11</td>
+<td style="text-align:center">001011101111110110</td>
+</tr>
+<tr>
+<td style="text-align:center">12</td>
+<td style="text-align:center">001100011101100010</td>
+</tr>
+<tr>
+<td style="text-align:center">13</td>
+<td style="text-align:center">001101100001000111</td>
+</tr>
+<tr>
+<td style="text-align:center">14</td>
+<td style="text-align:center">001110011000001101</td>
+</tr>
+<tr>
+<td style="text-align:center">15</td>
+<td style="text-align:center">001111100100101000</td>
+</tr>
+<tr>
+<td style="text-align:center">16</td>
+<td style="text-align:center">010000101101111000</td>
+</tr>
+<tr>
+<td style="text-align:center">17</td>
+<td style="text-align:center">010001010001011101</td>
+</tr>
+<tr>
+<td style="text-align:center">18</td>
+<td style="text-align:center">010010101000010111</td>
+</tr>
+<tr>
+<td style="text-align:center">19</td>
+<td style="text-align:center">010011010100110010</td>
+</tr>
+<tr>
+<td style="text-align:center">20</td>
+<td style="text-align:center">010100100110100110</td>
+</tr>
+<tr>
+<td style="text-align:center">21</td>
+<td style="text-align:center">010101011010000011</td>
+</tr>
+<tr>
+<td style="text-align:center">22</td>
+<td style="text-align:center">010110100011001001</td>
+</tr>
+<tr>
+<td style="text-align:center">23</td>
+<td style="text-align:center">010111011111101100</td>
+</tr>
+<tr>
+<td style="text-align:center">24</td>
+<td style="text-align:center">011000111011000100</td>
+</tr>
+<tr>
+<td style="text-align:center">25</td>
+<td style="text-align:center">011001000111100001</td>
+</tr>
+<tr>
+<td style="text-align:center">26</td>
+<td style="text-align:center">011010111110101011</td>
+</tr>
+<tr>
+<td style="text-align:center">27</td>
+<td style="text-align:center">011011000010001110</td>
+</tr>
+<tr>
+<td style="text-align:center">28</td>
+<td style="text-align:center">011100110000011010</td>
+</tr>
+<tr>
+<td style="text-align:center">29</td>
+<td style="text-align:center">011101001100111111</td>
+</tr>
+<tr>
+<td style="text-align:center">30</td>
+<td style="text-align:center">011110110101110101</td>
+</tr>
+<tr>
+<td style="text-align:center">31</td>
+<td style="text-align:center">011111001001010000</td>
+</tr>
+<tr>
+<td style="text-align:center">32</td>
+<td style="text-align:center">100000100111010101</td>
+</tr>
+<tr>
+<td style="text-align:center">33</td>
+<td style="text-align:center">100001011011110000</td>
+</tr>
+<tr>
+<td style="text-align:center">34</td>
+<td style="text-align:center">100010100010111010</td>
+</tr>
+<tr>
+<td style="text-align:center">35</td>
+<td style="text-align:center">100011011110011111</td>
+</tr>
+<tr>
+<td style="text-align:center">36</td>
+<td style="text-align:center">100100101100001011</td>
+</tr>
+<tr>
+<td style="text-align:center">37</td>
+<td style="text-align:center">100101010000101110</td>
+</tr>
+<tr>
+<td style="text-align:center">38</td>
+<td style="text-align:center">100110101001100100</td>
+</tr>
+<tr>
+<td style="text-align:center">39</td>
+<td style="text-align:center">100111010101000001</td>
+</tr>
+<tr>
+<td style="text-align:center">40</td>
+<td style="text-align:center">101000110001101001</td>
+</tr>
+</tbody>
+</table>
+<h3 id="数据编码"><a href="#数据编码" class="headerlink" title="数据编码"></a>数据编码</h3><p>看完其他区域，回头看数据区，本节以 <code>HELLO WORLD</code> 为例，讲解二维码是如何为字符串编码的</p>
+<h4 id="确定容错等级"><a href="#确定容错等级" class="headerlink" title="确定容错等级"></a>确定容错等级</h4><p>确定本次编码选用哪种容错等级，如 <code>Q</code> </p>
+<h4 id="确定编码模式"><a href="#确定编码模式" class="headerlink" title="确定编码模式"></a>确定编码模式</h4><p>根据字符串的类型，选择不同的编码模式</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">编码模式</th>
+<th style="text-align:center">判断方法</th>
+<th style="text-align:center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>数字模式</strong></td>
+<td style="text-align:center">/0-9/</td>
+<td style="text-align:center">数字</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>字母数字模式</strong></td>
+<td style="text-align:center">/[0-9A-Z$%\*+-\/.:\s]/</td>
+<td style="text-align:center">数字 + 大写字母 + 特殊符号（$%*+-/.:）+ 空格</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>字节模式</strong></td>
+<td style="text-align:center">0x00 &lt; x.charCodeAt(0) &lt; 0xFF</td>
+<td style="text-align:center">ISO 8859-1 编码中的字符</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>汉字模式</strong></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">Shift JIS 中的字符 <a href="http://www.rikai.com/library/kanjitables/kanji_codes.sjis.shtml" target="_blank" rel="noopener">http://www.rikai.com/library/kanjitables/kanji_codes.sjis.shtml</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>但是</strong>，在实际应用中，字节模式不仅用来编码 ISO 8859-1 的字符，也用来编码 utf-8 的所有字符。Shift JIS 的所有字符都可以用 utf-8 来表示，所以一般来说，除了字母数字，都用<strong>字节模式</strong>来编码。</p>
+<p>根据上表，<code>HELLO WORLD</code> 应该选择字母的编码模式</p>
+<pre><code class="line-numbers language-javascript">const ENCODING_MODE_NUMBER = &#39;ENCODING_MODE_NUMBER&#39;; // 数字
+const ENCODING_MODE_ALPHANUMERIC = &#39;ENCODING_MODE_ALPHANUMERIC&#39;; // 字母数字
+const ENCODING_MODE_BYTE = &#39;ENCODING_MODE_BYTE&#39;; // ISO-8859-1
+const ENCODING_MODE_KANJI = &#39;ENCODING_MODE_KANJI&#39;; // 其他
+
+function detectEncodingMode(value) {
+    if (/[0-9]/.test(value)) return ENCODING_MODE_NUMBER;
+
+  if (/[0-9A-Z$%\\*+-\\/.:\\s]/.test(value)) return ENCODING_MODE_ALPHANUMERIC;
+
+  return ENCODING_MODE_BYTE;
+}
+
+detectEncodingMode(123456789); // -&gt; ENCODING_MODE_NUMBER
+detectEncodingMode(&#39;HELLO WORLD&#39;); // -&gt; ENCODING_MODE_ALPHANUMERIC
+detectEncodingMode(&#39;&lt;&gt;&#39;); // -&gt; ENCODING_MODE_BYTE
+detectEncodingMode(&#39;中文&#39;); // -&gt; ENCODING_MODE_KANJI
+</code></pre>
+<h4 id="确定版本号"><a href="#确定版本号" class="headerlink" title="确定版本号"></a>确定版本号</h4><p>根据容错等级以及字符串的类型和长度，确定应该选用哪个版本（尺寸）的二维码</p>
+<p>根据上文的容量表，Q 容错等级，字母的编码模式，11位长度的字符串，版本1即可满足容量需求</p>
+<pre><code class="line-numbers language-javascript">// 字符容量表
+const CHAR_CAPACITY = [
+    // 1
+  [
+    [41,25,17,10], // L
+    [34,20,14,8], // M
+    [27,16,11,7], // Q
+    [17,10,7,4], // H
+  ],
+  // 2
+  [
+    [77,47,32,20],
+    [63,38,26,16],
+    [48,29,20,12],
+    [34,20,14,8],
+  ],
+  // 3
+  [
+    [127,77,53,32],
+    [101,61,42,26],
+    [77,47,32,20],
+    [58,35,24,15],
+  ],
+  // ...
+  [
+    [187,114,78,48],
+    [149,90,62,38],
+    [111,67,46,28],
+    [82,50,34,21],
+  ],
+  [
+    [255,154,106,65],
+    [202,122,84,52],
+    [144,87,60,37],
+    [106,64,44,27],
+  ],
+  [
+    [322,195,134,82],
+    [255,154,106,65],
+    [178,108,74,45],
+    [139,84,58,36],
+  ],
+  [
+    [370,224,154,95],
+    [293,178,122,75],
+    [207,125,86,53],
+    [154,93,64,39],
+  ],
+  [
+    [461,279,192,118],
+    [365,221,152,93],
+    [259,157,108,66],
+    [202,122,84,52],
+  ],
+  [
+    [552,335,230,141],
+    [432,262,180,111],
+    [312,189,130,80],
+    [235,143,98,60],
+  ],
+  [
+    [652,395,271,167],
+    [513,311,213,131],
+    [364,221,151,93],
+    [288,174,119,74],
+  ],
+  [
+    [772,468,321,198],
+    [604,366,251,155],
+    [427,259,177,109],
+    [331,200,137,85],
+  ],
+  [
+    [883,535,367,226],
+    [691,419,287,177],
+    [489,296,203,125],
+    [374,227,155,96],
+  ],
+  [
+    [1022,619,425,262],
+    [796,483,331,204],
+    [580,352,241,149],
+    [427,259,177,109],
+  ],
+  [
+    [1101,667,458,282],
+    [871,528,362,223],
+    [621,376,258,159],
+    [468,283,194,120],
+  ],
+  [
+    [1250,758,520,320],
+    [991,600,412,254],
+    [703,426,292,180],
+    [530,321,220,136],
+  ],
+  [
+    [1408,854,586,361],
+    [1082,656,450,277],
+    [775,470,322,198],
+    [602,365,250,154],
+  ],
+  [
+    [1548,938,644,397],
+    [1212,734,504,310],
+    [876,531,364,224],
+    [674,408,280,173],
+  ],
+  [
+    [1725,1046,718,442],
+    [1346,816,560,345],
+    [948,574,394,243],
+    [746,452,310,191],
+  ],
+  [
+    [1903,1153,792,488],
+    [1500,909,624,384],
+    [1063,644,442,272],
+    [813,493,338,208],
+  ],
+  [
+    [2061,1249,858,528],
+    [1600,970,666,410],
+    [1159,702,482,297],
+    [919,557,382,235],
+  ],
+  [
+    [2232,1352,929,572],
+    [1708,1035,711,438],
+    [1224,742,509,314],
+    [969,587,403,248],
+  ],
+  [
+    [2409,1460,1003,618],
+    [1872,1134,779,480],
+    [1358,823,565,348],
+    [1056,640,439,270],
+  ],
+  [
+    [2620,1588,1091,672],
+    [2059,1248,857,528],
+    [1468,890,611,376],
+    [1108,672,461,284],
+  ],
+  [
+    [2812,1704,1171,721],
+    [2188,1326,911,561],
+    [1588,963,661,407],
+    [1228,744,511,315],
+  ],
+  [
+    [3057,1853,1273,784],
+    [2395,1451,997,614],
+    [1718,1041,715,440],
+    [1286,779,535,330],
+  ],
+  [
+    [3283,1990,1367,842],
+    [2544,1542,1059,652],
+    [1804,1094,751,462],
+    [1425,864,593,365],
+  ],
+  [
+    [3517,2132,1465,902],
+    [2701,1637,1125,692],
+    [1933,1172,805,496],
+    [1501,910,625,385],
+  ],
+  [
+    [3669,2223,1528,940],
+    [2857,1732,1190,732],
+    [2085,1263,868,534],
+    [1581,958,658,405],
+  ],
+  [
+    [3909,2369,1628,1002],
+    [3035,1839,1264,778],
+    [2181,1322,908,559],
+    [1677,1016,698,430],
+  ],
+  [
+    [4158,2520,1732,1066],
+    [3289,1994,1370,843],
+    [2358,1429,982,604],
+    [1782,1080,742,457],
+  ],
+  [
+    [4417,2677,1840,1132],
+    [3486,2113,1452,894],
+    [2473,1499,1030,634],
+    [1897,1150,790,486],
+  ],
+  [
+    [4686,2840,1952,1201],
+    [3693,2238,1538,947],
+    [2670,1618,1112,684],
+    [2022,1226,842,518],
+  ],
+  [
+    [4965,3009,2068,1273],
+    [3909,2369,1628,1002],
+    [2805,1700,1168,719],
+    [2157,1307,898,553],
+  ],
+  [
+    [5253,3183,2188,1347],
+    [4134,2506,1722,1060],
+    [2949,1787,1228,756],
+    [2301,1394,958,590],
+  ],
+  [
+    [5529,3351,2303,1417],
+    [4343,2632,1809,1113],
+    [3081,1867,1283,790],
+    [2361,1431,983,605],
+  ],
+  [
+    [5836,3537,2431,1496],
+    [4588,2780,1911,1176],
+    [3244,1966,1351,832],
+    [2524,1530,1051,647],
+  ],
+  [
+    [6153,3729,2563,1577],
+    [4775,2894,1989,1224],
+    [3417,2071,1423,876],
+    [2625,1591,1093,673],
+  ],
+  [
+    [6479,3927,2699,1661],
+    [5039,3054,2099,1292],
+    [3599,2181,1499,923],
+    [2735,1658,1139,701],
+  ],
+  [
+    [6743,4087,2809,1729],
+    [5313,3220,2213,1362],
+    [3791,2298,1579,972],
+    [2927,1774,1219,750],
+  ],
+  // 40
+  [
+    [7089,4296,2953,1817],
+    [5596,3391,2331,1435],
+    [3993,2420,1663,1024],
+    [3057,1852,1273,784],
+  ],
+];
+
+function detectVersion(value, correctLevel, encodingMode) {
+  let version = &#39;1&#39;;
+
+  const len = value.length;
+
+  const correctLevelIndex = [CORRECT_LEVEL_L, CORRECT_LEVEL_M, CORRECT_LEVEL_Q, CORRECT_LEVEL_H].indexOf(correctLevel);
+  const encodingModeIndex = [ENCODING_MODE_NUMBER, ENCODING_MODE_ALPHANUMERIC, ENCODING_MODE_BYTE, ENCODING_MODE_KANJI].indexOf(encodingMode);
+
+  for (let i = 0; i &lt; CHAR_CAPACITY.length; i++) {
+  if (len &lt;= CHAR_CAPACITY[i][correctLevelIndex][encodingModeIndex]) version = i + 1;
+    break;
+  }
+
+  return String(version);
+}
+
+detectVersion(&#39;HELLO WORLD&#39;, &#39;Q&#39;, ENCODING_MODE_ALPHANUMERIC); // -&gt; 1
+</code></pre>
+<h4 id="确定编码模式指示器"><a href="#确定编码模式指示器" class="headerlink" title="确定编码模式指示器"></a>确定编码模式指示器</h4><p>根据编码模式的不同，选择不同的编码模式指示器</p>
+<table>
+<thead>
+<tr>
+<th>编码模式</th>
+<th>模式指示器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>数字模式</strong></td>
+<td>0001</td>
+</tr>
+<tr>
+<td><strong>字母数字模式</strong></td>
+<td>0010</td>
+</tr>
+<tr>
+<td><strong>字节模式</strong></td>
+<td>0100</td>
+</tr>
+<tr>
+<td><strong>汉字模式</strong></td>
+<td>1000</td>
+</tr>
+</tbody>
+</table>
+<p>根据上表，<code>HELLO WORLD</code> 应该选择字母的编码模式指示器，<code>0010</code></p>
+<pre><code class="line-numbers language-javascript">function detectEncodingModeIndicator(encodingMode) {
+    switch (encodingMode) {
+      case ENCODING_MODE_NUMBER:
+      return &#39;0001&#39;;
+    case ENCODING_MODE_ALPHANUMERIC:
+      return &#39;0010&#39;;
+    case ENCODING_MODE_BYTE:
+      return &#39;0100&#39;;
+    case ENCODING_MODE_KANJI:
+      return &#39;1000&#39;;
+  }
+}
+
+detectEncodingModeIndicator(ENCODING_MODE_NUMBER); // -&gt; 0001
+</code></pre>
+<h4 id="确定字符数量指示器"><a href="#确定字符数量指示器" class="headerlink" title="确定字符数量指示器"></a>确定字符数量指示器</h4><p>字符数量指示器用来表示要编码的字符数的二进制字符串，根据版本 + 编码模式以及字符串的长度确定，列表如下：</p>
+<table>
+<thead>
+<tr>
+<th>版本号</th>
+<th>编码模式</th>
+<th>字符数量指示器长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-9</td>
+<td>数字模式</td>
+<td>10</td>
+</tr>
+<tr>
+<td></td>
+<td>字母数字模式</td>
+<td>9</td>
+</tr>
+<tr>
+<td></td>
+<td>字节模式</td>
+<td>8</td>
+</tr>
+<tr>
+<td></td>
+<td>汉字模式</td>
+<td>8</td>
+</tr>
+<tr>
+<td>10-26</td>
+<td>数字模式</td>
+<td>12</td>
+</tr>
+<tr>
+<td></td>
+<td>字母数字模式</td>
+<td>11</td>
+</tr>
+<tr>
+<td></td>
+<td>字节模式</td>
+<td>16</td>
+</tr>
+<tr>
+<td></td>
+<td>汉字模式</td>
+<td>10</td>
+</tr>
+<tr>
+<td>27-40</td>
+<td>数字模式</td>
+<td>14</td>
+</tr>
+<tr>
+<td></td>
+<td>字母数字模式</td>
+<td>13</td>
+</tr>
+<tr>
+<td></td>
+<td>字节模式</td>
+<td>16</td>
+</tr>
+<tr>
+<td></td>
+<td>汉字模式</td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+<p>根据上表， <code>HELLO WORLD</code> 的字符长度为11，转成二进制为 <code>1011</code> ，版本号为1，编码模式为字母数字模式，字符数量指示器的长度为9，将 <code>1011</code> 左侧补0到9位，得到 <code>000001011</code> </p>
+<pre><code class="line-numbers language-javascript">// 字符指示器长度表
+const CHAR_COUNT_INDICATOR_LENGTH = [
+  [10, 9, 8, 8], // version 1 - 9 [数字, 字母数字, 字节, 汉字]
+  [12, 11, 16, 10], // version 10 - 26
+  [14, 13, 16, 12], // version 27 - 40
+];
+
+function detectCharCountIndicator(value, version, encodingMode) {
+  const encodingModeIndex = ENCODING_MODE_ORDER.indexOf(encodingMode);
+
+  let charCountIndicatorLenTableIndex = 0;
+  if (Number(version) &lt;= 9) charCountIndicatorLenTableIndex = 0;
+  if (Number(version) &gt;= 10 &amp;&amp; Number(version) &lt;= 26) charCountIndicatorLenTableIndex = 1;
+  if (Number(version) &gt;= 27) charCountIndicatorLenTableIndex = 2;
+
+  const valueLen = value.length;
+  const charCountIndicatorLen = CHAR_COUNT_INDICATOR_LENGTH[charCountIndicatorLenTableIndex][encodingModeIndex];
+
+  return valueLen.toString(2).padStart(charCountIndicatorLen, &#39;0&#39;);
+}
+
+detectCharCountIndicator(&#39;HELLO WORLD&#39;, &#39;1&#39;, &#39;ENCODING_MODE_ALPHANUMERIC&#39;); // -&gt; 000001011
+</code></pre>
+<h4 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h4><p>根据编码模式的不同，有不同的编码逻辑，具体如下：</p>
+<ul>
+<li><p>数字模式</p>
+<p>直接转成二进制数</p>
+<pre><code class="line-numbers language-javascript">function encodeDataWithNumberMode(value) {
+  return Number(value).toString(2);
+}
+</code></pre>
+</li>
+<li><p>字母数字模式</p>
+<ul>
+<li>原始字符串两两分组，比如 <code>HE</code> <code>LL</code> <code>O</code> <code>WO</code> <code>RL</code> <code>D</code> </li>
+<li>从字母数字模式的字符数字对照表找到分组内各字符的数字</li>
+<li><code>H</code> -&gt; 17； <code>E</code> -&gt; 14</li>
+<li>(45 * 17) + 14 = 779 （45 是固定值）</li>
+<li>转成二进制并左侧补 0 到 11 位，<code>Number(779).toString(2).padStart(11, 0) = &#39;01100001011&#39;</code> </li>
+<li>奇数长度字符，直接返回索引值的二进制，左侧补 0 到 6 位</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>数字</th>
+<th>字符</th>
+<th>数字</th>
+<th>字符</th>
+<th>数字</th>
+<th>字符</th>
+<th>数字</th>
+<th>字符</th>
+<th>数字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>A</td>
+<td>10</td>
+<td>K</td>
+<td>20</td>
+<td>U</td>
+<td>30</td>
+<td>+</td>
+<td>40</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>B</td>
+<td>11</td>
+<td>L</td>
+<td>21</td>
+<td>V</td>
+<td>31</td>
+<td>-</td>
+<td>41</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td>C</td>
+<td>12</td>
+<td>M</td>
+<td>22</td>
+<td>W</td>
+<td>32</td>
+<td>.</td>
+<td>42</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3</td>
+<td>D</td>
+<td>13</td>
+<td>N</td>
+<td>23</td>
+<td>X</td>
+<td>33</td>
+<td>/</td>
+<td>43</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>E</td>
+<td>14</td>
+<td>O</td>
+<td>24</td>
+<td>Y</td>
+<td>34</td>
+<td>:</td>
+<td>44</td>
+</tr>
+<tr>
+<td>5</td>
+<td>5</td>
+<td>F</td>
+<td>15</td>
+<td>P</td>
+<td>25</td>
+<td>Z</td>
+<td>35</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>6</td>
+<td>G</td>
+<td>16</td>
+<td>Q</td>
+<td>26</td>
+<td>(空格)</td>
+<td>36</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>7</td>
+<td>H</td>
+<td>17</td>
+<td>R</td>
+<td>27</td>
+<td>$</td>
+<td>37</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>8</td>
+<td>I</td>
+<td>18</td>
+<td>S</td>
+<td>28</td>
+<td>%</td>
+<td>38</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>9</td>
+<td>J</td>
+<td>19</td>
+<td>T</td>
+<td>29</td>
+<td>*</td>
+<td>39</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="line-numbers language-javascript">  // 编码模式 - 字母数字模式对照表
+  const ENCODING_MODE_ALPHANUMERIC_MAP = {
+      0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9,
+    A: 10, B: 11, C: 12, D: 13, E:14, F: 15, G: 16, H: 17, I: 18, J: 19, K: 20, L: 21, M: 22, N: 23, O: 24, P: 25, Q: 26, R: 27, S: 28, T: 29, U: 30, V: 31, W: 32, X: 33, Y: 34, Z: 35,
+    [&#39; &#39;]: 36, $: 37,
+  };
+  ENCODING_MODE_ALPHANUMERIC_MAP[&#39;%&#39;] = 38;
+  ENCODING_MODE_ALPHANUMERIC_MAP[&#39;*&#39;] = 39;
+  ENCODING_MODE_ALPHANUMERIC_MAP[&#39;+&#39;] = 40;
+  ENCODING_MODE_ALPHANUMERIC_MAP[&#39;-&#39;] = 41;
+  ENCODING_MODE_ALPHANUMERIC_MAP[&#39;.&#39;] = 42;
+  ENCODING_MODE_ALPHANUMERIC_MAP[&#39;/&#39;] = 43;
+  ENCODING_MODE_ALPHANUMERIC_MAP[&#39;:&#39;] = 44;
+
+  function encodeDataWithAlphanumericMode(value) {
+    // 两两分割
+    const splittedValue = value.split(/(.{2})/).filter(i =&gt; !!i);
+
+    return splittedValue.reduce((r, item) =&gt; {
+      const current = []
+      item.split(&#39;&#39;).forEach(i =&gt; {
+          // 找到分组内每个字符对应的索引
+        current.push(ENCODING_MODE_ALPHANUMERIC_MAP[i]);
+      })
+
+      let result = &#39;&#39;
+      // 奇数长度字符串，索引值转二进制左侧补 0 到 6 位
+      if (!current[1]) result = current[0].toString(2).padStart(6, &#39;0&#39;);
+      // 偶数长度字符串，45 * [0] + [1] 转二进制左侧补 0 到 11 位，
+      if (current[1]) result = (45 * current[0] + current[1]).toString(2).padStart(11, &#39;0&#39;);
+      return `${r}${result}`;
+    }, &#39;&#39;);
+  }
+
+  encodeDataWithAlphanumericMode(&#39;HELLO WORLD&#39;); // -&gt; 0110000101101111000110100010111001011011100010011010100001101
+</code></pre>
+<ul>
+<li><p>字节模式</p>
+<p>获取每个字符的 unicode 索引再转二进制，左侧补 0 到 8 位即可</p>
+<pre><code class="line-numbers language-javascript">function encodeDataWithByteMode(value) {
+  return value.split(&#39;&#39;).reduce((r, item) =&gt; {
+    return `${r}${item.charCodeAt(0).toString(2).padStart(8, &#39;0&#39;)}`;
+  }, &#39;&#39;);
+}
+
+encodeDataWithByteMode(&#39;Hello, world!&#39;); // -&gt; 01001000011001010110110001101100011011110010110000100000011101110110111101110010011011000110010000100001
+</code></pre>
+</li>
+<li><p>汉字模式</p>
+<ul>
+<li>获取每个字符的 Shift JIS 索引</li>
+<li>针对 0x8140 到 0x9ffc 的字符（以 “荷” <0x89d7> 为例）：<ul>
+<li>0x89D7 - 0x8140 = 0x0897</li>
+<li>得到 0x08 0x97</li>
+<li>(0x08 * 0xC0) + 0x97 = 0x697</li>
+<li>0x697 -&gt; 0011010010111</li>
+</ul>
+</0x89d7></li>
+<li>针对 0xE040 到 0xEBBF 的字符（以 “茗” <0xe4aa> 为例）:<ul>
+<li>0xE4AA - 0xC140 = 0x236A</li>
+<li>得到 0x23 0x6A</li>
+<li>(0x23 * 0xC0) + 0x6A = 0x1AAA</li>
+<li>0x1AAA -&gt; 1101010101010</li>
+</ul>
+</0xe4aa></li>
+</ul>
+</li>
+</ul>
+<pre><code class="line-numbers language-javascript">function encodeDataWithKanjiMode(value) {
+    // 略
+}
+</code></pre>
+<h4 id="整合编码结果"><a href="#整合编码结果" class="headerlink" title="整合编码结果"></a>整合编码结果</h4><p>根据以上复杂的计算后，可以获取以下的结果：</p>
+<p><code>HELLO WORLD</code> ：</p>
+<table>
+<thead>
+<tr>
+<th>编码模式指示器</th>
+<th>字符数量指示器</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0010</td>
+<td>000001011</td>
+<td>0110000101101111000110100010111001011011100010011010100001101</td>
+</tr>
+</tbody>
+</table>
+<p>最后，二维码规范规定编码后的字符串长度必须根据容错等级和版本拓展到8的倍数，所以针对上文的结果还需做额外处理。</p>
+<p>版本、容错等级和字节长度的对应表如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">版本号</th>
+<th style="text-align:left">容错等级</th>
+<th style="text-align:left">字节长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">19</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">16</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">13</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">9</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">34</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">28</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">22</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">16</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">55</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">44</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">34</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">26</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">80</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">64</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">48</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">36</td>
+</tr>
+<tr>
+<td style="text-align:left">5</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">108</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">86</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">62</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">46</td>
+</tr>
+<tr>
+<td style="text-align:left">6</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">136</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">108</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">76</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">60</td>
+</tr>
+<tr>
+<td style="text-align:left">7</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">156</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">124</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">88</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">66</td>
+</tr>
+<tr>
+<td style="text-align:left">8</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">194</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">154</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">110</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">86</td>
+</tr>
+<tr>
+<td style="text-align:left">9</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">232</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">182</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">132</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">100</td>
+</tr>
+<tr>
+<td style="text-align:left">10</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">274</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">216</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">154</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">122</td>
+</tr>
+<tr>
+<td style="text-align:left">11</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">324</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">254</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">180</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">140</td>
+</tr>
+<tr>
+<td style="text-align:left">12</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">370</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">290</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">206</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">158</td>
+</tr>
+<tr>
+<td style="text-align:left">13</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">428</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">334</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">244</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">180</td>
+</tr>
+<tr>
+<td style="text-align:left">14</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">461</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">365</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">261</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">197</td>
+</tr>
+<tr>
+<td style="text-align:left">15</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">523</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">415</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">295</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">223</td>
+</tr>
+<tr>
+<td style="text-align:left">16</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">589</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">453</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">325</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">253</td>
+</tr>
+<tr>
+<td style="text-align:left">17</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">647</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">507</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">367</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">283</td>
+</tr>
+<tr>
+<td style="text-align:left">18</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">721</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">563</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">397</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">313</td>
+</tr>
+<tr>
+<td style="text-align:left">19</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">795</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">627</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">445</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">341</td>
+</tr>
+<tr>
+<td style="text-align:left">20</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">861</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">669</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">485</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">385</td>
+</tr>
+<tr>
+<td style="text-align:left">21</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">932</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">714</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">512</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">406</td>
+</tr>
+<tr>
+<td style="text-align:left">22</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1006</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">782</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">568</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">442</td>
+</tr>
+<tr>
+<td style="text-align:left">23</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1094</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">860</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">614</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">464</td>
+</tr>
+<tr>
+<td style="text-align:left">24</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1174</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">914</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">664</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">514</td>
+</tr>
+<tr>
+<td style="text-align:left">25</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1276</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1000</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">718</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">538</td>
+</tr>
+<tr>
+<td style="text-align:left">26</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1370</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1062</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">754</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">596</td>
+</tr>
+<tr>
+<td style="text-align:left">27</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1468</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1128</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">808</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">628</td>
+</tr>
+<tr>
+<td style="text-align:left">28</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1531</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1193</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">871</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">661</td>
+</tr>
+<tr>
+<td style="text-align:left">29</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1631</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1267</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">911</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">701</td>
+</tr>
+<tr>
+<td style="text-align:left">30</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1735</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1373</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">985</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">745</td>
+</tr>
+<tr>
+<td style="text-align:left">31</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1843</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1455</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1033</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">793</td>
+</tr>
+<tr>
+<td style="text-align:left">32</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">1955</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1541</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1115</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">845</td>
+</tr>
+<tr>
+<td style="text-align:left">33</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">2071</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1631</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1171</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">901</td>
+</tr>
+<tr>
+<td style="text-align:left">34</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">2191</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1725</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1231</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">961</td>
+</tr>
+<tr>
+<td style="text-align:left">35</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">2306</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1812</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1286</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">986</td>
+</tr>
+<tr>
+<td style="text-align:left">36</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">2434</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1914</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1354</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">1054</td>
+</tr>
+<tr>
+<td style="text-align:left">37</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">2566</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">1992</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1426</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">1096</td>
+</tr>
+<tr>
+<td style="text-align:left">38</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">2702</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">2102</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1502</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">1142</td>
+</tr>
+<tr>
+<td style="text-align:left">39</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">2812</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">2216</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1582</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">1222</td>
+</tr>
+<tr>
+<td style="text-align:left">40</td>
+<td style="text-align:left">L</td>
+<td style="text-align:left">2956</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">M</td>
+<td style="text-align:left">2334</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Q</td>
+<td style="text-align:left">1666</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">H</td>
+<td style="text-align:left">1276</td>
+</tr>
+</tbody>
+</table>
+<p>具体流程如下：</p>
+<ul>
+<li>确定最终字符长度，如版本1，容错等级 Q 的 <code>Hello World</code> 最终比特长度应该为 13*8 = 104</li>
+<li>补0，最多补4位，比如整合前的编码是74位，小于104，而且补4个0也没到104位，那就补4个0</li>
+<li>补0，补到8的倍数，比如补完0之后只有78位，还需要补两个0，到80位，8的倍数</li>
+<li>重复补特定二进制，直到补满长度，比如80位还是小于104，用 <code>11101100</code> 和 <code>00010001</code> 重复补，一直补到104位</li>
+</ul>
+<pre><code class="line-numbers language-javascript">function mergeEncodedData(encodingModeIndicator, charCountIndicator, encodedData, version, correctLevel) {
+  const repeatBits = [&#39;11101100&#39;, &#39;00010001&#39;];
+  const correctLevelIndex = CORRECT_LEVEL_ORDER.indexOf(correctLevel);
+  const codeWordsBitsLen = CODE_WORDS_LENGTH[version - 1][correctLevelIndex] * 8; // 比特长度
+
+  let result = `${encodingModeIndicator}${charCountIndicator}${encodedData}`;
+
+  const codeWordsDiff = codeWordsBitsLen - result.length;
+
+  // 直接补 0 到相应长度
+  if (codeWordsDiff &lt;= 4) return result.padEnd(codeWordsBitsLen, &#39;0&#39;);
+
+  // 先补四个 0
+  result = result.padEnd(result.length + 4, &#39;0&#39;);
+
+  // 再补到 8 的倍数
+  result = result.padEnd(result.length + 8 - result.length % 8, &#39;0&#39;);
+
+  // 长度还是不够，再补重复字节
+  const len = result.length;
+  for (let i = 0; i &lt; codeWordsBitsLen - len; i += 8) {
+    result = `${result}${repeatBits[(i / 8) % 2]}`;
+  }
+
+  return result;
+}
+
+mergeEncodedData(&#39;0010&#39;, &#39;000001011&#39;, &#39;0110000101101111000110100010111001011011100010011010100001101&#39;, &#39;1&#39;, &#39;Q&#39;); // -&gt; 00100000010110110000101101111000110100010111001011011100010011010100001101000000111011000001000111101100
+</code></pre>
+<p>回忆下整个流程，如下图：</p>
+<p><img src="./1612171777537-9964930d-6246-4e84-b2ac-0e0b644fab62.png" alt="编组 22.png"></p>
+<h4 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h4><p>整合所有逻辑，伪代码如下：</p>
+<pre><code class="line-numbers language-javascript">// 容错等级
+const CORRECT_LEVEL_L = &#39;L&#39;;
+const CORRECT_LEVEL_M = &#39;M&#39;;
+const CORRECT_LEVEL_Q = &#39;Q&#39;;
+const CORRECT_LEVEL_H = &#39;H&#39;;
+
+const CORRECT_LEVEL_ORDER = [CORRECT_LEVEL_L, CORRECT_LEVEL_M, CORRECT_LEVEL_Q, CORRECT_LEVEL_H];
+
+// 编码模式
+const ENCODING_MODE_NUMBER = &#39;ENCODING_MODE_NUMBER&#39;; // 数字
+const ENCODING_MODE_ALPHANUMERIC = &#39;ENCODING_MODE_ALPHANUMERIC&#39;; // 字母数字
+const ENCODING_MODE_BYTE = &#39;ENCODING_MODE_BYTE&#39;; // ISO-8859-1
+const ENCODING_MODE_KANJI = &#39;ENCODING_MODE_KANJI&#39;; // 其他
+
+const ENCODING_MODE_ORDER = [ENCODING_MODE_NUMBER, ENCODING_MODE_ALPHANUMERIC, ENCODING_MODE_BYTE, ENCODING_MODE_KANJI];
+
+// 字符容量表
+const CHAR_CAPACITY = [
+  // 1
+  [
+    [41,25,17,10], // L
+    [34,20,14,8], // M
+    [27,16,11,7], // Q
+    [17,10,7,4], // H
+  ],
+  // 2
+  [
+    [77,47,32,20],
+    [63,38,26,16],
+    [48,29,20,12],
+    [34,20,14,8],
+  ],
+  // 3
+  [
+    [127,77,53,32],
+    [101,61,42,26],
+    [77,47,32,20],
+    [58,35,24,15],
+  ],
+  // ...
+  [
+    [187,114,78,48],
+    [149,90,62,38],
+    [111,67,46,28],
+    [82,50,34,21],
+  ],
+  [
+    [255,154,106,65],
+    [202,122,84,52],
+    [144,87,60,37],
+    [106,64,44,27],
+  ],
+  [
+    [322,195,134,82],
+    [255,154,106,65],
+    [178,108,74,45],
+    [139,84,58,36],
+  ],
+  [
+    [370,224,154,95],
+    [293,178,122,75],
+    [207,125,86,53],
+    [154,93,64,39],
+  ],
+  [
+    [461,279,192,118],
+    [365,221,152,93],
+    [259,157,108,66],
+    [202,122,84,52],
+  ],
+  [
+    [552,335,230,141],
+    [432,262,180,111],
+    [312,189,130,80],
+    [235,143,98,60],
+  ],
+  [
+    [652,395,271,167],
+    [513,311,213,131],
+    [364,221,151,93],
+    [288,174,119,74],
+  ],
+  [
+    [772,468,321,198],
+    [604,366,251,155],
+    [427,259,177,109],
+    [331,200,137,85],
+  ],
+  [
+    [883,535,367,226],
+    [691,419,287,177],
+    [489,296,203,125],
+    [374,227,155,96],
+  ],
+  [
+    [1022,619,425,262],
+    [796,483,331,204],
+    [580,352,241,149],
+    [427,259,177,109],
+  ],
+  [
+    [1101,667,458,282],
+    [871,528,362,223],
+    [621,376,258,159],
+    [468,283,194,120],
+  ],
+  [
+    [1250,758,520,320],
+    [991,600,412,254],
+    [703,426,292,180],
+    [530,321,220,136],
+  ],
+  [
+    [1408,854,586,361],
+    [1082,656,450,277],
+    [775,470,322,198],
+    [602,365,250,154],
+  ],
+  [
+    [1548,938,644,397],
+    [1212,734,504,310],
+    [876,531,364,224],
+    [674,408,280,173],
+  ],
+  [
+    [1725,1046,718,442],
+    [1346,816,560,345],
+    [948,574,394,243],
+    [746,452,310,191],
+  ],
+  [
+    [1903,1153,792,488],
+    [1500,909,624,384],
+    [1063,644,442,272],
+    [813,493,338,208],
+  ],
+  [
+    [2061,1249,858,528],
+    [1600,970,666,410],
+    [1159,702,482,297],
+    [919,557,382,235],
+  ],
+  [
+    [2232,1352,929,572],
+    [1708,1035,711,438],
+    [1224,742,509,314],
+    [969,587,403,248],
+  ],
+  [
+    [2409,1460,1003,618],
+    [1872,1134,779,480],
+    [1358,823,565,348],
+    [1056,640,439,270],
+  ],
+  [
+    [2620,1588,1091,672],
+    [2059,1248,857,528],
+    [1468,890,611,376],
+    [1108,672,461,284],
+  ],
+  [
+    [2812,1704,1171,721],
+    [2188,1326,911,561],
+    [1588,963,661,407],
+    [1228,744,511,315],
+  ],
+  [
+    [3057,1853,1273,784],
+    [2395,1451,997,614],
+    [1718,1041,715,440],
+    [1286,779,535,330],
+  ],
+  [
+    [3283,1990,1367,842],
+    [2544,1542,1059,652],
+    [1804,1094,751,462],
+    [1425,864,593,365],
+  ],
+  [
+    [3517,2132,1465,902],
+    [2701,1637,1125,692],
+    [1933,1172,805,496],
+    [1501,910,625,385],
+  ],
+  [
+    [3669,2223,1528,940],
+    [2857,1732,1190,732],
+    [2085,1263,868,534],
+    [1581,958,658,405],
+  ],
+  [
+    [3909,2369,1628,1002],
+    [3035,1839,1264,778],
+    [2181,1322,908,559],
+    [1677,1016,698,430],
+  ],
+  [
+    [4158,2520,1732,1066],
+    [3289,1994,1370,843],
+    [2358,1429,982,604],
+    [1782,1080,742,457],
+  ],
+  [
+    [4417,2677,1840,1132],
+    [3486,2113,1452,894],
+    [2473,1499,1030,634],
+    [1897,1150,790,486],
+  ],
+  [
+    [4686,2840,1952,1201],
+    [3693,2238,1538,947],
+    [2670,1618,1112,684],
+    [2022,1226,842,518],
+  ],
+  [
+    [4965,3009,2068,1273],
+    [3909,2369,1628,1002],
+    [2805,1700,1168,719],
+    [2157,1307,898,553],
+  ],
+  [
+    [5253,3183,2188,1347],
+    [4134,2506,1722,1060],
+    [2949,1787,1228,756],
+    [2301,1394,958,590],
+  ],
+  [
+    [5529,3351,2303,1417],
+    [4343,2632,1809,1113],
+    [3081,1867,1283,790],
+    [2361,1431,983,605],
+  ],
+  [
+    [5836,3537,2431,1496],
+    [4588,2780,1911,1176],
+    [3244,1966,1351,832],
+    [2524,1530,1051,647],
+  ],
+  [
+    [6153,3729,2563,1577],
+    [4775,2894,1989,1224],
+    [3417,2071,1423,876],
+    [2625,1591,1093,673],
+  ],
+  [
+    [6479,3927,2699,1661],
+    [5039,3054,2099,1292],
+    [3599,2181,1499,923],
+    [2735,1658,1139,701],
+  ],
+  [
+    [6743,4087,2809,1729],
+    [5313,3220,2213,1362],
+    [3791,2298,1579,972],
+    [2927,1774,1219,750],
+  ],
+  // 40
+  [
+    [7089,4296,2953,1817],
+    [5596,3391,2331,1435],
+    [3993,2420,1663,1024],
+    [3057,1852,1273,784],
+  ],
+];
+
+// 字符指示器长度表
+const CHAR_COUNT_INDICATOR_LENGTH = [
+  [10, 9, 8, 8], // version 1 - 9
+  [12, 11, 16, 10], // version 10 - 26
+  [14, 13, 16, 12], // version 27 - 40
+];
+
+// 编码模式 - 字母数字模式对照表
+const ENCODING_MODE_ALPHANUMERIC_MAP = {
+  0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9,
+  A: 10, B: 11, C: 12, D: 13, E:14, F: 15, G: 16, H: 17, I: 18, J: 19, K: 20, L: 21, M: 22, N: 23, O: 24, P: 25, Q: 26, R: 27, S: 28, T: 29, U: 30, V: 31, W: 32, X: 33, Y: 34, Z: 35,
+  [&#39; &#39;]: 36, $: 37,
+};
+ENCODING_MODE_ALPHANUMERIC_MAP[&#39;%&#39;] = 38;
+ENCODING_MODE_ALPHANUMERIC_MAP[&#39;*&#39;] = 39;
+ENCODING_MODE_ALPHANUMERIC_MAP[&#39;+&#39;] = 40;
+ENCODING_MODE_ALPHANUMERIC_MAP[&#39;-&#39;] = 41;
+ENCODING_MODE_ALPHANUMERIC_MAP[&#39;.&#39;] = 42;
+ENCODING_MODE_ALPHANUMERIC_MAP[&#39;/&#39;] = 43;
+ENCODING_MODE_ALPHANUMERIC_MAP[&#39;:&#39;] = 44;
+
+const CODE_WORDS_LENGTH = [
+  // 1
+  [19,16,13,9], // L M Q H
+  // 2
+  [34,28,22,16],
+  // 3
+  [55,44,34,26],
+  // ...
+  [80,64,48,36],
+  [108,86,62,46],
+  [136,108,76,60],
+  [156,124,88,66],
+  [194,154,110,86],
+  [232,182,132,100],
+  [274,216,154,122],
+  [324,254,180,140],
+  [370,290,206,158],
+  [428,334,244,180],
+  [461,365,261,197],
+  [523,415,295,223],
+  [589,453,325,253],
+  [647,507,367,283],
+  [721,563,397,313],
+  [795,627,445,341],
+  [861,669,485,385],
+  [932,714,512,406],
+  [1006,782,568,442],
+  [1094,860,614,464],
+  [1174,914,664,514],
+  [1276,1000,718,538],
+  [1370,1062,754,596],
+  [1468,1128,808,628],
+  [1531,1193,871,661],
+  [1631,1267,911,701],
+  [1735,1373,985,745],
+  [1843,1455,1033,793],
+  [1955,1541,1115,845],
+  [2071,1631,1171,901],
+  [2191,1725,1231,961],
+  [2306,1812,1286,986],
+  [2434,1914,1354,1054],
+  [2566,1992,1426,1096],
+  [2702,2102,1502,1142],
+  [2812,2216,1582,1222],
+  // 40
+  [2956,2334,1666,1276],
+]
+
+/**
+ * 确定编码模式
+ * @param { string } value 原始字符串
+ */
+function detectEncodingMode(value) {
+  if (/[0-9]/.test(value)) return ENCODING_MODE_NUMBER;
+
+  if (/[0-9A-Z$%\\*+-\\/.:\\s]/.test(value)) return ENCODING_MODE_ALPHANUMERIC;
+
+  return ENCODING_MODE_BYTE;
+}
+
+/**
+ * 确定版本号
+ * @param { string } value 原始字符串
+ * @param { &#39;L&#39; | &#39;M&#39; | &#39;Q&#39; | &#39;H&#39; } correctLevel 容错等级
+ * @param { &#39;ENCODING_MODE_NUMBER&#39; |  &#39;ENCODING_MODE_ALPHANUMERIC&#39; | &#39;ENCODING_MODE_BYTE&#39; | &#39;ENCODING_MODE_KANJI&#39; } encodingMode 编码模式
+ */
+function detectVersion(value, correctLevel, encodingMode) {
+  let version = &#39;1&#39;;
+
+  const len = value.length;
+
+  const correctLevelIndex = CORRECT_LEVEL_ORDER.indexOf(correctLevel);
+  const encodingModeIndex = ENCODING_MODE_ORDER.indexOf(encodingMode);
+
+  for (let i = 0; i &lt; CHAR_CAPACITY.length; i++) {
+    if (len &lt;= CHAR_CAPACITY[i][correctLevelIndex][encodingModeIndex]) version = i + 1;
+    break;
+  }
+
+  return String(version);
+}
+
+/**
+ * 确定编码模式指示器
+ * @param { &#39;ENCODING_MODE_NUMBER&#39; |  &#39;ENCODING_MODE_ALPHANUMERIC&#39; | &#39;ENCODING_MODE_BYTE&#39; | &#39;ENCODING_MODE_KANJI&#39; } encodingMode 编码模式
+ */
+function detectEncodingModeIndicator(encodingMode) {
+  switch (encodingMode) {
+    case ENCODING_MODE_NUMBER:
+      return &#39;0001&#39;;
+    case ENCODING_MODE_ALPHANUMERIC:
+      return &#39;0010&#39;;
+    case ENCODING_MODE_BYTE:
+      return &#39;0100&#39;;
+    case ENCODING_MODE_KANJI:
+      return &#39;1000&#39;;
+  }
+}
+
+/**
+ * 确定字符数量指示器
+ * @param { string } value 原始字符串
+ * @param { string } version 版本号（1-40）
+ * @param { &#39;ENCODING_MODE_NUMBER&#39; |  &#39;ENCODING_MODE_ALPHANUMERIC&#39; | &#39;ENCODING_MODE_BYTE&#39; | &#39;ENCODING_MODE_KANJI&#39; } encodingMode 编码模式
+ */
+function detectCharCountIndicator(value, version, encodingMode) {
+  const encodingModeIndex = ENCODING_MODE_ORDER.indexOf(encodingMode);
+
+  let charCountIndicatorLenTableIndex = 0;
+  if (Number(version) &lt;= 9) charCountIndicatorLenTableIndex = 0;
+  if (Number(version) &gt;= 10 &amp;&amp; Number(version) &lt;= 26) charCountIndicatorLenTableIndex = 1;
+  if (Number(version) &gt;= 27) charCountIndicatorLenTableIndex = 2;
+
+  const valueLen = value.length;
+  const charCountIndicatorLen = CHAR_COUNT_INDICATOR_LENGTH[charCountIndicatorLenTableIndex][encodingModeIndex];
+
+  return valueLen.toString(2).padStart(charCountIndicatorLen, &#39;0&#39;);
+}
+
+/**
+ * 编码数字
+ * @param { string } value 原始字符串
+ */
+function encodeDataWithNumberMode(value) {
+  return Number(value).toString(2);
+}
+
+/**
+ * 编码字母数字
+ * @param { string } value 原始字符串
+ */
+function encodeDataWithAlphanumericMode(value) {
+  // 两两分割
+  const splittedValue = value.split(/(.{2})/).filter(i =&gt; !!i);
+
+  return splittedValue.reduce((r, item) =&gt; {
+    const current = []
+    item.split(&#39;&#39;).forEach(i =&gt; {
+      // 找到分组内每个字符对应的索引
+      current.push(ENCODING_MODE_ALPHANUMERIC_MAP[i]);
+    })
+
+    let result = &#39;&#39;
+    // 奇数长度字符串，索引值转二进制左侧补 0 到 6 位
+    if (!current[1]) result = current[0].toString(2).padStart(6, &#39;0&#39;);
+    // 偶数长度字符串，45 * [0] + [1] 转二进制左侧补 0 到 11 位，
+    if (current[1]) result = (45 * current[0] + current[1]).toString(2).padStart(11, &#39;0&#39;);
+
+    return `${r}${result}`;
+  }, &#39;&#39;);
+}
+
+/**
+ * 编码字节
+ * @param { string } value 原始字符串
+ */
+function encodeDataWithByteMode(value) {
+  return value.split(&#39;&#39;).reduce((r, item) =&gt; {
+    return `${r}${item.charCodeAt(0).toString(2).padStart(8, &#39;0&#39;)}`;
+  }, &#39;&#39;);
+}
+
+/**
+ * 编码汉字
+ * @param { string } value 原始字符串
+ */
+function encodeDataWithKanjiMode(value) {
+  // 略
+}
+
+/**
+ * 合并最终计算结果
+ * @param { string } encodingModeIndicator 编码模式指示器
+ * @param { string } charCountIndicator 字符数量指示器
+ * @param { string } encodedData 编码后的结果
+ * @param { string } version 版本号（1-40）
+ * @param { &#39;L&#39; | &#39;M&#39; | &#39;Q&#39; | &#39;H&#39; } correctLevel 容错等级
+ */
+function mergeEncodedData(encodingModeIndicator, charCountIndicator, encodedData, version, correctLevel) {
+  const repeatBits = [&#39;11101100&#39;, &#39;00010001&#39;];
+  const correctLevelIndex = CORRECT_LEVEL_ORDER.indexOf(correctLevel);
+  const codeWordsBitsLen = CODE_WORDS_LENGTH[version - 1][correctLevelIndex] * 8; // 比特长度
+
+  let result = `${encodingModeIndicator}${charCountIndicator}${encodedData}`;
+
+  const codeWordsDiff = codeWordsBitsLen - result.length;
+
+  // 直接补 0 到相应长度
+  if (codeWordsDiff &lt;= 4) return result.padEnd(codeWordsBitsLen, &#39;0&#39;);
+
+  // 先补四个 0
+  result = result.padEnd(result.length + 4, &#39;0&#39;);
+
+  // 再补到 8 的倍数
+  result = result.padEnd(result.length + 8 - result.length % 8, &#39;0&#39;);
+
+  // 长度还是不够，再补重复字节
+  const len = result.length;
+  for (let i = 0; i &lt; codeWordsBitsLen - len; i += 8) {
+    result = `${result}${repeatBits[(i / 8) % 2]}`;
+  }
+
+  return result;
+}
+
+/**
+ * 编码
+ * @param { string } value 原始字符串
+ * @param { string } correctLevel 容错等级
+ */
+function encodeData(value, correctLevel = &#39;L&#39;) {
+  const encodingMode = detectEncodingMode(value);
+  const version = detectVersion(value, correctLevel, encodingMode);
+
+  const encodingModeIndicator = detectEncodingModeIndicator(encodingMode);
+  const charCountIndicator = detectCharCountIndicator(value, version, encodingMode)
+
+  let encodedData = &#39;&#39;;
+  switch (encodingMode) {
+    case ENCODING_MODE_NUMBER:
+      encodedData = encodeDataWithNumberMode(value);
+      break;
+    case ENCODING_MODE_ALPHANUMERIC:
+      encodedData = encodeDataWithAlphanumericMode(value);
+      break;
+    case ENCODING_MODE_BYTE:
+      encodedData = encodeDataWithByteMode(value);
+      break;
+    case ENCODING_MODE_KANJI:
+      encodedData = encodeDataWithKanjiMode(value);
+      break;
+  }
+
+  return mergeEncodedData(encodingModeIndicator, charCountIndicator, encodedData, version, correctLevel);
+}
+
+encodeData(&#39;HELLO WORLD&#39;, &#39;Q&#39;); // -&gt; 00100000010110110000101101111000110100010111001011011100010011010100001101000000111011000001000111101100
+</code></pre>
+<h3 id="容错和纠错"><a href="#容错和纠错" class="headerlink" title="容错和纠错"></a>容错和纠错</h3><p>讲了这么久，终于可以来到二维码最核心的部分，容错纠错</p>
+<p>二维码能够大规模普及的很重要因素就是容错，即使一部分画面被污损，依旧可以被识别，而容错的实现原理，就是纠错算法中的里德-所罗门码</p>
+<p>里德-所罗门码，可以对目标信息进行冗余拓展，在传输过程中，只要出错量少于事先定义好的值，就能完美的纠错解码</p>
+<blockquote>
+<p>本节会涉及到一些简单的数学知识，包括有限域、多项式等</p>
+</blockquote>
+<h4 id="有限域"><a href="#有限域" class="headerlink" title="有限域"></a>有限域</h4><blockquote>
+<p>熟悉的朋友可以略过</p>
+</blockquote>
+<p>有限域是指包含有限个元素的域，这是一个封闭的域，域内元素的四则运算，总会得到域内的结果</p>
+<p>有限域又称，伽罗瓦域（Galois field），用 GF 表示</p>
+<p><img src="./13d7f9f1f837dd8322d8dc16e9a699c0.svg" alt></p>
+<p>表示含有 p 个元的有限域，p 必须是质数的方幂，如</p>
+<p><img src="./2ccf2592479bbf2c2f0d62dadecc1cf5.svg" alt></p>
+<p>域内有 <code>2^8 = 256</code> 个元</p>
+<h5 id="有限域的四则运算"><a href="#有限域的四则运算" class="headerlink" title="有限域的四则运算"></a>有限域的四则运算</h5><p>有限域中的四则运算，加等于减，乘等于除，并且四则运算的结果也必定在域中</p>
+<p>以</p>
+<p><img src="./c06d564797fc959a4d16fbb5ecda75c0.svg" alt></p>
+<p>为例，域内有8个数，分别是 <code>0 1 2 3 4 5 6 7</code> ，对应的二进制如下：</p>
+<p><img src="./1612328893440-5cce8725-1853-4308-b4e4-d95793a12e10.png" alt></p>
+<ul>
+<li><p>有限域中的加减都是异或运算，如 <code>1 + 2 = 1 ^ 2 = 001 ^ 010 = 011 = 3</code> ，得出 </p>
+<p><img src="./c06d564797fc959a4d16fbb5ecda75c0.svg" alt></p>
+<p>的加法表如下：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">＋</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">4</th>
+<th style="text-align:center">5</th>
+<th style="text-align:center">6</th>
+<th style="text-align:center">7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">7</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">6</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>有限域中的乘除较为复杂，规则如下：</p>
+<ul>
+<li>两个数先做模二相乘</li>
+<li>如果结果不在域内，再除以固定值 1011，取余数作为结果</li>
+</ul>
+<p>模二加法： <code>0 + 0 = 0; 0 + 1 = 1; 1 + 0 = 1; 1 + 1 = 0</code><br>模二减法： <code>0 - 0 = 0; 0 - 1 = 1; 1 - 0 = 1; 1 - 1 = 0</code><br>模二乘法： <code>0 * 0 = 0; 0 * 1 = 0; 1 * 0 = 0; 1 * 1 = 1</code><br>模二除法： <code>0 / 0 = 0; 1 / 1 = 1</code></p>
+<p>以 <code>6 * 7</code> 为例， <code>6 * 7 = 110 * 111</code> ，模二相乘算法如下：</p>
+<p><img src="./1ecaac7b4f73ba833ec2731726a804d5.svg" alt></p>
+<p>结果为 <code>10010 = 39</code> ，大于域中的数，所以继续做模二除法：</p>
+<p><img src="./7a5a78774f6415a69c7b9e71c3e8172f.svg" alt></p>
+<p>结果为余数，即 <code>100</code> ，得出</p>
+<p><img src="./c06d564797fc959a4d16fbb5ecda75c0.svg" alt></p>
+<p>的乘法表如下：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><strong>x</strong></th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">4</th>
+<th style="text-align:center">5</th>
+<th style="text-align:center">6</th>
+<th style="text-align:center">7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">7</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+</tr>
+</tbody>
+</table>
+<h4 id="多项式"><a href="#多项式" class="headerlink" title="多项式"></a>多项式</h4><blockquote>
+<p>熟悉的朋友可以略过</p>
+</blockquote>
+<p>多项式，英文 Polynomial ，形如</p>
+<p><img src="./2048d7946a062b722175aeb52a1f6874.svg" alt></p>
+<p>可以含有常数、变量、指数，指数只能是 0、1、2</p>
+<h5 id="多项式和二进制"><a href="#多项式和二进制" class="headerlink" title="多项式和二进制"></a>多项式和二进制</h5><p>多项式和二进制数一一对应，规则是：存在指数的项记为1，不存在的记为0</p>
+<p>以</p>
+<p><img src="./2b8d9826228308b56556b3bf19950c2e.svg" alt></p>
+<p>为例，指数存在的项分别是， <code>0 1 2 4 5 8 10</code> ，那最终二进制数的这几位（从右向左）都为1，其他为0，也就是</p>
+<p><img src="./4b49d5b5aea9686479fb23ac7654c44d.svg" alt></p>
+<p>易得结果 <code>10100110111</code> </p>
+<p>反过来，以 <code>11111100101</code> 为例，指数存在的项应该是 <code>0 2 5 6 7 8 9 10</code> ，结果为</p>
+<p><img src="./97037a516df3779ee8ab4ff7428bf7e7.svg" alt></p>
+<h5 id="多项式长除法"><a href="#多项式长除法" class="headerlink" title="多项式长除法"></a>多项式长除法</h5><p>多项式除以或者乘以多项式，结果都是多项式，为了计算除以的结果，这里讲下多项式的长除法</p>
+<p>如 <img src="./e598555faf247c4f8663f51fe0034d41.svg" alt></p>
+<p>计算过程如下：</p>
+<video id="video" controls preload="none" style="width: 100%;"><br>  <source id="mp4" src="./1.mp4" type="video/mp4"><br></video>
+
+<p>再如无法整除的例子</p>
+<p><img src="./96b8d5f2570e67092a648d00eeb215af.svg" alt></p>
+<p>计算过程如下：</p>
+<video id="video" controls preload="none" style="width: 100%;"><br>  <source id="mp4" src="./2.mp4" type="video/mp4"><br></video>
+
+<h4 id="里德-所罗门编码"><a href="#里德-所罗门编码" class="headerlink" title="里德-所罗门编码"></a>里德-所罗门编码</h4><p>讲完基础知识，下面讲解里德-所罗门是如何做到纠错的</p>
+<p>要做到对某个字符进行纠错，必须知道两个信息：</p>
+<ul>
+<li>这串字符错了</li>
+<li>错误的值与正确的值的误差是多少</li>
+</ul>
+<p>先看下里德-所罗门（RS）编码的图解：</p>
+<p><img src="./1612504457088-d5ddf0b9-45c1-40bf-95a3-542398b9b3de.png" alt></p>
+<p>计算机体系中，一个字节有八个比特，所以最常用的RS编码是</p>
+<p><img src="./23b051c3910814ebbf0f5db7530d65f0.svg" alt></p>
+<p>255代表整个密语的比特数，223代表原始数据比特数，校验数据比特数则为 <code>255 - 223 = 32</code> ，上图中的变量如下：</p>
+<ul>
+<li>m = 8</li>
+<li>n = 255</li>
+<li>k = 223</li>
+<li>2t = 32</li>
+</ul>
+<p>同样，涉及到伽罗瓦域的计算，也使用拥有255个元的</p>
+<p><img src="./2ccf2592479bbf2c2f0d62dadecc1cf5.svg" alt></p>
+<p>再看下RS规定的编码算法：</p>
+<p><img src="./1612507008790-d4d06cfa-e6bb-4501-97ba-4f89c989f7d8.png" alt="编组 28.png"></p>
+<blockquote>
+<p>举例，如 <code>2021</code> 这个字符，我们的目标是得到一串“加密”后的字符，修改加密后字符中的任意值，通过算法都可以得到 <code>2021</code> 这个原始值</p>
+</blockquote>
+<blockquote>
+<p>待补充。</p>
+</blockquote>
+<h4 id="二维码规范中的纠错码计算"><a href="#二维码规范中的纠错码计算" class="headerlink" title="二维码规范中的纠错码计算"></a>二维码规范中的纠错码计算</h4><ul>
+<li>分组</li>
+<li>计算</li>
+<li>合并</li>
+</ul>
+<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>回顾以上所有信息，整理整个二维码各个区域的绘制顺序如下</p>
+<ul>
+<li>绘制定位区</li>
+<li>绘制分隔区</li>
+<li>绘制矫正区</li>
+<li>绘制时序信息</li>
+<li>绘制格式信息</li>
+<li>绘制版本信息</li>
+<li>绘制数据区</li>
+</ul>
+<p>除数据区外，其他区域如何绘制都以详细讲解，本节主要关注数据区的绘制逻辑，如下：![编组 19.png](./1612510048074-c1a2d072-8874-4916-9a46-ff3f6c61c25c.png过</p>
+<h3 id="掩码"><a href="#掩码" class="headerlink" title="掩码"></a>掩码</h3><p>经过一系列复杂的步骤之后，终于来到二维码生成的最后一步，掩码</p>
+<p>掩码之前的图案很可能如下图，特别是字符较少，大部分需要用0填充的时候：</p>
+<p><img src="./1612512864307-c078eefa-73da-4dbc-b9bb-80f2343c9d44.png" alt="image.png"></p>
+<p>所以掩码其实就是对最后的数据区进行操作，让图案更加零散，便于机器识别，不同的掩码模式会根据坐标和对应的计算规则进行异或运算（如 0,3 是 1，计算后公式成立，取反改为 0）</p>
+<p>上文提到，二维码规范中的掩码模式有八种，各种掩码模式的计算逻辑如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">掩码模式编号</th>
+<th style="text-align:center">计算逻辑（根据坐标计算公式，成立则取反）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">(x + y) % 2 === 0</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">x % 2 === 0</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">y % 3 === 0</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">(x + y) % 3 === 0</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">(floor(x / 2) + floor(y / 3)) % 2 === 0</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">((x <em> y) % 2) + ((x </em> y) % 3) === 0</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">(((x <em> y) % 2) + ((x </em> y % 3))) % 2 === 0</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">(((x + y) % 2) + ((x +*y) % 3)) % 2 === 0</td>
+</tr>
+</tbody>
+</table>
+<p>当然，掩码模式的选择并不是随机任选，而是根据掩码模式计算出四个惩罚分，选择惩罚分总和最低的那种模式作为最终掩码模式。惩罚分计算逻辑如下（<strong>惩罚分的计算，需要包含二维码所有区域</strong>）：</p>
+<ul>
+<li><p>惩罚分一：</p>
+<p>同行或同列连续5块颜色相同记三分，每多一块加一分</p>
+<p><img src="./1612512087955-bf0e6221-71b8-403b-945f-79a4fd46b58c.png" alt="image.png"></p>
+</li>
+<li><p>惩罚分二：</p>
+<p><code>m * n</code> 的同色色块，记分</p>
+<p><img src="./ef56cec149eea65847106fd9bc28636f.svg" alt></p>
+<p>比如 <code>2*2</code> 色块相同，则记 3 分， <code>3*3</code> 色块相同，则记 12 分</p>
+<p><img src="./1612512260779-b4103f74-d042-4996-88ba-78257cc0388d.png" alt="image.png"></p>
+</li>
+<li><p>惩罚分三：</p>
+<p>同行或者同列出现 <code>10111010000</code> 或者 <code>00001011101</code> 则记 40 分</p>
+<p><img src="./1612512697828-19920556-19ef-4d14-9992-e85f68058a18.png" alt="编组 31.png"></p>
+</li>
+<li><p>惩罚分四：</p>
+<p>用黑色色块在整个二维码中的占比，减去50%得到绝对值，每差5%记10分，不满5%的忽略，比如黑色色块占        62%，则应该记 <code>Math.floor(Math.abs(62 - 50) / 5) * 3 = 20</code> 20分</p>
+<p>图略。</p>
+</li>
+</ul>
+<p>以 <code>HELLO WORLD</code> 容错 <code>Q</code> 为例，未掩码绘制的图案如下：</p>
+<p>用八种不同的掩码模式绘制结果及惩罚分如下：</p>
+<p><img src="./1612511813652-1dd17ddc-792e-43ff-ba02-948273815aa6.png" alt="image.png"></p>
+<p>可知惩罚分最少的是掩码模式一，所以最终结果就是：</p>
+<p><img src="./1612511837629-d60548a6-544c-4953-a4f8-2b864959fc82.png" alt="image.png"></p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>二维码的字符容量是如何计算的？<a href="https://stackoverflow.com/questions/34465106/how-to-calculate-the-maximum-of-data-bits-for-each-qr-code" target="_blank" rel="noopener">https://stackoverflow.com/questions/34465106/how-to-calculate-the-maximum-of-data-bits-for-each-qr-code</a></li>
+<li>各个流程性能更高的算法</li>
+<li>RS 编码公式的推导</li>
+</ul>
+</div></article></div></section><footer><div class="paginator"><a href="/blog/2020/12/18/折腾折腾家庭网络架构/" class="next">下一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'luoyefe';
+var disqus_identifier = '2021/02/05/一维码、二维码的生成原理/';
+var disqus_title = '一维码、二维码的生成原理';
+var disqus_url = 'https://luoyefe.com/blog/2021/02/05/一维码、二维码的生成原理/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2021 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="/blog/js/prism.js"></script></body></html>
