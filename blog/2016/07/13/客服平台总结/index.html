@@ -25,11 +25,11 @@
 </li>
 </ul>
 <h4 id="相关文档"><a href="#相关文档" class="headerlink" title="相关文档"></a>相关文档</h4><ul>
-<li><p><a href="http://cn.vuejs.org/" target="_blank" rel="noopener">Vue 文档</a></p>
+<li><p><a href="http://cn.vuejs.org/" target="_blank" rel="external">Vue 文档</a></p>
 </li>
-<li><p><a href="http://router.vuejs.org/zh-cn/index.html" target="_blank" rel="noopener">Vue-router 文档</a></p>
+<li><p><a href="http://router.vuejs.org/zh-cn/index.html" target="_blank" rel="external">Vue-router 文档</a></p>
 </li>
-<li><p><a href="http://vuex.vuejs.org/zh-cn/intro.html" target="_blank" rel="noopener">Vuex 文档</a></p>
+<li><p><a href="http://vuex.vuejs.org/zh-cn/intro.html" target="_blank" rel="external">Vuex 文档</a></p>
 </li>
 </ul>
 <h2 id="NodeJs-Npm"><a href="#NodeJs-Npm" class="headerlink" title="NodeJs/Npm"></a>NodeJs/Npm</h2><h4 id="NodeJs"><a href="#NodeJs" class="headerlink" title="NodeJs"></a>NodeJs</h4><p>NodeJs 虽然是一门后端语言，但是在前端工作中，利用 NodeJs 开发的一些工具能够极大简化我们的工作。  </p>
@@ -40,9 +40,9 @@
 <p>例如，在本地开发时，需要连接后台人员的机器，可以执行 <code>npm run localtest</code> 命令，而实际执行的命令是 <code>scripts</code> 字段中 <code>localtest</code> 对应的 <code>NODE_ENV=localtest gulp watch</code> 命令。  </p>
 <p>这相当于为某些命令做了个缩写，但是在本项目中，由于环境变量定义方式不同，mac 环境可以直接执行 <code>npm run localtest</code> ，win 上只能执行具体的命令 <code>NODE_ENV=localtest gulp watch</code>。  </p>
 <h4 id="相关文档-1"><a href="#相关文档-1" class="headerlink" title="相关文档"></a>相关文档</h4><ul>
-<li><p><a href="http://nodejs.cn/api/" target="_blank" rel="noopener">NodeJs 文档</a></p>
+<li><p><a href="http://nodejs.cn/api/" target="_blank" rel="external">NodeJs 文档</a></p>
 </li>
-<li><p><a href="https://docs.npmjs.com/" target="_blank" rel="noopener">NPM 文档</a></p>
+<li><p><a href="https://docs.npmjs.com/" target="_blank" rel="external">NPM 文档</a></p>
 </li>
 </ul>
 <h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>客服平台对 NodeJs 的依赖不可或缺，开发人员必须安装 NodeJs ，建议版本 v4.2.4</p>
@@ -57,21 +57,21 @@
 <li>Promise 对象控制异步流程</li>
 <li>其他的新API</li>
 </ul>
-<p><a href="http://es6.ruanyifeng.com/" target="_blank" rel="noopener">ES6 文档</a></p>
+<p><a href="http://es6.ruanyifeng.com/" target="_blank" rel="external">ES6 文档</a></p>
 <h2 id="Webpack-Gulp"><a href="#Webpack-Gulp" class="headerlink" title="Webpack/Gulp"></a>Webpack/Gulp</h2><h4 id="Webpack"><a href="#Webpack" class="headerlink" title="Webpack"></a>Webpack</h4><p>上文提到，我们用了 Vue，用了 ES6，用了很多新特性新东西，但是对于浏览器来说，这些东西浏览器是没有办法直接运行的，所以需要有构建这一过程，我们选择了 webpack 这个工具。  </p>
 <p>webpack 是一个灵活的模块打包工具，搭配不同的 plugin 和 loader 可以打包几乎所有 js 方言，css 方言，不同的模板文件，最后生成可供浏览器直接运行的 js 文件。  </p>
 <p>客服平台的 webpack 配置在 <code>gulpfile.js</code> 文件的 <code>webpackConfig</code> 变量中，具体可以看代码。  </p>
-<p><a href="http://webpack.github.io/docs/" target="_blank" rel="noopener">webpack 文档</a></p>
+<p><a href="http://webpack.github.io/docs/" target="_blank" rel="external">webpack 文档</a></p>
 <h4 id="Gulp"><a href="#Gulp" class="headerlink" title="Gulp"></a>Gulp</h4><p>除了 webpack 用来打包构建之外，还有一些额外的自动化工作需要完成，比如图片的拷贝，静态资源更改 hash 值以控制缓存，打包四个环境不同的 bundle 包等，这一部分我们选择了 gulp 来完成。  </p>
 <p>gulp 主要利用 NodeJs 文件流的概念在内存中操作文件，减少 IO 操作，能够更加快速的完成复杂的构建工作。  </p>
-<p><a href="http://www.gulpjs.com.cn/docs/" target="_blank" rel="noopener">gulp 文档</a></p>
+<p><a href="http://www.gulpjs.com.cn/docs/" target="_blank" rel="external">gulp 文档</a></p>
 <h2 id="Sass-Jade"><a href="#Sass-Jade" class="headerlink" title="Sass/Jade"></a>Sass/Jade</h2><h4 id="Sass"><a href="#Sass" class="headerlink" title="Sass"></a>Sass</h4><p>一个 css 方言，提供了嵌套的书写方式，css 的变量定义，逻辑控制功能等。  </p>
 <p>客服平台使用的是页面构建组提供的 sass 源码，最后使用 gulp 编译成浏览器可识别的 css。  </p>
-<p><a href="http://sass.bootcss.com/docs/sass-reference/" target="_blank" rel="noopener">sass 文档</a></p>
+<p><a href="http://sass.bootcss.com/docs/sass-reference/" target="_blank" rel="external">sass 文档</a></p>
 <h4 id="Jade-Pug"><a href="#Jade-Pug" class="headerlink" title="Jade(Pug)"></a>Jade(Pug)</h4><p>HTML 模板引擎，页面构建组使用的 HTML 方言，用更加简洁的方式书写 HTML，也可以在 HTML 中加以逻辑，写出更加强大健壮的 HTML 模板。  </p>
 <p>客服平台使用的是页面构建组提供的生成后的普通 HTML 文件。  </p>
 <p>已更名为 Pug 。  </p>
-<p><a href="http://jade-lang.com/" target="_blank" rel="noopener">pug 文档</a></p>
+<p><a href="http://jade-lang.com/" target="_blank" rel="external">pug 文档</a></p>
 <h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>客服平台的所有代码，都托管在公司的 gitlab 上，项目地址是： <code>http://gitlab.intra.gomeplus.com/gomeplusFED/CSP</code>。  </p>
 <p>配合 git ，我们完成了一套完整的开发发布流程。  </p>
 <h2 id="Webscoket"><a href="#Webscoket" class="headerlink" title="Webscoket"></a>Webscoket</h2><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>WebSocket协议，代替原先http协议的1s轮询，能更好的节省服务器资源和带宽并达到实时通讯，本项目用于客服与买家的实时通讯聊天、表情、上传图片、接收图片音频视频。   </p>
@@ -114,7 +114,7 @@ socket.onopen = function(event) {
 <li><p>客服选择在线重连    </p>
 </li>
 </ul>
-<p><a href="https://msdn.microsoft.com/library/hh673567.aspx" target="_blank" rel="noopener">Webscoket 文档</a></p>
+<p><a href="https://msdn.microsoft.com/library/hh673567.aspx" target="_blank" rel="external">Webscoket 文档</a></p>
 <h2 id="业务详解"><a href="#业务详解" class="headerlink" title="业务详解"></a>业务详解</h2><h4 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h4><pre><code>```shell
 ├── src                             源码文件夹
 │   ├── font                            font 文件夹
@@ -253,5 +253,5 @@ var disqus_url = 'https://luoyefe.com/blog/2016/07/13/客服平台总结/';
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2021 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2023 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
 var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="/blog/js/prism.js"></script></body></html>

@@ -1,15 +1,15 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> NPM 的基础知识 · LUOYE</title><meta name="description" content="NPM 的基础知识 - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"><link rel="stylesheet" href="/blog/css/prism.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">NPM 的基础知识</h1><div class="post-info">2020年12月18日</div><div class="post-content"><h2 id="npm-的安装"><a href="#npm-的安装" class="headerlink" title="npm 的安装"></a>npm 的安装</h2><p>作为 <code>NodeJS</code> 的包管理工具， 安装 <code>NodeJS</code> 的过程中， <code>npm</code> 就会自动安装，而安装 <code>NodeJS</code> 的方法一般有三种：</p>
 <ul>
 <li><p><strong>官网安装包</strong></p>
-<p>官方已经为各个系统构架好安装包，访问 <a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">https://nodejs.org/en/download/</a> 根据系统下载安装即可。</p>
+<p>官方已经为各个系统构架好安装包，访问 <a href="https://nodejs.org/en/download/" target="_blank" rel="external">https://nodejs.org/en/download/</a> 根据系统下载安装即可。</p>
 </li>
 <li><p><strong>编译安装</strong></p>
-<p>如果想要体验 <code>NodeJS</code> 最新特性，可以从源码编译安装，较为复杂，需 clone 源码并安装整套的编译工具，具 体可访问 <a href="https://github.com/nodejs/node/blob/master/BUILDING.md" target="_blank" rel="noopener">https://github.com/nodejs/node/blob/master/BUILDING.md</a>，这里不展开。</p>
+<p>如果想要体验 <code>NodeJS</code> 最新特性，可以从源码编译安装，较为复杂，需 clone 源码并安装整套的编译工具，具 体可访问 <a href="https://github.com/nodejs/node/blob/master/BUILDING.md" target="_blank" rel="external">https://github.com/nodejs/node/blob/master/BUILDING.md</a>，这里不展开。</p>
 </li>
 <li><p><strong><code>NodeJS</code> 版本管理工具</strong></p>
 <p>上面两种安装方式都有一个无法避免的问题：无法切换版本。 <code>NodeJS</code> 从和 <code>io.js</code> 决裂又合并后的第一个大      版本，v2 之后，就采用 Long Term Support（LTS）的方式发布 <code>NodeJS</code> ，这意味着 <code>NodeJS</code> 的版本会快速迭代。从15年的 v2，到现如今20年的 v15，注定会出现某些特性不兼容的现象，那注定会遇到切换<code>NodeJS</code> 运行时版本的问题（LTS 是长期支持版本，版本号为偶数，每年4月发布，奇数号版本为不稳定版本，建议使用 LTS 版本）。</p>
-<p><code>nvm</code> 和 <code>n</code> 就是为了解决这个问题，两者在功能和使用上没有明显差异，但是实测 <code>nvm</code> 会导致 <code>zsh</code> 打开缓慢，可见官方 <a href="https://github.com/nvm-sh/nvm/issues/860" target="_blank" rel="noopener">issue</a> ，所以推荐使用 <code>n</code> 来管理 <code>NodeJS</code> 版本</p>
-<p>访问 <code>n</code> 的 <a href="https://github.com/tj/n" target="_blank" rel="noopener">官方仓库</a>，可以看到安装脚本：</p>
+<p><code>nvm</code> 和 <code>n</code> 就是为了解决这个问题，两者在功能和使用上没有明显差异，但是实测 <code>nvm</code> 会导致 <code>zsh</code> 打开缓慢，可见官方 <a href="https://github.com/nvm-sh/nvm/issues/860" target="_blank" rel="external">issue</a> ，所以推荐使用 <code>n</code> 来管理 <code>NodeJS</code> 版本</p>
+<p>访问 <code>n</code> 的 <a href="https://github.com/tj/n" target="_blank" rel="external">官方仓库</a>，可以看到安装脚本：</p>
 <pre><code class="line-numbers language-bash">curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
 </code></pre>
 <p>安装后会自动安装最新的 LTS 版本， <code>npm</code> 也会安装最新版本（ <code>n</code> 的具体使用此处不展开）。</p>
@@ -18,15 +18,15 @@
 <h2 id="npm-的组成"><a href="#npm-的组成" class="headerlink" title="npm 的组成"></a>npm 的组成</h2><p>先看下 npm 的组成：</p>
 <ul>
 <li>npm cli: 用于开发者本地开发、安装、更新、发布模块</li>
-<li>npm web: 用于展示、搜索模块，官方网站：<a href="https://www.npmjs.com/" target="_blank" rel="noopener">https://www.npmjs.com/</a></li>
-<li>npm registry（源）: 用于存储、管理模块，以及模块相关的用户信息、组织信息等，官方 registry：<a href="https://registry.npmjs.org" target="_blank" rel="noopener">https://registry.npmjs.org</a></li>
+<li>npm web: 用于展示、搜索模块，官方网站：<a href="https://www.npmjs.com/" target="_blank" rel="external">https://www.npmjs.com/</a></li>
+<li>npm registry（源）: 用于存储、管理模块，以及模块相关的用户信息、组织信息等，官方 registry：<a href="https://registry.npmjs.org" target="_blank" rel="external">https://registry.npmjs.org</a></li>
 </ul>
 <h2 id="npm-的源"><a href="#npm-的源" class="headerlink" title="npm 的源"></a>npm 的源</h2><p>官方的 registry 属于公开源，虽然有私有模块的能力，但是实际数据也是存储在 <code>npm</code> 的服务器上，对于企业来说，风险较大，所以企业用户一般采用自建源的方式维护私有模块。</p>
 <p><strong>常见的源如下：</strong></p>
 <ul>
-<li>官方：<a href="https://registry.npmjs.org" target="_blank" rel="noopener">https://registry.npmjs.org</a></li>
-<li>阿里国内源（只镜像官方数据）：<a href="https://registry.npm.taobao.org/" target="_blank" rel="noopener">https://registry.npm.taobao.org/</a></li>
-<li>阿里集团私有源（镜像官方数据 + 私有模块）：<a href="https://registry.npm.alibaba-inc.com" target="_blank" rel="noopener">https://registry.npm.alibaba-inc.com</a></li>
+<li>官方：<a href="https://registry.npmjs.org" target="_blank" rel="external">https://registry.npmjs.org</a></li>
+<li>阿里国内源（只镜像官方数据）：<a href="https://registry.npm.taobao.org/" target="_blank" rel="external">https://registry.npm.taobao.org/</a></li>
+<li>阿里集团私有源（镜像官方数据 + 私有模块）：<a href="https://registry.npm.alibaba-inc.com" target="_blank" rel="external">https://registry.npm.alibaba-inc.com</a></li>
 </ul>
 <p><strong>源的使用：</strong></p>
 <ul>
@@ -51,7 +51,7 @@ registry=https://registry.npm.alibaba-inc.com
 @alife:registry=https://registry.npm.alibaba-inc.com
 registry=https://registry.npm.taobao.org/
 </code></pre>
-<p>如果不想手动修改源，可以使用开源工具 <a href="https://github.com/Pana/nrm" target="_blank" rel="noopener">nrm</a>。</p>
+<p>如果不想手动修改源，可以使用开源工具 <a href="https://github.com/Pana/nrm" target="_blank" rel="external">nrm</a>。</p>
 </li>
 </ul>
 <p>接下来我们看下几种 <code>npm</code> 的区别。</p>
@@ -74,7 +74,7 @@ registry=https://registry.npm.taobao.org/
 <p>如果依赖较深， <code>node_modules</code> 的目录层级会非常非常深，并且同版本的模块会被重复安装，所以，关于 <code>npm</code> 的这个问题，网络上就有了一张非常有名的图：<img src="./1607671117029-de91814a-f780-4dac-8b0f-e49d59609fb5.png" alt="image.png"></p>
 </li>
 <li><p><strong>版本锁定</strong></p>
-<p>另一个就是版本锁定的问题，举个例子：某个前端项目依赖 <a href="mailto:`babel@6.9.0" target="_blank" rel="noopener">`babel@6.9.0</a><code>，</code>package.json<code>里的 babel 版本号配置为，^6.9.0，</code>npm<code>安装时会安装</code>6.9.x` 的最新版本。如果 babel 发布了新版本 6.9.1，引入了一个 bug，项目构建失败，此时版本带来的问题就会被暴露。更极端的情况，一个运行时依赖的包，预发测试没问题，重新构建上线的过程中，包更新了，将会导致线上业务直接出问题。</p>
+<p>另一个就是版本锁定的问题，举个例子：某个前端项目依赖 <code>babel@6.9.0</code> ， <code>package.json</code> 里的 babel 版本号配置为，^6.9.0，<code>npm</code> 安装时会安装 <code>6.9.x</code> 的最新版本。如果 babel 发布了新版本 6.9.1，引入了一个 bug，项目构建失败，此时版本带来的问题就会被暴露。更极端的情况，一个运行时依赖的包，预发测试没问题，重新构建上线的过程中，包更新了，将会导致线上业务直接出问题。</p>
 <p>虽然在 <code>package.json</code> 中可以锁定版本，但是只能锁当前项目所依赖的模块的版本，二级依赖或者更深则无法锁定，所以 <code>yarn</code> 引入了 <code>yanr.lock</code> 文件，用来记录整个依赖树的版本号，重新安装时，会以 lock 文件为准安装依赖。</p>
 </li>
 <li><p><strong>安装速度</strong></p>
@@ -149,7 +149,7 @@ registry=https://registry.npm.taobao.org/
 </li>
 <li><p><strong>不安装的情况下调用全局模块</strong></p>
 <p>比如 <code>create-react-app</code> ，这个包用于初始化 react 项目，正常使用时，需全局安装，再进行调用，使用 <code>npx</code> 则可以 <code>npx create-reac-app init</code> ， <code>npx</code> 会自动安装所需依赖，执行相关命令，执行完毕后删除依赖。</p>
-<p>其他高级用法，可以查看官方仓库：<a href="https://github.com/npm/npx" target="_blank" rel="noopener">https://github.com/npm/npx</a></p>
+<p>其他高级用法，可以查看官方仓库：<a href="https://github.com/npm/npx" target="_blank" rel="external">https://github.com/npm/npx</a></p>
 </li>
 </ul>
 <h3 id="dependencies、devDependencies、peerDependencies"><a href="#dependencies、devDependencies、peerDependencies" class="headerlink" title="dependencies、devDependencies、peerDependencies"></a>dependencies、devDependencies、peerDependencies</h3><p>用于标记本项目的依赖：</p>
@@ -214,5 +214,5 @@ var disqus_url = 'https://luoyefe.com/blog/2020/12/18/NPM-的基础知识/';
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2021 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2023 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
 var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="/blog/js/prism.js"></script></body></html>

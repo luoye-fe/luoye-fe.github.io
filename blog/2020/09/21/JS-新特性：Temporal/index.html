@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> JS 新特性：Temporal · LUOYE</title><meta name="description" content="JS 新特性：Temporal - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"><link rel="stylesheet" href="/blog/css/prism.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">JS 新特性：Temporal</h1><div class="post-info">2020年9月21日</div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近日（2020.9.16）， <code>Moment</code> 团队发布<a href="https://momentjs.com/docs/#/-project-status/recommendations/" target="_blank" rel="noopener">声明</a>，宣布 <code>Moment</code> 将进入<strong>维护状态</strong>，除非必要，将不再更新：</p>
+<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> JS 新特性：Temporal · LUOYE</title><meta name="description" content="JS 新特性：Temporal - Luoye"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="https://s10.mogucdn.com/mlcdn/c45406/181108_569k3hlic06fcbj3i96b426i024d9.ico"><link rel="stylesheet" href="/blog/css/apollo.css"><link rel="stylesheet" href="/blog/css/prism.css"></head><body><div class="wrap"><header><a href="/blog/" class="logo-link"><img src="https://s10.mogucdn.com/mlcdn/c45406/180104_87747584h81ji8hjc144bkgkgk9ai_460x460.jpg"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="https://luoyefe.com" target="_blank" class="nav-list-link">INDEX</a></li><li class="nav-list-item"><a href="/blog/archives/" target="_self" class="nav-list-link">ARCHIVES</a></li><li class="nav-list-item"><a href="https://www.zhihu.com/people/luo-ye-42-22" target="_blank" class="nav-list-link">ZHIHU</a></li><li class="nav-list-item"><a href="https://github.com/luoye-fe" target="_blank" class="nav-list-link">GITHUB</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">JS 新特性：Temporal</h1><div class="post-info">2020年9月21日</div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近日（2020.9.16）， <code>Moment</code> 团队发布<a href="https://momentjs.com/docs/#/-project-status/recommendations/" target="_blank" rel="external">声明</a>，宣布 <code>Moment</code> 将进入<strong>维护状态</strong>，除非必要，将不再更新：</p>
 <ul>
 <li>未来不会新增任何新特性</li>
 <li>不会改成 <code>immutable</code> </li>
@@ -22,14 +22,14 @@
 <li><p><strong>等等</strong></p>
 </li>
 </ul>
-<p>所以 TC39 工作组提出了遵循 <a href="https://zh.wikipedia.org/zh-hans/ISO_8601" target="_blank" rel="noopener">ISO_8601 标准</a> 的全新时间对象 <code>Temporal</code> 来解决这些问题，全新的对象将着眼于以下几个方面：</p>
+<p>所以 TC39 工作组提出了遵循 <a href="https://zh.wikipedia.org/zh-hans/ISO_8601" target="_blank" rel="external">ISO_8601 标准</a> 的全新时间对象 <code>Temporal</code> 来解决这些问题，全新的对象将着眼于以下几个方面：</p>
 <ul>
 <li>提供简单易用的 API</li>
 <li>提供 <code>immutable</code> 对象</li>
 <li>严格的时间字符串格式</li>
 <li>支持非公历、支持时区</li>
 </ul>
-<p>详细的 API 可以查看 <a href="https://tc39.es/proposal-temporal/docs/" target="_blank" rel="noopener">TC39文档</a>，接下来我们用实际的案例感受下 <code>Temporal</code> 的强大（在 <code>Temporal</code> 文档页面，已集成 polyfill，可在控制台直接调用）。</p>
+<p>详细的 API 可以查看 <a href="https://tc39.es/proposal-temporal/docs/" target="_blank" rel="external">TC39文档</a>，接下来我们用实际的案例感受下 <code>Temporal</code> 的强大（在 <code>Temporal</code> 文档页面，已集成 polyfill，可在控制台直接调用）。</p>
 <h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="获取-构造时间"><a href="#获取-构造时间" class="headerlink" title="获取/构造时间"></a>获取/构造时间</h3><p>相较于 <code>Date</code>，使用 <code>Temporal</code> 获取/构造时间有以下优点：</p>
 <ul>
 <li>最大精度为纳秒，可以对时间进行更精准的计算（为了配合纳秒， <code>Temporal</code> 以 <code>bigInit</code> 为基础参数） </li>
@@ -106,7 +106,6 @@ Temporal.DateTime.from(&#39;2019-01-25&#39;).difference(Temporal.DateTime.from(&
   largestUnit: &#39;years&#39;,
   smallestUnit: &#39;seconds&#39;
 }).toString(); // -&gt; P1Y7M20D = 一年七个月二十天
-
 </code></pre>
 <h3 id="时区支持"><a href="#时区支持" class="headerlink" title="时区支持"></a>时区支持</h3><p>与 <code>Date</code> 不同， <code>Temporal</code> 将天然支持时区。 <code>Temporal</code> 的时间默认无时区信息，所以需要在不同时区转换时间信息时，将用到时区相关 API。</p>
 <pre><code class="line-numbers language-javascript">// 构造中国东八区时区
@@ -120,8 +119,8 @@ const now = tz.getDateTimeFor(Temporal.now.absolute()); // -&gt; 2020-09-21T20:0
 </code></pre>
 <h3 id="历法支持"><a href="#历法支持" class="headerlink" title="历法支持"></a>历法支持</h3><p>在上文提到的时间静态属性中，细心的朋友可能已经发现有是否是闰年这个属性，其实这就是历法在起作用。</p>
 <p>时间定义中，历法决定了了一年中有多少天，一年有多少月，一个月有多少天，所以能够灵活而准确的采用不同历法在时间计算中相当重要。</p>
-<p>目前世界上最常用的历法是 <a href="https://en.wikipedia.org/wiki/Gregorian_calendar" target="_blank" rel="noopener">Gregorian calendar</a>，在此基础上演变出来的时间标准 ISO_8601， <code>Temporal</code> 就是采用此种标准。</p>
-<p>以 <a href="https://en.wikipedia.org/wiki/Hebrew_calendar" target="_blank" rel="noopener">Hebrew calendar</a>（犹太历）为例，犹太历根据大小月，每个月有29或30天，八月九月是润月，根据常年缺年满年的不同，有不同的天数，以犹太历为例：</p>
+<p>目前世界上最常用的历法是 <a href="https://en.wikipedia.org/wiki/Gregorian_calendar" target="_blank" rel="external">Gregorian calendar</a>，在此基础上演变出来的时间标准 ISO_8601， <code>Temporal</code> 就是采用此种标准。</p>
+<p>以 <a href="https://en.wikipedia.org/wiki/Hebrew_calendar" target="_blank" rel="external">Hebrew calendar</a>（犹太历）为例，犹太历根据大小月，每个月有29或30天，八月九月是润月，根据常年缺年满年的不同，有不同的天数，以犹太历为例：</p>
 <pre><code class="line-numbers language-javascript">// 获取犹太历 5756年3月14号 的绝对时间
 const dateWithCalendar = Temporal.DateTime.from({
     year: 5756,
@@ -142,5 +141,5 @@ var disqus_url = 'https://luoyefe.com/blog/2020/09/21/JS-新特性：Temporal/';
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2021 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
+})();</script><script id="dsq-count-scr" src="//luoyefe.disqus.com/count.js" async></script><div class="copyright"><p>© 2015 - 2023 <a href="https://luoyefe.com/blog">Luoye</a>, unless otherwise noted.</p></div></footer></div><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-78104533-1",'auto');ga('send','pageview');
 var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?213cc17b8240ff47d16b1b3aa9dbe0ad";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s);})();</script><script src="/blog/js/prism.js"></script></body></html>
